@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국사 뛰어넘기 3 - 독서 퀴즈 (7장)</title>
+    <style>
+        :root { --primary-color: #4A90E2; --secondary-color: #F5F7FA; --text-color: #333; --border-color: #E1E4E8; --correct-color: #27ae60; --incorrect-color: #e74c3c; }
+        body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: var(--text-color); background-color: var(--secondary-color); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em; }
+        h2 { color: #2C3E50; margin-top: 40px; padding: 12px 15px; background-color: #E8F4F8; border-radius: 8px; font-size: 1.3em; }
+        h3 { color: #34495E; border-left: 4px solid var(--primary-color); padding-left: 10px; margin-top: 30px; }
+        .question { margin-bottom: 20px; padding: 15px; background-color: #FAFAFA; border: 1px solid var(--border-color); border-radius: 8px; position: relative; }
+        .question-number { font-weight: bold; color: var(--primary-color); font-size: 1.1em; margin-right: 5px; }
+        .options { list-style-type: none; padding-left: 0; margin-top: 10px; }
+        .options li { margin-bottom: 8px; padding: 10px 12px; background-color: white; border: 2px solid #ddd; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .options li:hover { background-color: #F0F7FF; border-color: #A9D0F5; }
+        .options li.selected { background-color: #E8F4F8; border-color: var(--primary-color); font-weight: bold; }
+        .input-box { width: 100%; padding: 12px; margin-top: 10px; border: 2px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 1em; transition: border-color 0.2s; }
+        .input-box:focus { outline: none; border-color: var(--primary-color); }
+        .feedback { display: inline-block; margin-top: 10px; font-weight: bold; font-size: 1em; padding: 4px 8px; border-radius: 4px; }
+        .feedback.correct { color: var(--correct-color); background-color: #eafaf1; border: 1px solid var(--correct-color); }
+        .feedback.incorrect { color: var(--incorrect-color); background-color: #fceceb; border: 1px solid var(--incorrect-color); }
+        .btn-submit { display: block; width: 100%; padding: 15px; background-color: var(--primary-color); color: white; font-size: 1.2em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; margin-top: 40px; transition: background-color 0.3s; }
+        .btn-submit:hover { background-color: #357ABD; }
+        #result-container { display: none; margin-top: 30px; padding: 20px; background-color: #fffde7; border: 2px solid #f1c40f; border-radius: 8px; text-align: center; }
+        .score-text { font-size: 2em; color: #e67e22; font-weight: bold; margin: 10px 0; }
+        .real-answer { color: var(--correct-color); font-weight: bold; font-size: 0.9em; display: none; margin-top: 5px; }
+        @media (max-width: 600px) { body { padding: 10px; } .container { padding: 15px; } h1 { font-size: 1.5em; } h2 { font-size: 1.1em; } .btn-submit { font-size: 1.1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 한국사 뛰어넘기 3 독서 퀴즈</h1>
+        <div class="subtitle">7장. 청의 침략에 맞서 싸우다</div>
+        
+        <h2>📝 1부. 객관식 (1~15번)</h2>
+        
+        <div class="question"><span class="question-number">1.</span> 임진왜란이 끝난 후 나라를 다스리게 된 광해군의 외교 정책으로 가장 알맞은 것은?
+            <ul class="options" data-qid="1">
+                <li data-val="1">① 명나라와 굳게 손잡고 후금을 공격했다.</li>
+                <li data-val="2">② 후금에 완전히 항복했다.</li>
+                <li data-val="3">③ 명나라와 후금 사이에서 실리를 챙기는 중립 외교를 펼쳤다.</li>
+                <li data-val="4">④ 다시 일본을 공격하여 복수했다.</li>
+            </ul>
+            <div id="fb-1" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">2.</span> 광해군 때 백성들의 세금 부담을 줄여주기 위해 특산물 대신 쌀이나 베로 세금을 내게 한 제도는?
+            <ul class="options" data-qid="2">
+                <li data-val="1">① 호패법</li>
+                <li data-val="2">② 대동법</li>
+                <li data-val="3">③ 균역법</li>
+                <li data-val="4">④ 영정법</li>
+            </ul>
+            <div id="fb-2" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">3.</span> 광해군의 실리 외교에 반발한 서인 세력이 반란을 일으켜 광해군을 몰아내고 새 왕을 세운 사건은?
+            <ul class="options" data-qid="3">
+                <li data-val="1">① 인조반정</li>
+                <li data-val="2">② 중종반정</li>
+                <li data-val="3">③ 계유정난</li>
+                <li data-val="4">④ 왕자의 난</li>
+            </ul>
+            <div id="fb-3" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">4.</span> 인조반정 이후 인조와 서인 세력이 후금에 대해 취한 외교 정책은 무엇인가요?
+            <ul class="options" data-qid="4">
+                <li data-val="1">① 교린 정책</li>
+                <li data-val="2">② 친명배금 정책</li>
+                <li data-val="3">③ 북벌 정책</li>
+                <li data-val="4">④ 화친 정책</li>
+            </ul>
+            <div id="fb-4" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">5.</span> 조선의 친명배금 정책에 불만을 품은 후금이 1627년에 조선을 침략한 사건은 무엇인가요?
+            <ul class="options" data-qid="5">
+                <li data-val="1">① 임진왜란</li>
+                <li data-val="2">② 병자호란</li>
+                <li data-val="3">③ 정묘호란</li>
+                <li data-val="4">④ 정유재란</li>
+            </ul>
+            <div id="fb-5" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">6.</span> 정묘호란 이후 조선과 후금이 맺은 외교적 관계는 어떠했나요?
+            <ul class="options" data-qid="6">
+                <li data-val="1">① 형제 관계</li>
+                <li data-val="2">② 군신(임금과 신하) 관계</li>
+                <li data-val="3">③ 완전히 교류를 끊은 적대 관계</li>
+                <li data-val="4">④ 평등한 동맹 관계</li>
+            </ul>
+            <div id="fb-6" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">7.</span> 국호를 '청'으로 바꾼 청나라 태종이 1636년에 군신 관계를 요구하며 다시 조선을 침략한 전쟁은?
+            <ul class="options" data-qid="7">
+                <li data-val="1">① 기유약조</li>
+                <li data-val="2">② 병인양요</li>
+                <li data-val="3">③ 병자호란</li>
+                <li data-val="4">④ 살수대첩</li>
+            </ul>
+            <div id="fb-7" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">8.</span> 청나라가 쳐들어왔을 때 김상헌 등 대다수 신하들이 주장한 '척화론'의 핵심 내용은?
+            <ul class="options" data-qid="8">
+                <li data-val="1">① 오랑캐인 청나라와 절대 타협할 수 없으니 끝까지 싸워야 한다.</li>
+                <li data-val="2">② 백성들을 위해 당장 항복해야 한다.</li>
+                <li data-val="3">③ 명나라를 버리고 청나라를 임금의 나라로 섬겨야 한다.</li>
+                <li data-val="4">④ 도읍을 강화도로 옮기고 장기전을 준비해야 한다.</li>
+            </ul>
+            <div id="fb-8" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">9.</span> 최명길 등이 주장한 '주화론'의 핵심 내용은 무엇이었나요?
+            <ul class="options" data-qid="9">
+                <li data-val="1">① 군대를 모아 북벌을 감행해야 한다.</li>
+                <li data-val="2">② 일단 청나라와 화해하여 백성의 피해를 줄이고 나라를 보존해야 한다.</li>
+                <li data-val="3">③ 일본에 군사 원조를 요청해야 한다.</li>
+                <li data-val="4">④ 청나라 황제를 암살해야 한다.</li>
+            </ul>
+            <div id="fb-9" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">10.</span> 병자호란 때 인조가 피란을 가서 45일 동안 청나라 군대에 맞서 싸웠던 곳은 어디인가요?
+            <ul class="options" data-qid="10">
+                <li data-val="1">① 북한산성</li>
+                <li data-val="2">② 남한산성</li>
+                <li data-val="3">③ 강화도</li>
+                <li data-val="4">④ 행주산성</li>
+            </ul>
+            <div id="fb-10" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">11.</span> 남한산성에서 항복하기로 결정한 인조가 청 태종에게 세 번 절하고 아홉 번 머리를 조아린 곳은?
+            <ul class="options" data-qid="11">
+                <li data-val="1">① 삼전도</li>
+                <li data-val="2">② 벽제관</li>
+                <li data-val="3">③ 우금치</li>
+                <li data-val="4">④ 동래성</li>
+            </ul>
+            <div id="fb-11" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">12.</span> 병자호란의 결과 청나라에 인질로 끌려간 두 명의 왕자는 누구인가요?
+            <ul class="options" data-qid="12">
+                <li data-val="1">① 양녕대군, 효령대군</li>
+                <li data-val="2">② 소현세자, 봉림대군</li>
+                <li data-val="3">③ 연산군, 광해군</li>
+                <li data-val="4">④ 안평대군, 수양대군</li>
+            </ul>
+            <div id="fb-12" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">13.</span> 청나라에 인질로 갔을 때, 서양의 과학기술과 문물을 접하고 돌아와 조선의 발전을 꿈꾸었으나 일찍 세상을 떠난 세자는?
+            <ul class="options" data-qid="13">
+                <li data-val="1">① 사도세자</li>
+                <li data-val="2">② 소현세자</li>
+                <li data-val="3">③ 효명세자</li>
+                <li data-val="4">④ 광해군</li>
+            </ul>
+            <div id="fb-13" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">14.</span> 병자호란 직후 조선 백성들이 겪은 가장 큰 고통은 무엇이었나요?
+            <ul class="options" data-qid="14">
+                <li data-val="1">① 많은 백성들이 포로로 청나라에 끌려갔다.</li>
+                <li data-val="2">② 일본군의 잦은 해안가 약탈.</li>
+                <li data-val="3">③ 거란족의 침입으로 인한 영토 상실.</li>
+                <li data-val="4">④ 불교가 탄압받아 사찰이 모두 불탔다.</li>
+            </ul>
+            <div id="fb-14" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">15.</span> 병자호란 이후 조선 사회의 변화로 알맞은 것은?
+            <ul class="options" data-qid="15">
+                <li data-val="1">① 명나라와의 외교를 더욱 강화했다.</li>
+                <li data-val="2">② 청나라에 대한 깊은 반감으로 훗날 '북벌'을 준비하게 된다.</li>
+                <li data-val="3">③ 유교(성리학)를 버리고 천주교를 국가 종교로 삼았다.</li>
+                <li data-val="4">④ 수도를 개경으로 옮겼다.</li>
+            </ul>
+            <div id="fb-15" class="feedback" style="display:none;"></div>
+        </div>
+
+        <h2>✏️ 2부. 단답식 (16~25번)</h2>
+        
+        <div class="question"><span class="question-number">16.</span> 임진왜란 이후 피폐해진 나라를 재건하고 명과 후금 사이에서 '중립 외교'를 펼친 왕의 이름은?
+            <input type="text" class="input-box" data-qid="16" placeholder="정답을 입력하세요">
+            <div id="fb-16" class="feedback" style="display:none;"></div>
+            <div id="ans-16" class="real-answer">정답: 광해군</div>
+        </div>
+        <div class="question"><span class="question-number">17.</span> 1623년, 서인 세력이 광해군의 중립 외교와 영창대군 살해 등을 비판하며 광해군을 쫓아낸 사건을 무엇이라 부르나요?
+            <input type="text" class="input-box" data-qid="17" placeholder="정답을 입력하세요">
+            <div id="fb-17" class="feedback" style="display:none;"></div>
+            <div id="ans-17" class="real-answer">정답: 인조반정</div>
+        </div>
+        <div class="question"><span class="question-number">18.</span> 인조반정으로 왕위에 오른 조선 제16대 왕은 누구인가요?
+            <input type="text" class="input-box" data-qid="18" placeholder="정답을 입력하세요">
+            <div id="fb-18" class="feedback" style="display:none;"></div>
+            <div id="ans-18" class="real-answer">정답: 인조</div>
+        </div>
+        <div class="question"><span class="question-number">19.</span> 인조와 서인 세력이 추진한 외교 정책으로, '명나라와 친하게 지내고 후금을 배척한다'는 뜻의 4글자 정책은?
+            <input type="text" class="input-box" data-qid="19" placeholder="정답을 입력하세요">
+            <div id="fb-19" class="feedback" style="display:none;"></div>
+            <div id="ans-19" class="real-answer">정답: 친명배금</div>
+        </div>
+        <div class="question"><span class="question-number">20.</span> 1627년 조선의 친명배금 정책에 반발하여 후금이 침략하여 조선과 '형제 관계'를 맺고 돌아간 전쟁은?
+            <input type="text" class="input-box" data-qid="20" placeholder="정답을 입력하세요">
+            <div id="fb-20" class="feedback" style="display:none;"></div>
+            <div id="ans-20" class="real-answer">정답: 정묘호란</div>
+        </div>
+        <div class="question"><span class="question-number">21.</span> 후금이 나라 이름을 고치고 1636년에 조선을 재침략한 나라의 이름은 무엇인가요?
+            <input type="text" class="input-box" data-qid="21" placeholder="정답을 입력하세요">
+            <div id="fb-21" class="feedback" style="display:none;"></div>
+            <div id="ans-21" class="real-answer">정답: 청 (또는 청나라)</div>
+        </div>
+        <div class="question"><span class="question-number">22.</span> 병자호란 당시 청나라가 조선에 새롭게 요구한 외교적 관계(임금과 신하의 관계)를 무엇이라고 하나요?
+            <input type="text" class="input-box" data-qid="22" placeholder="정답을 입력하세요">
+            <div id="fb-22" class="feedback" style="display:none;"></div>
+            <div id="ans-22" class="real-answer">정답: 군신 관계 (또는 군신관계)</div>
+        </div>
+        <div class="question"><span class="question-number">23.</span> 청나라 대군이 한양으로 밀고 내려오자, 인조가 다급하게 도망쳐 45일간 항전했던 산성의 이름은?
+            <input type="text" class="input-box" data-qid="23" placeholder="정답을 입력하세요">
+            <div id="fb-23" class="feedback" style="display:none;"></div>
+            <div id="ans-23" class="real-answer">정답: 남한산성</div>
+        </div>
+        <div class="question"><span class="question-number">24.</span> 인조가 밖으로 나와 청나라 태종에게 직접 무릎을 꿇고 항복의 의식을 치른 곳은 어디인가요?
+            <input type="text" class="input-box" data-qid="24" placeholder="정답을 입력하세요">
+            <div id="fb-24" class="feedback" style="display:none;"></div>
+            <div id="ans-24" class="real-answer">정답: 삼전도</div>
+        </div>
+        <div class="question"><span class="question-number">25.</span> 소현세자와 함께 청나라에 볼모(인질)로 끌려갔다가, 돌아와서 인조의 뒤를 이어 왕이 된 인물은 누구인가요?
+            <input type="text" class="input-box" data-qid="25" placeholder="정답을 입력하세요">
+            <div id="fb-25" class="feedback" style="display:none;"></div>
+            <div id="ans-25" class="real-answer">정답: 봉림대군 (또는 효종)</div>
+        </div>
+
+        <button class="btn-submit" onclick="gradeAll()">전체 채점하기 및 결과 확인 📝</button>
+
+        <div id="result-container">
+            <h3>🎉 채점 결과 🎉</h3>
+            <div class="score-text">총 <span id="final-score">0</span> / 25 문항 정답</div>
+            <p>틀린 문제는 아래에서 빨간색 표시(❌)와 정답을 확인해 보세요.</p>
+        </div>
+    </div>
+
+    <script>
+        const answers = {
+            1: "3", 2: "2", 3: "1", 4: "2", 5: "3",
+            6: "1", 7: "3", 8: "1", 9: "2", 10: "2",
+            11: "1", 12: "2", 13: "2", 14: "1", 15: "2",
+            
+            16: ["광해군"], 
+            17: ["인조반정"], 
+            18: ["인조"], 
+            19: ["친명배금"], 
+            20: ["정묘호란"], 
+            21: ["청", "청나라"], 
+            22: ["군신관계", "군신 관계", "군신"], 
+            23: ["남한산성"], 
+            24: ["삼전도"], 
+            25: ["봉림대군", "효종"]
+        };
+
+        let userAnswers = {};
+        document.querySelectorAll('.input-box').forEach(input => {
+            input.addEventListener('blur', function() { userAnswers[this.getAttribute('data-qid')] = this.value; });
+        });
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentNode;
+                const qId = parent.getAttribute('data-qid');
+                Array.from(parent.children).forEach(sib => sib.classList.remove('selected'));
+                this.classList.add('selected');
+                userAnswers[qId] = this.getAttribute('data-val');
+            });
+        });
+        function checkQuestion(qId, val, type) {
+            let isCorrect = false;
+            const fbElement = document.getElementById(`fb-${qId}`);
+            const ansElement = document.getElementById(`ans-${qId}`);
+            if (!val || val.trim() === "") {
+                fbElement.textContent = "⚠️ 답을 입력(선택)해주세요.";
+                fbElement.className = "feedback incorrect";
+                fbElement.style.display = "inline-block";
+                return false;
+            }
+            if (type === 'short') {
+                const normalizedVal = val.replace(/\s+/g, '').toLowerCase(); 
+                isCorrect = answers[qId].map(a => a.replace(/\s+/g, '').toLowerCase()).includes(normalizedVal);
+            } else if (type === 'mcq') {
+                isCorrect = (val === answers[qId]);
+            }
+            if (isCorrect) {
+                fbElement.innerHTML = "✅ 정답입니다!";
+                fbElement.className = "feedback correct";
+                if(ansElement) ansElement.style.display = "none";
+            } else {
+                fbElement.innerHTML = "❌ 틀렸습니다.";
+                fbElement.className = "feedback incorrect";
+                if(ansElement) ansElement.style.display = "block"; 
+            }
+            fbElement.style.display = "inline-block";
+            return isCorrect;
+        }
+        function gradeAll() {
+            let correctCount = 0;
+            document.querySelectorAll('.input-box').forEach(input => { userAnswers[input.getAttribute('data-qid')] = input.value; });
+            for (let i = 1; i <= 25; i++) {
+                if (checkQuestion(i, userAnswers[i] || "", (i <= 15) ? 'mcq' : 'short')) correctCount++;
+            }
+            const resultBox = document.getElementById('result-container');
+            document.getElementById('final-score').textContent = correctCount;
+            resultBox.style.display = 'block';
+            window.scrollTo({ top: resultBox.offsetTop, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

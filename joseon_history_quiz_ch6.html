@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국사 뛰어넘기 3 - 독서 퀴즈 (6장)</title>
+    <style>
+        :root { --primary-color: #4A90E2; --secondary-color: #F5F7FA; --text-color: #333; --border-color: #E1E4E8; --correct-color: #27ae60; --incorrect-color: #e74c3c; }
+        body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: var(--text-color); background-color: var(--secondary-color); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em; }
+        h2 { color: #2C3E50; margin-top: 40px; padding: 12px 15px; background-color: #E8F4F8; border-radius: 8px; font-size: 1.3em; }
+        h3 { color: #34495E; border-left: 4px solid var(--primary-color); padding-left: 10px; margin-top: 30px; }
+        .question { margin-bottom: 20px; padding: 15px; background-color: #FAFAFA; border: 1px solid var(--border-color); border-radius: 8px; position: relative; }
+        .question-number { font-weight: bold; color: var(--primary-color); font-size: 1.1em; margin-right: 5px; }
+        .options { list-style-type: none; padding-left: 0; margin-top: 10px; }
+        .options li { margin-bottom: 8px; padding: 10px 12px; background-color: white; border: 2px solid #ddd; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .options li:hover { background-color: #F0F7FF; border-color: #A9D0F5; }
+        .options li.selected { background-color: #E8F4F8; border-color: var(--primary-color); font-weight: bold; }
+        .input-box { width: 100%; padding: 12px; margin-top: 10px; border: 2px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 1em; transition: border-color 0.2s; }
+        .input-box:focus { outline: none; border-color: var(--primary-color); }
+        .feedback { display: inline-block; margin-top: 10px; font-weight: bold; font-size: 1em; padding: 4px 8px; border-radius: 4px; }
+        .feedback.correct { color: var(--correct-color); background-color: #eafaf1; border: 1px solid var(--correct-color); }
+        .feedback.incorrect { color: var(--incorrect-color); background-color: #fceceb; border: 1px solid var(--incorrect-color); }
+        .btn-submit { display: block; width: 100%; padding: 15px; background-color: var(--primary-color); color: white; font-size: 1.2em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; margin-top: 40px; transition: background-color 0.3s; }
+        .btn-submit:hover { background-color: #357ABD; }
+        #result-container { display: none; margin-top: 30px; padding: 20px; background-color: #fffde7; border: 2px solid #f1c40f; border-radius: 8px; text-align: center; }
+        .score-text { font-size: 2em; color: #e67e22; font-weight: bold; margin: 10px 0; }
+        .real-answer { color: var(--correct-color); font-weight: bold; font-size: 0.9em; display: none; margin-top: 5px; }
+        @media (max-width: 600px) { body { padding: 10px; } .container { padding: 15px; } h1 { font-size: 1.5em; } h2 { font-size: 1.1em; } .btn-submit { font-size: 1.1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 한국사 뛰어넘기 3 독서 퀴즈</h1>
+        <div class="subtitle">6장. 온 힘을 다해 일본의 침략을 물리치다</div>
+        
+        <h2>📝 1부. 객관식 (1~15번)</h2>
+        
+        <div class="question"><span class="question-number">1.</span> 임진왜란이 일어나기 전, 장차 있을 전쟁에 대비해 '10만 양병설(군대 10만 명 육성)'을 주장한 학자는 누구인가요?
+            <ul class="options" data-qid="1">
+                <li data-val="1">① 이황</li>
+                <li data-val="2">② 이이</li>
+                <li data-val="3">③ 정철</li>
+                <li data-val="4">④ 유성룡</li>
+            </ul>
+            <div id="fb-1" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">2.</span> 일본을 통일하고 내부의 불만을 밖으로 돌리기 위해 조선을 침략한 일본의 지도자는?
+            <ul class="options" data-qid="2">
+                <li data-val="1">① 도쿠가와 이에야스</li>
+                <li data-val="2">② 이토 히로부미</li>
+                <li data-val="3">③ 도요토미 히데요시</li>
+                <li data-val="4">④ 소 요시토시</li>
+            </ul>
+            <div id="fb-2" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">3.</span> 임진왜란이 일어난 해는 언제인가요?
+            <ul class="options" data-qid="3">
+                <li data-val="1">① 1392년</li>
+                <li data-val="2">② 1443년</li>
+                <li data-val="3">③ 1592년</li>
+                <li data-val="4">④ 1636년</li>
+            </ul>
+            <div id="fb-3" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">4.</span> 일본군이 조선을 침략하며 내세운 명분(구실)은 무엇이었나요?
+            <ul class="options" data-qid="4">
+                <li data-val="1">① 원나라를 치러 가겠다.</li>
+                <li data-val="2">② 명나라를 치러 갈 테니 길을 내어달라 (정명가도).</li>
+                <li data-val="3">③ 조선이 일본의 조공 요구를 거절했기 때문이다.</li>
+                <li data-val="4">④ 쓰시마섬을 조선이 공격했기 때문이다.</li>
+            </ul>
+            <div id="fb-4" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">5.</span> 일본군이 쳐들어오자 한양을 버리고 북쪽의 의주로 피란을 떠난 조선의 왕은?
+            <ul class="options" data-qid="5">
+                <li data-val="1">① 중종</li>
+                <li data-val="2">② 명종</li>
+                <li data-val="3">③ 선조</li>
+                <li data-val="4">④ 광해군</li>
+            </ul>
+            <div id="fb-5" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">6.</span> 이순신 장군이 학이 날개를 편 모양으로 적선을 감싸 공격하여 크게 승리한 해전의 이름은?
+            <ul class="options" data-qid="6">
+                <li data-val="1">① 한산도 대첩</li>
+                <li data-val="2">② 명량 해전</li>
+                <li data-val="3">③ 노량 해전</li>
+                <li data-val="4">④ 옥포 해전</li>
+            </ul>
+            <div id="fb-6" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">7.</span> 진주성 전투에서 3천여 명의 군사로 3만 명이 넘는 일본군을 물리친 조선의 장군은?
+            <ul class="options" data-qid="7">
+                <li data-val="1">① 권율</li>
+                <li data-val="2">② 김시민</li>
+                <li data-val="3">③ 이순신</li>
+                <li data-val="4">④ 신립</li>
+            </ul>
+            <div id="fb-7" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">8.</span> 권율 장군이 이끌었으며, 부녀자들까지 치마에 돌을 날라 일본군과 싸워 승리한 전투는?
+            <ul class="options" data-qid="8">
+                <li data-val="1">① 행주 대첩</li>
+                <li data-val="2">② 진주 대첩</li>
+                <li data-val="3">③ 살수 대첩</li>
+                <li data-val="4">④ 귀주 대첩</li>
+            </ul>
+            <div id="fb-8" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">9.</span> 조선에 군대를 파견하여 조명 연합군을 결성하고, 함께 평양성을 되찾은 나라는?
+            <ul class="options" data-qid="9">
+                <li data-val="1">① 청나라</li>
+                <li data-val="2">② 원나라</li>
+                <li data-val="3">③ 송나라</li>
+                <li data-val="4">④ 명나라</li>
+            </ul>
+            <div id="fb-9" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">10.</span> 전쟁 중 이순신 장군이 모함을 받아 감옥에 갇히고 백의종군하게 된 주된 원인은?
+            <ul class="options" data-qid="10">
+                <li data-val="1">① 일본군의 이간질과 선조의 의심 때문</li>
+                <li data-val="2">② 명나라 장수와의 불화 때문</li>
+                <li data-val="3">③ 군수물자를 훔쳤다는 누명 때문</li>
+                <li data-val="4">④ 해전에서 크게 패배했기 때문</li>
+            </ul>
+            <div id="fb-10" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">11.</span> 이순신 장군이 다시 삼도 수군통제사로 복귀하여, 단 12척의 배로 130여 척의 일본 수군을 무찌른 기적 같은 해전은?
+            <ul class="options" data-qid="11">
+                <li data-val="1">① 한산도 대첩</li>
+                <li data-val="2">② 명량 해전</li>
+                <li data-val="3">③ 노량 해전</li>
+                <li data-val="4">④ 부산포 해전</li>
+            </ul>
+            <div id="fb-11" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">12.</span> 임진왜란 때 스스로 무기를 들고 일어나 나라를 지킨 백성들의 군대를 부르는 말은?
+            <ul class="options" data-qid="12">
+                <li data-val="1">① 관군</li>
+                <li data-val="2">② 의병</li>
+                <li data-val="3">③ 삼별초</li>
+                <li data-val="4">④ 별무반</li>
+            </ul>
+            <div id="fb-12" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">13.</span> 붉은 옷을 입고 활약하여 '홍의장군'이라 불렸던 경상도 지역의 대표적인 의병장은?
+            <ul class="options" data-qid="13">
+                <li data-val="1">① 곽재우</li>
+                <li data-val="2">② 조헌</li>
+                <li data-val="3">③ 고경명</li>
+                <li data-val="4">④ 김천일</li>
+            </ul>
+            <div id="fb-13" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">14.</span> 휴정(서산대사)과 유정(사명대사) 등은 어떤 신분으로 의병을 일으켜 일본군과 싸웠나요?
+            <ul class="options" data-qid="14">
+                <li data-val="1">① 양반 유학자</li>
+                <li data-val="2">② 농민</li>
+                <li data-val="3">③ 승려(스님)</li>
+                <li data-val="4">④ 관노비</li>
+            </ul>
+            <div id="fb-14" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">15.</span> 임진왜란 이후의 결과로 알맞지 않은 것은?
+            <ul class="options" data-qid="15">
+                <li data-val="1">① 조선의 농토가 크게 줄어들고 국가 재정이 어려워졌다.</li>
+                <li data-val="2">② 많은 백성이 죽거나 일본에 포로로 끌려갔다.</li>
+                <li data-val="3">③ 명나라가 강해지고 후금이 멸망했다.</li>
+                <li data-val="4">④ 일본은 조선의 도공을 데려가 도자기 문화를 크게 발전시켰다.</li>
+            </ul>
+            <div id="fb-15" class="feedback" style="display:none;"></div>
+        </div>
+
+        <h2>✏️ 2부. 단답식 (16~25번)</h2>
+        
+        <div class="question"><span class="question-number">16.</span> 전쟁이 나기 전, 조선이 일본의 정세를 파악하기 위해 파견했던 외교 사절단은 무엇인가요?
+            <input type="text" class="input-box" data-qid="16" placeholder="정답을 입력하세요">
+            <div id="fb-16" class="feedback" style="display:none;"></div>
+            <div id="ans-16" class="real-answer">정답: 통신사</div>
+        </div>
+        <div class="question"><span class="question-number">17.</span> 이순신 장군이 일본 수군을 무찌르기 위해 지붕을 덮고 쇠못을 꽂아 만든 돌격용 군선의 이름은?
+            <input type="text" class="input-box" data-qid="17" placeholder="정답을 입력하세요">
+            <div id="fb-17" class="feedback" style="display:none;"></div>
+            <div id="ans-17" class="real-answer">정답: 거북선</div>
+        </div>
+        <div class="question"><span class="question-number">18.</span> 이순신이 처음으로 일본 수군과 싸워 승리하여, 조선 수군에게 자신감을 심어준 해전의 이름은?
+            <input type="text" class="input-box" data-qid="18" placeholder="정답을 입력하세요">
+            <div id="fb-18" class="feedback" style="display:none;"></div>
+            <div id="ans-18" class="real-answer">정답: 옥포 해전</div>
+        </div>
+        <div class="question"><span class="question-number">19.</span> 한산도 대첩에서 이순신 장군이 사용한, '학이 날개를 편 모양'의 해상 전술 이름은 무엇인가요?
+            <input type="text" class="input-box" data-qid="19" placeholder="정답을 입력하세요">
+            <div id="fb-19" class="feedback" style="display:none;"></div>
+            <div id="ans-19" class="real-answer">정답: 학익진</div>
+        </div>
+        <div class="question"><span class="question-number">20.</span> 1597년, 휴전 협정이 깨지고 일본이 군대를 다시 정비하여 조선을 재침략한 사건을 무엇이라고 부르나요?
+            <input type="text" class="input-box" data-qid="20" placeholder="정답을 입력하세요">
+            <div id="fb-20" class="feedback" style="display:none;"></div>
+            <div id="ans-20" class="real-answer">정답: 정유재란</div>
+        </div>
+        <div class="question"><span class="question-number">21.</span> 조명 연합군이 힘을 합쳐 일본군을 몰아내고 되찾은 조선의 도읍(수도)은 어디인가요?
+            <input type="text" class="input-box" data-qid="21" placeholder="정답을 입력하세요">
+            <div id="fb-21" class="feedback" style="display:none;"></div>
+            <div id="ans-21" class="real-answer">정답: 한양</div>
+        </div>
+        <div class="question"><span class="question-number">22.</span> 이순신 장군이 "나의 죽음을 적에게 알리지 말라"는 유언을 남기고 전사한 7년 전쟁의 마지막 해전은?
+            <input type="text" class="input-box" data-qid="22" placeholder="정답을 입력하세요">
+            <div id="fb-22" class="feedback" style="display:none;"></div>
+            <div id="ans-22" class="real-answer">정답: 노량 해전 (또는 노량해전)</div>
+        </div>
+        <div class="question"><span class="question-number">23.</span> 승려 사명대사가 전란 후 일본에 건너가 조선의 포로들을 데려오는 협상을 성공적으로 마쳤습니다. 사명대사의 본명(법명)은 무엇인가요?
+            <input type="text" class="input-box" data-qid="23" placeholder="정답을 입력하세요">
+            <div id="fb-23" class="feedback" style="display:none;"></div>
+            <div id="ans-23" class="real-answer">정답: 유정</div>
+        </div>
+        <div class="question"><span class="question-number">24.</span> 전쟁 후 일본으로 끌려가 도자기 기술을 전수해주어 일본의 도자기 산업 발전에 결정적 역할을 한 조선의 기술자들을 무엇이라고 부르나요?
+            <input type="text" class="input-box" data-qid="24" placeholder="정답을 입력하세요">
+            <div id="fb-24" class="feedback" style="display:none;"></div>
+            <div id="ans-24" class="real-answer">정답: 도공</div>
+        </div>
+        <div class="question"><span class="question-number">25.</span> 임진왜란 중 훈련도감을 설치하여 군사 제도를 개편하고, 굶주리는 백성을 위해 둔전을 설치하는 등 국가 위기 극복에 앞장선 조선의 재상(영의정)은 누구인가요?
+            <input type="text" class="input-box" data-qid="25" placeholder="정답을 입력하세요">
+            <div id="fb-25" class="feedback" style="display:none;"></div>
+            <div id="ans-25" class="real-answer">정답: 유성룡 (또는 류성룡)</div>
+        </div>
+
+        <button class="btn-submit" onclick="gradeAll()">전체 채점하기 및 결과 확인 📝</button>
+
+        <div id="result-container">
+            <h3>🎉 채점 결과 🎉</h3>
+            <div class="score-text">총 <span id="final-score">0</span> / 25 문항 정답</div>
+            <p>틀린 문제는 아래에서 빨간색 표시(❌)와 정답을 확인해 보세요.</p>
+        </div>
+    </div>
+
+    <script>
+        const answers = {
+            1: "2", 2: "3", 3: "3", 4: "2", 5: "3",
+            6: "1", 7: "2", 8: "1", 9: "4", 10: "1",
+            11: "2", 12: "2", 13: "1", 14: "3", 15: "3",
+            
+            16: ["통신사", "조선통신사"], 
+            17: ["거북선"], 
+            18: ["옥포해전", "옥포 해전"], 
+            19: ["학익진"], 
+            20: ["정유재란"], 
+            21: ["한양", "한성"], 
+            22: ["노량해전", "노량 해전"], 
+            23: ["유정", "사명대사"], 
+            24: ["도공"], 
+            25: ["유성룡", "류성룡"]
+        };
+
+        let userAnswers = {};
+        document.querySelectorAll('.input-box').forEach(input => {
+            input.addEventListener('blur', function() { userAnswers[this.getAttribute('data-qid')] = this.value; });
+        });
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentNode;
+                const qId = parent.getAttribute('data-qid');
+                Array.from(parent.children).forEach(sib => sib.classList.remove('selected'));
+                this.classList.add('selected');
+                userAnswers[qId] = this.getAttribute('data-val');
+            });
+        });
+        function checkQuestion(qId, val, type) {
+            let isCorrect = false;
+            const fbElement = document.getElementById(`fb-${qId}`);
+            const ansElement = document.getElementById(`ans-${qId}`);
+            if (!val || val.trim() === "") {
+                fbElement.textContent = "⚠️ 답을 입력(선택)해주세요.";
+                fbElement.className = "feedback incorrect";
+                fbElement.style.display = "inline-block";
+                return false;
+            }
+            if (type === 'short') {
+                const normalizedVal = val.replace(/\s+/g, '').toLowerCase(); 
+                isCorrect = answers[qId].map(a => a.replace(/\s+/g, '').toLowerCase()).includes(normalizedVal);
+            } else if (type === 'mcq') {
+                isCorrect = (val === answers[qId]);
+            }
+            if (isCorrect) {
+                fbElement.innerHTML = "✅ 정답입니다!";
+                fbElement.className = "feedback correct";
+                if(ansElement) ansElement.style.display = "none";
+            } else {
+                fbElement.innerHTML = "❌ 틀렸습니다.";
+                fbElement.className = "feedback incorrect";
+                if(ansElement) ansElement.style.display = "block"; 
+            }
+            fbElement.style.display = "inline-block";
+            return isCorrect;
+        }
+        function gradeAll() {
+            let correctCount = 0;
+            document.querySelectorAll('.input-box').forEach(input => { userAnswers[input.getAttribute('data-qid')] = input.value; });
+            for (let i = 1; i <= 25; i++) {
+                if (checkQuestion(i, userAnswers[i] || "", (i <= 15) ? 'mcq' : 'short')) correctCount++;
+            }
+            const resultBox = document.getElementById('result-container');
+            document.getElementById('final-score').textContent = correctCount;
+            resultBox.style.display = 'block';
+            window.scrollTo({ top: resultBox.offsetTop, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

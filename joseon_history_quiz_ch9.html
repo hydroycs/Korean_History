@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국사 뛰어넘기 3 - 독서 퀴즈 (9장)</title>
+    <style>
+        :root { --primary-color: #4A90E2; --secondary-color: #F5F7FA; --text-color: #333; --border-color: #E1E4E8; --correct-color: #27ae60; --incorrect-color: #e74c3c; }
+        body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: var(--text-color); background-color: var(--secondary-color); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em; }
+        h2 { color: #2C3E50; margin-top: 40px; padding: 12px 15px; background-color: #E8F4F8; border-radius: 8px; font-size: 1.3em; }
+        h3 { color: #34495E; border-left: 4px solid var(--primary-color); padding-left: 10px; margin-top: 30px; }
+        .question { margin-bottom: 20px; padding: 15px; background-color: #FAFAFA; border: 1px solid var(--border-color); border-radius: 8px; position: relative; }
+        .question-number { font-weight: bold; color: var(--primary-color); font-size: 1.1em; margin-right: 5px; }
+        .options { list-style-type: none; padding-left: 0; margin-top: 10px; }
+        .options li { margin-bottom: 8px; padding: 10px 12px; background-color: white; border: 2px solid #ddd; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .options li:hover { background-color: #F0F7FF; border-color: #A9D0F5; }
+        .options li.selected { background-color: #E8F4F8; border-color: var(--primary-color); font-weight: bold; }
+        .input-box { width: 100%; padding: 12px; margin-top: 10px; border: 2px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 1em; transition: border-color 0.2s; }
+        .input-box:focus { outline: none; border-color: var(--primary-color); }
+        .feedback { display: inline-block; margin-top: 10px; font-weight: bold; font-size: 1em; padding: 4px 8px; border-radius: 4px; }
+        .feedback.correct { color: var(--correct-color); background-color: #eafaf1; border: 1px solid var(--correct-color); }
+        .feedback.incorrect { color: var(--incorrect-color); background-color: #fceceb; border: 1px solid var(--incorrect-color); }
+        .btn-submit { display: block; width: 100%; padding: 15px; background-color: var(--primary-color); color: white; font-size: 1.2em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; margin-top: 40px; transition: background-color 0.3s; }
+        .btn-submit:hover { background-color: #357ABD; }
+        #result-container { display: none; margin-top: 30px; padding: 20px; background-color: #fffde7; border: 2px solid #f1c40f; border-radius: 8px; text-align: center; }
+        .score-text { font-size: 2em; color: #e67e22; font-weight: bold; margin: 10px 0; }
+        .real-answer { color: var(--correct-color); font-weight: bold; font-size: 0.9em; display: none; margin-top: 5px; }
+        @media (max-width: 600px) { body { padding: 10px; } .container { padding: 15px; } h1 { font-size: 1.5em; } h2 { font-size: 1.1em; } .btn-submit { font-size: 1.1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 한국사 뛰어넘기 3 독서 퀴즈</h1>
+        <div class="subtitle">9장. 자연과 어울려 일하고 먹고 즐기는 삶</div>
+        
+        <h2>📝 1부. 객관식 (1~15번)</h2>
+        
+        <div class="question"><span class="question-number">1.</span> 조선 후기 농촌에서 벼농사 수확량을 크게 늘려준 가장 획기적인 농사법은 무엇인가요?
+            <ul class="options" data-qid="1">
+                <li data-val="1">① 윤작법(돌려짓기)</li>
+                <li data-val="2">② 모내기법(이앙법)</li>
+                <li data-val="3">③ 직파법(씨뿌리기)</li>
+                <li data-val="4">④ 화전 농법</li>
+            </ul>
+            <div id="fb-1" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">2.</span> 모내기법의 장점으로 알맞지 않은 것은?
+            <ul class="options" data-qid="2">
+                <li data-val="1">① 잡초를 뽑는 수고(김매기)를 크게 덜어준다.</li>
+                <li data-val="2">② 봄에 가뭄이 들어 물이 부족해도 농사가 아주 잘 된다.</li>
+                <li data-val="3">③ 일손이 줄어 한 사람이 더 넓은 땅을 농사지을 수 있다.</li>
+                <li data-val="4">④ 벼와 보리를 한 땅에서 번갈아 심을 수 있다(이모작).</li>
+            </ul>
+            <div id="fb-2" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">3.</span> 조선 시대 농민들이 세금을 내기 위해 국가에 바치던 가장 대표적이고 실용적인 옷감은 무엇인가요?
+            <ul class="options" data-qid="3">
+                <li data-val="1">① 명주(비단)</li>
+                <li data-val="2">② 모시</li>
+                <li data-val="3">③ 나일론</li>
+                <li data-val="4">④ 무명(면포)</li>
+            </ul>
+            <div id="fb-3" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">4.</span> 고려 말 원나라에서 가져와 조선 시대에 널리 퍼져 백성들의 겨울을 따뜻하게 해준 작물은?
+            <ul class="options" data-qid="4">
+                <li data-val="1">① 고구마</li>
+                <li data-val="2">② 감자</li>
+                <li data-val="3">③ 담배</li>
+                <li data-val="4">④ 목화</li>
+            </ul>
+            <div id="fb-4" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">5.</span> 조선 시대 전통 가옥에서 볼 수 있는 우리나라 고유의 난방 방식으로 바른 것은?
+            <ul class="options" data-qid="5">
+                <li data-val="1">① 벽난로를 설치해 공기를 데운다.</li>
+                <li data-val="2">② 아궁이에 불을 때어 방바닥 밑의 구들을 데우는 온돌 방식이다.</li>
+                <li data-val="3">③ 뜨거운 물을 파이프에 통과시켜 난방을 한다.</li>
+                <li data-val="4">④ 화로만 방 가운데에 둔다.</li>
+            </ul>
+            <div id="fb-5" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">6.</span> 여름철 무더위를 이겨내기 위해 바람이 잘 통하도록 방과 방 사이에 바닥을 띄워 만든 나무 공간은?
+            <ul class="options" data-qid="6">
+                <li data-val="1">① 다락</li>
+                <li data-val="2">② 부엌</li>
+                <li data-val="3">③ 마루</li>
+                <li data-val="4">④ 광</li>
+            </ul>
+            <div id="fb-6" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">7.</span> 조선 시대 서민들이 평소 밥을 먹을 때 상을 차리던 가장 기본적인 형태는?
+            <ul class="options" data-qid="7">
+                <li data-val="1">① 큰 상에 온 가족이 둘러앉아 먹었다.</li>
+                <li data-val="2">② 뷔페식으로 각자 덜어 먹었다.</li>
+                <li data-val="3">③ 한 사람씩 따로 차려 먹는 독상이 기본이었다.</li>
+                <li data-val="4">④ 상 없이 바닥에 놓고 먹었다.</li>
+            </ul>
+            <div id="fb-7" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">8.</span> 농민들이 힘들고 고된 농사일을 할 때 능률을 높이기 위해 마을 사람들이 함께 조직하여 일하던 공동 노동 조직은?
+            <ul class="options" data-qid="8">
+                <li data-val="1">① 계</li>
+                <li data-val="2">② 향약</li>
+                <li data-val="3">③ 보부상단</li>
+                <li data-val="4">④ 두레 (또는 품앗이)</li>
+            </ul>
+            <div id="fb-8" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">9.</span> 마을 명절이나 제사, 추수 후에 농민들이 꽹과리, 징, 장구, 북을 치며 즐기던 집단 놀이는?
+            <ul class="options" data-qid="9">
+                <li data-val="1">① 연날리기</li>
+                <li data-val="2">② 풍물놀이 (농악)</li>
+                <li data-val="3">③ 널뛰기</li>
+                <li data-val="4">④ 윷놀이</li>
+            </ul>
+            <div id="fb-9" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">10.</span> 조선 시대 전국 각지에서 5일마다 한 번씩 정기적으로 열려 백성들이 필요한 물건을 교환하던 시장은?
+            <ul class="options" data-qid="10">
+                <li data-val="1">① 시전</li>
+                <li data-val="2">② 장시 (5일장)</li>
+                <li data-val="3">③ 백화점</li>
+                <li data-val="4">④ 상단</li>
+            </ul>
+            <div id="fb-10" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">11.</span> 등이나 봇짐에 물건을 짊어지고 여러 지역의 장시를 돌아다니며 물건을 팔던 상인은?
+            <ul class="options" data-qid="11">
+                <li data-val="1">① 시전 상인</li>
+                <li data-val="2">② 보부상</li>
+                <li data-val="3">③ 객주</li>
+                <li data-val="4">④ 역관</li>
+            </ul>
+            <div id="fb-11" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">12.</span> 조선 시대 집을 지을 때 '산을 등지고 물을 바라보는' 지형이 좋다고 믿은 풍수지리설의 원리는?
+            <ul class="options" data-qid="12">
+                <li data-val="1">① 음양오행</li>
+                <li data-val="2">② 동도서기</li>
+                <li data-val="3">③ 배산임수</li>
+                <li data-val="4">④ 신선사상</li>
+            </ul>
+            <div id="fb-12" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">13.</span> 양반의 집 구조에서 남성(주인)이 머물며 글을 읽거나 손님을 맞이하는 주요 공간은?
+            <ul class="options" data-qid="13">
+                <li data-val="1">① 안채</li>
+                <li data-val="2">② 사랑채</li>
+                <li data-val="3">③ 행랑채</li>
+                <li data-val="4">④ 곳간</li>
+            </ul>
+            <div id="fb-13" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">14.</span> 조선 시대 여성들이 집안 살림을 맡아 하며 주로 생활하던 집 안쪽의 깊숙한 공간은?
+            <ul class="options" data-qid="14">
+                <li data-val="1">① 대청마루</li>
+                <li data-val="2">② 사랑채</li>
+                <li data-val="3">③ 행랑채</li>
+                <li data-val="4">④ 안채</li>
+            </ul>
+            <div id="fb-14" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">15.</span> 조선 사람들의 식생활 문화 중 틀린 것은?
+            <ul class="options" data-qid="15">
+                <li data-val="1">① 쌀, 보리, 조 등 곡식이 주식이었다.</li>
+                <li data-val="2">② 된장, 간장, 고추장 등 발효 식품이 발달했다.</li>
+                <li data-val="3">③ 고추는 임진왜란 이후 일본을 통해 들어왔다.</li>
+                <li data-val="4">④ 밥 대신 항상 빵과 고기를 주로 먹었다.</li>
+            </ul>
+            <div id="fb-15" class="feedback" style="display:none;"></div>
+        </div>
+
+        <h2>✏️ 2부. 단답식 (16~25번)</h2>
+        
+        <div class="question"><span class="question-number">16.</span> 모판에서 어느 정도 기른 벼의 모를 논으로 옮겨 심어 잡초를 줄이고 수확량을 늘린 조선 후기의 대표적인 벼농사 방법은?
+            <input type="text" class="input-box" data-qid="16" placeholder="정답을 입력하세요">
+            <div id="fb-16" class="feedback" style="display:none;"></div>
+            <div id="ans-16" class="real-answer">정답: 모내기법 (또는 이앙법)</div>
+        </div>
+        <div class="question"><span class="question-number">17.</span> 문익점이 원나라에서 들여온 씨앗으로, 이를 가공하여 천을 만들거나 겨울옷에 솜을 넣어 백성들을 따뜻하게 해준 식물은?
+            <input type="text" class="input-box" data-qid="17" placeholder="정답을 입력하세요">
+            <div id="fb-17" class="feedback" style="display:none;"></div>
+            <div id="ans-17" class="real-answer">정답: 목화</div>
+        </div>
+        <div class="question"><span class="question-number">18.</span> 목화솜에서 실을 뽑아 짠 튼튼한 천으로, 조선 시대 백성들의 대표적인 옷감이면서 세금과 화폐로도 쓰였던 이것은?
+            <input type="text" class="input-box" data-qid="18" placeholder="정답을 입력하세요">
+            <div id="fb-18" class="feedback" style="display:none;"></div>
+            <div id="ans-18" class="real-answer">정답: 무명 (또는 면포)</div>
+        </div>
+        <div class="question"><span class="question-number">19.</span> 부엌의 아궁이에 불을 때면 그 뜨거운 기운이 방바닥 밑의 구들장을 지나며 방을 따뜻하게 데워주는 우리나라 고유의 난방 시설은?
+            <input type="text" class="input-box" data-qid="19" placeholder="정답을 입력하세요">
+            <div id="fb-19" class="feedback" style="display:none;"></div>
+            <div id="ans-19" class="real-answer">정답: 온돌</div>
+        </div>
+        <div class="question"><span class="question-number">20.</span> 더운 여름을 시원하게 보내기 위해 방과 방 사이에 지면에서 띄워 나무판을 깐 시원한 공간의 이름은?
+            <input type="text" class="input-box" data-qid="20" placeholder="정답을 입력하세요">
+            <div id="fb-20" class="feedback" style="display:none;"></div>
+            <div id="ans-20" class="real-answer">정답: 마루 (또는 대청마루)</div>
+        </div>
+        <div class="question"><span class="question-number">21.</span> 여성들이 주로 머물며 집안 살림을 하고 아이들을 키우던 주택 안쪽의 중심 생활 공간은?
+            <input type="text" class="input-box" data-qid="21" placeholder="정답을 입력하세요">
+            <div id="fb-21" class="feedback" style="display:none;"></div>
+            <div id="ans-21" class="real-answer">정답: 안채</div>
+        </div>
+        <div class="question"><span class="question-number">22.</span> 양반집 구조에서 대문과 가까운 바깥쪽에 위치하며, 주인이 글을 읽고 손님을 접대하던 공간은?
+            <input type="text" class="input-box" data-qid="22" placeholder="정답을 입력하세요">
+            <div id="fb-22" class="feedback" style="display:none;"></div>
+            <div id="ans-22" class="real-answer">정답: 사랑채</div>
+        </div>
+        <div class="question"><span class="question-number">23.</span> 농촌에서 모내기나 김매기 등 한꺼번에 많은 일손이 필요할 때 마을 사람들이 다 같이 힘을 합쳐 공동으로 일하기 위해 만든 조직은?
+            <input type="text" class="input-box" data-qid="23" placeholder="정답을 입력하세요">
+            <div id="fb-23" class="feedback" style="display:none;"></div>
+            <div id="ans-23" class="real-answer">정답: 두레</div>
+        </div>
+        <div class="question"><span class="question-number">24.</span> 조선 후기 농촌 지역에서 상업이 발달하면서, 보통 5일에 한 번씩 열려 사람들이 물건을 사고팔던 시장의 이름은?
+            <input type="text" class="input-box" data-qid="24" placeholder="정답을 입력하세요">
+            <div id="fb-24" class="feedback" style="display:none;"></div>
+            <div id="ans-24" class="real-answer">정답: 장시 (또는 오일장, 5일장)</div>
+        </div>
+        <div class="question"><span class="question-number">25.</span> 짐을 지게나 등에 지고 이 마을 저 마을 여러 장시를 돌아다니며 물건을 팔았던 조선의 행상인은 누구인가요?
+            <input type="text" class="input-box" data-qid="25" placeholder="정답을 입력하세요">
+            <div id="fb-25" class="feedback" style="display:none;"></div>
+            <div id="ans-25" class="real-answer">정답: 보부상</div>
+        </div>
+
+        <button class="btn-submit" onclick="gradeAll()">전체 채점하기 및 결과 확인 📝</button>
+
+        <div id="result-container">
+            <h3>🎉 채점 결과 🎉</h3>
+            <div class="score-text">총 <span id="final-score">0</span> / 25 문항 정답</div>
+            <p>틀린 문제는 아래에서 빨간색 표시(❌)와 정답을 확인해 보세요.</p>
+        </div>
+    </div>
+
+    <script>
+        const answers = {
+            1: "2", 2: "2", 3: "4", 4: "4", 5: "2",
+            6: "3", 7: "3", 8: "4", 9: "2", 10: "2",
+            11: "2", 12: "3", 13: "2", 14: "4", 15: "4",
+            
+            16: ["모내기법", "이앙법"], 
+            17: ["목화"], 
+            18: ["무명", "면포"], 
+            19: ["온돌"], 
+            20: ["마루", "대청마루"], 
+            21: ["안채"], 
+            22: ["사랑채"], 
+            23: ["두레"], 
+            24: ["장시", "오일장", "5일장"], 
+            25: ["보부상"]
+        };
+
+        let userAnswers = {};
+        document.querySelectorAll('.input-box').forEach(input => {
+            input.addEventListener('blur', function() { userAnswers[this.getAttribute('data-qid')] = this.value; });
+        });
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentNode;
+                const qId = parent.getAttribute('data-qid');
+                Array.from(parent.children).forEach(sib => sib.classList.remove('selected'));
+                this.classList.add('selected');
+                userAnswers[qId] = this.getAttribute('data-val');
+            });
+        });
+        function checkQuestion(qId, val, type) {
+            let isCorrect = false;
+            const fbElement = document.getElementById(`fb-${qId}`);
+            const ansElement = document.getElementById(`ans-${qId}`);
+            if (!val || val.trim() === "") {
+                fbElement.textContent = "⚠️ 답을 입력(선택)해주세요.";
+                fbElement.className = "feedback incorrect";
+                fbElement.style.display = "inline-block";
+                return false;
+            }
+            if (type === 'short') {
+                const normalizedVal = val.replace(/\s+/g, '').toLowerCase(); 
+                isCorrect = answers[qId].map(a => a.replace(/\s+/g, '').toLowerCase()).includes(normalizedVal);
+            } else if (type === 'mcq') {
+                isCorrect = (val === answers[qId]);
+            }
+            if (isCorrect) {
+                fbElement.innerHTML = "✅ 정답입니다!";
+                fbElement.className = "feedback correct";
+                if(ansElement) ansElement.style.display = "none";
+            } else {
+                fbElement.innerHTML = "❌ 틀렸습니다.";
+                fbElement.className = "feedback incorrect";
+                if(ansElement) ansElement.style.display = "block"; 
+            }
+            fbElement.style.display = "inline-block";
+            return isCorrect;
+        }
+        function gradeAll() {
+            let correctCount = 0;
+            document.querySelectorAll('.input-box').forEach(input => { userAnswers[input.getAttribute('data-qid')] = input.value; });
+            for (let i = 1; i <= 25; i++) {
+                if (checkQuestion(i, userAnswers[i] || "", (i <= 15) ? 'mcq' : 'short')) correctCount++;
+            }
+            const resultBox = document.getElementById('result-container');
+            document.getElementById('final-score').textContent = correctCount;
+            resultBox.style.display = 'block';
+            window.scrollTo({ top: resultBox.offsetTop, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

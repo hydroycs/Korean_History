@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국사 뛰어넘기 3 - 독서 퀴즈 (5장)</title>
+    <style>
+        :root { --primary-color: #4A90E2; --secondary-color: #F5F7FA; --text-color: #333; --border-color: #E1E4E8; --correct-color: #27ae60; --incorrect-color: #e74c3c; }
+        body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: var(--text-color); background-color: var(--secondary-color); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em; }
+        h2 { color: #2C3E50; margin-top: 40px; padding: 12px 15px; background-color: #E8F4F8; border-radius: 8px; font-size: 1.3em; }
+        h3 { color: #34495E; border-left: 4px solid var(--primary-color); padding-left: 10px; margin-top: 30px; }
+        .question { margin-bottom: 20px; padding: 15px; background-color: #FAFAFA; border: 1px solid var(--border-color); border-radius: 8px; position: relative; }
+        .question-number { font-weight: bold; color: var(--primary-color); font-size: 1.1em; margin-right: 5px; }
+        .options { list-style-type: none; padding-left: 0; margin-top: 10px; }
+        .options li { margin-bottom: 8px; padding: 10px 12px; background-color: white; border: 2px solid #ddd; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .options li:hover { background-color: #F0F7FF; border-color: #A9D0F5; }
+        .options li.selected { background-color: #E8F4F8; border-color: var(--primary-color); font-weight: bold; }
+        .input-box { width: 100%; padding: 12px; margin-top: 10px; border: 2px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 1em; transition: border-color 0.2s; }
+        .input-box:focus { outline: none; border-color: var(--primary-color); }
+        .feedback { display: inline-block; margin-top: 10px; font-weight: bold; font-size: 1em; padding: 4px 8px; border-radius: 4px; }
+        .feedback.correct { color: var(--correct-color); background-color: #eafaf1; border: 1px solid var(--correct-color); }
+        .feedback.incorrect { color: var(--incorrect-color); background-color: #fceceb; border: 1px solid var(--incorrect-color); }
+        .btn-submit { display: block; width: 100%; padding: 15px; background-color: var(--primary-color); color: white; font-size: 1.2em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; margin-top: 40px; transition: background-color 0.3s; }
+        .btn-submit:hover { background-color: #357ABD; }
+        #result-container { display: none; margin-top: 30px; padding: 20px; background-color: #fffde7; border: 2px solid #f1c40f; border-radius: 8px; text-align: center; }
+        .score-text { font-size: 2em; color: #e67e22; font-weight: bold; margin: 10px 0; }
+        .real-answer { color: var(--correct-color); font-weight: bold; font-size: 0.9em; display: none; margin-top: 5px; }
+        @media (max-width: 600px) { body { padding: 10px; } .container { padding: 15px; } h1 { font-size: 1.5em; } h2 { font-size: 1.1em; } .btn-submit { font-size: 1.1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 한국사 뛰어넘기 3 독서 퀴즈</h1>
+        <div class="subtitle">5장. 피바람을 헤치고 사림 세력이 성장하다</div>
+        
+        <h2>📝 1부. 객관식 (1~15번)</h2>
+        
+        <div class="question"><span class="question-number">1.</span> 성종 때 훈구 세력을 견제하기 위해 주로 등용한 새로운 정치 세력은 누구인가요?
+            <ul class="options" data-qid="1">
+                <li data-val="1">① 권문세족</li>
+                <li data-val="2">② 사림</li>
+                <li data-val="3">③ 호족</li>
+                <li data-val="4">④ 무신</li>
+            </ul>
+            <div id="fb-1" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">2.</span> 사림파가 가장 중요하게 여긴 학문적 바탕은 무엇인가요?
+            <ul class="options" data-qid="2">
+                <li data-val="1">① 도교</li>
+                <li data-val="2">② 불교</li>
+                <li data-val="3">③ 성리학</li>
+                <li data-val="4">④ 실학</li>
+            </ul>
+            <div id="fb-2" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">3.</span> 김종직이 쓴 '조의제문'이 발단이 되어 연산군 때 일어난 최초의 사화는?
+            <ul class="options" data-qid="3">
+                <li data-val="1">① 무오사화</li>
+                <li data-val="2">② 갑자사화</li>
+                <li data-val="3">③ 기묘사화</li>
+                <li data-val="4">④ 을사사화</li>
+            </ul>
+            <div id="fb-3" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">4.</span> 연산군의 생모인 폐비 윤씨의 죽음과 관련된 관리들을 모두 처형하며 발생한 두 번째 사화는?
+            <ul class="options" data-qid="4">
+                <li data-val="1">① 무오사화</li>
+                <li data-val="2">② 갑자사화</li>
+                <li data-val="3">③ 기묘사화</li>
+                <li data-val="4">④ 을사사화</li>
+            </ul>
+            <div id="fb-4" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">5.</span> 중종 때 개혁 정치를 이끌던 조광조가 억울하게 죽음을 당한 사화의 이름은?
+            <ul class="options" data-qid="5">
+                <li data-val="1">① 갑자사화</li>
+                <li data-val="2">② 을사사화</li>
+                <li data-val="3">③ 무오사화</li>
+                <li data-val="4">④ 기묘사화</li>
+            </ul>
+            <div id="fb-5" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">6.</span> 명종 때 왕실 외척(대윤과 소윤) 간의 권력 다툼 과정에서 사림이 피해를 본 사화는?
+            <ul class="options" data-qid="6">
+                <li data-val="1">① 기묘사화</li>
+                <li data-val="2">② 무오사화</li>
+                <li data-val="3">③ 을사사화</li>
+                <li data-val="4">④ 갑자사화</li>
+            </ul>
+            <div id="fb-6" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">7.</span> 사림이 네 번의 큰 사화를 겪고도 끈질기게 살아남아 결국 정권을 잡을 수 있었던 바탕 2가지는 무엇인가요?
+            <ul class="options" data-qid="7">
+                <li data-val="1">① 군사력과 무기</li>
+                <li data-val="2">② 서원과 향약</li>
+                <li data-val="3">③ 상업과 무역</li>
+                <li data-val="4">④ 훈민정음과 과학 기술</li>
+            </ul>
+            <div id="fb-7" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">8.</span> 조광조의 개혁 정치 내용으로 알맞지 않은 것은?
+            <ul class="options" data-qid="8">
+                <li data-val="1">① 불교와 도교 행사를 적극적으로 장려했다.</li>
+                <li data-val="2">② 향약을 널리 보급하여 유교 윤리를 실천하게 했다.</li>
+                <li data-val="3">③ 추천 제도를 통해 어진 선비들을 관리로 뽑았다.</li>
+                <li data-val="4">④ 훈구파의 거짓된 공훈(위훈)을 삭제하려고 했다.</li>
+            </ul>
+            <div id="fb-8" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">9.</span> 서원의 가장 중요한 두 가지 역할은 무엇이었나요?
+            <ul class="options" data-qid="9">
+                <li data-val="1">① 군사 훈련과 세금 징수</li>
+                <li data-val="2">② 훌륭한 선비에 대한 제사와 학문 연구(교육)</li>
+                <li data-val="3">③ 물건의 판매와 무역</li>
+                <li data-val="4">④ 죄인에 대한 재판과 처벌</li>
+            </ul>
+            <div id="fb-9" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">10.</span> 향약의 4대 덕목 중 하나로, '어려운 일이 있을 때 서로 돕는다'는 의미를 가진 것은?
+            <ul class="options" data-qid="10">
+                <li data-val="1">① 덕업상권</li>
+                <li data-val="2">② 과실상규</li>
+                <li data-val="3">③ 예속상교</li>
+                <li data-val="4">④ 환난상휼</li>
+            </ul>
+            <div id="fb-10" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">11.</span> 사림이 동인과 서인으로 나뉘어 서로를 견제하며 정치를 이끌어간 형태를 무엇이라고 하나요?
+            <ul class="options" data-qid="11">
+                <li data-val="1">① 붕당 정치</li>
+                <li data-val="2">② 세도 정치</li>
+                <li data-val="3">③ 탕평 정치</li>
+                <li data-val="4">④ 귀족 정치</li>
+            </ul>
+            <div id="fb-11" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">12.</span> 동인과 서인으로 처음 나뉘게 된 결정적인 원인이 된 벼슬 자리는 무엇인가요?
+            <ul class="options" data-qid="12">
+                <li data-val="1">① 영의정</li>
+                <li data-val="2">② 이조 전랑</li>
+                <li data-val="3">③ 관찰사</li>
+                <li data-val="4">④ 훈련대장</li>
+            </ul>
+            <div id="fb-12" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">13.</span> 주세붕이 안향을 기리기 위해 세운 최초의 서원(백운동 서원)은 나중에 임금으로부터 현판을 하사받아 어떤 이름이 되었나요?
+            <ul class="options" data-qid="13">
+                <li data-val="1">① 도산서원</li>
+                <li data-val="2">② 병산서원</li>
+                <li data-val="3">③ 소수서원</li>
+                <li data-val="4">④ 옥산서원</li>
+            </ul>
+            <div id="fb-13" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">14.</span> 훈구 세력의 거짓 공훈을 삭제하려다 '주초위왕(나뭇잎에 꿀을 발라 글씨를 새긴 일)'의 모함을 받은 인물은?
+            <ul class="options" data-qid="14">
+                <li data-val="1">① 김종직</li>
+                <li data-val="2">② 조광조</li>
+                <li data-val="3">③ 이황</li>
+                <li data-val="4">④ 이이</li>
+            </ul>
+            <div id="fb-14" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">15.</span> 조광조가 폐지하려 했던 도교의 제사 기관은 무엇인가요?
+            <ul class="options" data-qid="15">
+                <li data-val="1">① 종묘</li>
+                <li data-val="2">② 사직단</li>
+                <li data-val="3">③ 소격서</li>
+                <li data-val="4">④ 성균관</li>
+            </ul>
+            <div id="fb-15" class="feedback" style="display:none;"></div>
+        </div>
+
+        <h2>✏️ 2부. 단답식 (16~25번)</h2>
+        
+        <div class="question"><span class="question-number">16.</span> 세조의 왕위 찬탈을 도와 공을 세우고, 막강한 권력과 토지를 차지했던 정치 세력의 이름은 무엇인가요?
+            <input type="text" class="input-box" data-qid="16" placeholder="정답을 입력하세요">
+            <div id="fb-16" class="feedback" style="display:none;"></div>
+            <div id="ans-16" class="real-answer">정답: 훈구 (또는 훈구파, 훈구세력)</div>
+        </div>
+        <div class="question"><span class="question-number">17.</span> 훈구 세력과 사림 세력의 치열한 대립 속에서, 사림 선비들이 화를 입고 큰 피해를 본 사건들을 통틀어 무엇이라고 하나요?
+            <input type="text" class="input-box" data-qid="17" placeholder="정답을 입력하세요">
+            <div id="fb-17" class="feedback" style="display:none;"></div>
+            <div id="ans-17" class="real-answer">정답: 사화</div>
+        </div>
+        <div class="question"><span class="question-number">18.</span> 중종 때 백성들을 위한 도덕적인 정치를 꿈꾸며 강력한 개혁을 추진하다가 모함을 받아 죽은 대표적 사림 학자는 누구인가요?
+            <input type="text" class="input-box" data-qid="18" placeholder="정답을 입력하세요">
+            <div id="fb-18" class="feedback" style="display:none;"></div>
+            <div id="ans-18" class="real-answer">정답: 조광조</div>
+        </div>
+        <div class="question"><span class="question-number">19.</span> 지방의 훌륭한 유학자에게 제사를 지내고, 양반의 자제들을 교육하기 위해 세워진 사설 교육 기관은 무엇인가요?
+            <input type="text" class="input-box" data-qid="19" placeholder="정답을 입력하세요">
+            <div id="fb-19" class="feedback" style="display:none;"></div>
+            <div id="ans-19" class="real-answer">정답: 서원</div>
+        </div>
+        <div class="question"><span class="question-number">20.</span> 백운동 서원처럼 임금이 서원의 이름을 직접 지어 현판을 내려주고, 책과 노비, 토지 등을 지원해 준 서원을 무엇이라고 부르나요?
+            <input type="text" class="input-box" data-qid="20" placeholder="정답을 입력하세요">
+            <div id="fb-20" class="feedback" style="display:none;"></div>
+            <div id="ans-20" class="real-answer">정답: 사액서원 (또는 사액 서원)</div>
+        </div>
+        <div class="question"><span class="question-number">21.</span> 지방의 양반들이 백성들에게 유교의 올바른 예절을 가르치고 질서를 잡기 위해 향촌에 널리 보급한 '마을의 자치 규약'은?
+            <input type="text" class="input-box" data-qid="21" placeholder="정답을 입력하세요">
+            <div id="fb-21" class="feedback" style="display:none;"></div>
+            <div id="ans-21" class="real-answer">정답: 향약</div>
+        </div>
+        <div class="question"><span class="question-number">22.</span> 조광조가 과거 시험 외에도 학문과 덕행이 뛰어난 인재를 추천을 통해 관리로 뽑자고 주장하여 실시된 제도는 무엇인가요?
+            <input type="text" class="input-box" data-qid="22" placeholder="정답을 입력하세요">
+            <div id="fb-22" class="feedback" style="display:none;"></div>
+            <div id="ans-22" class="real-answer">정답: 혈량과</div>
+        </div>
+        <div class="question"><span class="question-number">23.</span> 관리들의 비리를 감시하고 임금에게 바른말을 하던 언론 기관(사헌부, 사간원, 홍문관)을 통틀어 부르는 말은?
+            <input type="text" class="input-box" data-qid="23" placeholder="정답을 입력하세요">
+            <div id="fb-23" class="feedback" style="display:none;"></div>
+            <div id="ans-23" class="real-answer">정답: 삼사</div>
+        </div>
+        <div class="question"><span class="question-number">24.</span> 동인과 서인이 갈라지게 된 직접적인 계기가 되었으며, 3사의 관리를 추천할 수 있는 막강한 권한을 가졌던 핵심 관직 이름은 무엇인가요?
+            <input type="text" class="input-box" data-qid="24" placeholder="정답을 입력하세요">
+            <div id="fb-24" class="feedback" style="display:none;"></div>
+            <div id="ans-24" class="real-answer">정답: 이조 전랑 (또는 전랑, 이조전랑)</div>
+        </div>
+        <div class="question"><span class="question-number">25.</span> 선조 때 사림 세력이 완전히 정권을 잡은 뒤, 학문적 생각과 정치적 입장이 같은 사람들끼리 당을 나누어 정치를 이끌어간 방식을 무엇이라고 하나요?
+            <input type="text" class="input-box" data-qid="25" placeholder="정답을 입력하세요">
+            <div id="fb-25" class="feedback" style="display:none;"></div>
+            <div id="ans-25" class="real-answer">정답: 붕당정치 (또는 붕당 정치, 붕당)</div>
+        </div>
+
+        <button class="btn-submit" onclick="gradeAll()">전체 채점하기 및 결과 확인 📝</button>
+
+        <div id="result-container">
+            <h3>🎉 채점 결과 🎉</h3>
+            <div class="score-text">총 <span id="final-score">0</span> / 25 문항 정답</div>
+            <p>틀린 문제는 아래에서 빨간색 표시(❌)와 정답을 확인해 보세요.</p>
+        </div>
+    </div>
+
+    <script>
+        const answers = {
+            1: "2", 2: "3", 3: "1", 4: "2", 5: "4",
+            6: "3", 7: "2", 8: "1", 9: "2", 10: "4",
+            11: "1", 12: "2", 13: "3", 14: "2", 15: "3",
+            
+            16: ["훈구", "훈구파", "훈구세력"], 
+            17: ["사화"], 
+            18: ["조광조"], 
+            19: ["서원"], 
+            20: ["사액서원", "사액 서원"], 
+            21: ["향약"], 
+            22: ["혈량과"], 
+            23: ["삼사", "3사"], 
+            24: ["이조전랑", "이조 전랑", "전랑"], 
+            25: ["붕당정치", "붕당 정치", "붕당"]
+        };
+
+        let userAnswers = {};
+        document.querySelectorAll('.input-box').forEach(input => {
+            input.addEventListener('blur', function() { userAnswers[this.getAttribute('data-qid')] = this.value; });
+        });
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentNode;
+                const qId = parent.getAttribute('data-qid');
+                Array.from(parent.children).forEach(sib => sib.classList.remove('selected'));
+                this.classList.add('selected');
+                userAnswers[qId] = this.getAttribute('data-val');
+            });
+        });
+        function checkQuestion(qId, val, type) {
+            let isCorrect = false;
+            const fbElement = document.getElementById(`fb-${qId}`);
+            const ansElement = document.getElementById(`ans-${qId}`);
+            if (!val || val.trim() === "") {
+                fbElement.textContent = "⚠️ 답을 입력(선택)해주세요.";
+                fbElement.className = "feedback incorrect";
+                fbElement.style.display = "inline-block";
+                return false;
+            }
+            if (type === 'short') {
+                const normalizedVal = val.replace(/\s+/g, '').toLowerCase(); 
+                isCorrect = answers[qId].map(a => a.replace(/\s+/g, '').toLowerCase()).includes(normalizedVal);
+            } else if (type === 'mcq') {
+                isCorrect = (val === answers[qId]);
+            }
+            if (isCorrect) {
+                fbElement.innerHTML = "✅ 정답입니다!";
+                fbElement.className = "feedback correct";
+                if(ansElement) ansElement.style.display = "none";
+            } else {
+                fbElement.innerHTML = "❌ 틀렸습니다.";
+                fbElement.className = "feedback incorrect";
+                if(ansElement) ansElement.style.display = "block"; 
+            }
+            fbElement.style.display = "inline-block";
+            return isCorrect;
+        }
+        function gradeAll() {
+            let correctCount = 0;
+            document.querySelectorAll('.input-box').forEach(input => { userAnswers[input.getAttribute('data-qid')] = input.value; });
+            for (let i = 1; i <= 25; i++) {
+                if (checkQuestion(i, userAnswers[i] || "", (i <= 15) ? 'mcq' : 'short')) correctCount++;
+            }
+            const resultBox = document.getElementById('result-container');
+            document.getElementById('final-score').textContent = correctCount;
+            resultBox.style.display = 'block';
+            window.scrollTo({ top: resultBox.offsetTop, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국사 뛰어넘기 3 - 독서 퀴즈 (8장)</title>
+    <style>
+        :root { --primary-color: #4A90E2; --secondary-color: #F5F7FA; --text-color: #333; --border-color: #E1E4E8; --correct-color: #27ae60; --incorrect-color: #e74c3c; }
+        body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; line-height: 1.6; color: var(--text-color); background-color: var(--secondary-color); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em; }
+        h2 { color: #2C3E50; margin-top: 40px; padding: 12px 15px; background-color: #E8F4F8; border-radius: 8px; font-size: 1.3em; }
+        h3 { color: #34495E; border-left: 4px solid var(--primary-color); padding-left: 10px; margin-top: 30px; }
+        .question { margin-bottom: 20px; padding: 15px; background-color: #FAFAFA; border: 1px solid var(--border-color); border-radius: 8px; position: relative; }
+        .question-number { font-weight: bold; color: var(--primary-color); font-size: 1.1em; margin-right: 5px; }
+        .options { list-style-type: none; padding-left: 0; margin-top: 10px; }
+        .options li { margin-bottom: 8px; padding: 10px 12px; background-color: white; border: 2px solid #ddd; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .options li:hover { background-color: #F0F7FF; border-color: #A9D0F5; }
+        .options li.selected { background-color: #E8F4F8; border-color: var(--primary-color); font-weight: bold; }
+        .input-box { width: 100%; padding: 12px; margin-top: 10px; border: 2px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 1em; transition: border-color 0.2s; }
+        .input-box:focus { outline: none; border-color: var(--primary-color); }
+        .feedback { display: inline-block; margin-top: 10px; font-weight: bold; font-size: 1em; padding: 4px 8px; border-radius: 4px; }
+        .feedback.correct { color: var(--correct-color); background-color: #eafaf1; border: 1px solid var(--correct-color); }
+        .feedback.incorrect { color: var(--incorrect-color); background-color: #fceceb; border: 1px solid var(--incorrect-color); }
+        .btn-submit { display: block; width: 100%; padding: 15px; background-color: var(--primary-color); color: white; font-size: 1.2em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; margin-top: 40px; transition: background-color 0.3s; }
+        .btn-submit:hover { background-color: #357ABD; }
+        #result-container { display: none; margin-top: 30px; padding: 20px; background-color: #fffde7; border: 2px solid #f1c40f; border-radius: 8px; text-align: center; }
+        .score-text { font-size: 2em; color: #e67e22; font-weight: bold; margin: 10px 0; }
+        .real-answer { color: var(--correct-color); font-weight: bold; font-size: 0.9em; display: none; margin-top: 5px; }
+        @media (max-width: 600px) { body { padding: 10px; } .container { padding: 15px; } h1 { font-size: 1.5em; } h2 { font-size: 1.1em; } .btn-submit { font-size: 1.1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 한국사 뛰어넘기 3 독서 퀴즈</h1>
+        <div class="subtitle">8장. 사무치는 한을 풀고자 북벌을 계획하다</div>
+        
+        <h2>📝 1부. 객관식 (1~15번)</h2>
+        
+        <div class="question"><span class="question-number">1.</span> 효종이 병자호란의 치욕을 씻기 위해 왕위에 오르자마자 강력하게 추진한 정책은 무엇인가요?
+            <ul class="options" data-qid="1">
+                <li data-val="1">① 친명배금 정책</li>
+                <li data-val="2">② 북벌 정책</li>
+                <li data-val="3">③ 중립 외교 정책</li>
+                <li data-val="4">④ 북학 정책</li>
+            </ul>
+            <div id="fb-1" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">2.</span> 효종의 북벌 정책에 적극적으로 협력하며 정치적 지지를 보냈던 서인 세력의 영수는 누구인가요?
+            <ul class="options" data-qid="2">
+                <li data-val="1">① 이황</li>
+                <li data-val="2">② 송시열</li>
+                <li data-val="3">③ 조광조</li>
+                <li data-val="4">④ 류성룡</li>
+            </ul>
+            <div id="fb-2" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">3.</span> 효종이 북벌을 위해 가장 먼저 힘을 쏟은 일은 무엇인가요?
+            <ul class="options" data-qid="3">
+                <li data-val="1">① 군사력을 키우고 무기를 정비하는 일</li>
+                <li data-val="2">② 청나라에 화해의 사신을 보내는 일</li>
+                <li data-val="3">③ 일본과 군사 동맹을 맺는 일</li>
+                <li data-val="4">④ 농민들에게 세금을 없애주는 일</li>
+            </ul>
+            <div id="fb-3" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">4.</span> 조선 시대에 러시아를 한자로 부르던 말로, 효종 때 군대를 파견해 이곳 사람들과 싸운 사건의 이름은 무엇인가요?
+            <ul class="options" data-qid="4">
+                <li data-val="1">① 병자호란</li>
+                <li data-val="2">② 대마도 정벌</li>
+                <li data-val="3">③ 나선정벌</li>
+                <li data-val="4">④ 동북 9성 개척</li>
+            </ul>
+            <div id="fb-4" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">5.</span> 효종 때 러시아(나선) 군대와 싸우기 위해 조선의 군대가 출병하게 된 직접적인 원인은 무엇인가요?
+            <ul class="options" data-qid="5">
+                <li data-val="1">① 러시아가 조선을 직접 침략했기 때문에</li>
+                <li data-val="2">② 명나라를 도와주기 위해서</li>
+                <li data-val="3">③ 러시아군에 밀리던 청나라가 조선에 파병을 요구했기 때문에</li>
+                <li data-val="4">④ 새로운 영토를 넓히기 위해서</li>
+            </ul>
+            <div id="fb-5" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">6.</span> 나선정벌에 파견된 조선 군사들은 어떤 무기를 다루는 데 매우 뛰어난 능력을 발휘했나요?
+            <ul class="options" data-qid="6">
+                <li data-val="1">① 활</li>
+                <li data-val="2">② 창</li>
+                <li data-val="3">③ 조총</li>
+                <li data-val="4">④ 신기전</li>
+            </ul>
+            <div id="fb-6" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">7.</span> 나선정벌의 결과로 알맞은 것은?
+            <ul class="options" data-qid="7">
+                <li data-val="1">① 조선 군대가 크게 패배하여 많은 사상자가 발생했다.</li>
+                <li data-val="2">② 조선 조총 부대가 맹활약하여 러시아 군을 물리치는 데 큰 공을 세웠다.</li>
+                <li data-val="3">③ 러시아가 조선의 영토를 일부 차지하게 되었다.</li>
+                <li data-val="4">④ 청나라와 조선의 관계가 더욱 나빠졌다.</li>
+            </ul>
+            <div id="fb-7" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">8.</span> 북벌을 외쳤던 송시열 등 서인 세력의 속마음(정치적 의도)과 거리가 먼 것은?
+            <ul class="options" data-qid="8">
+                <li data-val="1">① 멸망한 명나라에 대한 유교적 의리를 지키려 했다.</li>
+                <li data-val="2">② 서인들 자신의 정치적 권력을 단단하게 유지하려 했다.</li>
+                <li data-val="3">③ 백성들의 생활을 안정시키는 것을 최우선으로 여겼다.</li>
+                <li data-val="4">④ 양반 중심의 신분 질서를 계속 지키려고 했다.</li>
+            </ul>
+            <div id="fb-8" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">9.</span> 효종이 젊은 나이에 세상을 떠난 후 북벌 정책은 어떻게 되었나요?
+            <ul class="options" data-qid="9">
+                <li data-val="1">① 다음 왕에 의해 더욱 강력하게 추진되어 결국 청을 공격했다.</li>
+                <li data-val="2">② 백성들의 강력한 지지를 얻어 계속 군사 훈련을 했다.</li>
+                <li data-val="3">③ 청나라가 너무 강성해져 현실적으로 불가능함을 깨닫고 점차 힘을 잃었다.</li>
+                <li data-val="4">④ 명나라 부흥 운동과 결합하여 큰 성과를 거두었다.</li>
+            </ul>
+            <div id="fb-9" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">10.</span> 북벌 운동이 한계에 부딪힌 현실적인 가장 큰 이유는 무엇인가요?
+            <ul class="options" data-qid="10">
+                <li data-val="1">① 조선 백성들이 전쟁을 강력히 원했기 때문에</li>
+                <li data-val="2">② 청나라가 영토를 크게 넓히고 강력한 제국으로 성장했기 때문에</li>
+                <li data-val="3">③ 조선 군대의 무기가 너무 형편없었기 때문에</li>
+                <li data-val="4">④ 일본이 뒤에서 공격할 위험이 있었기 때문에</li>
+            </ul>
+            <div id="fb-10" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">11.</span> 북벌론 이후 조선 후기에 나타난 새로운 생각으로, "청나라를 미워하지만 말고 그들의 발달한 문물과 기술은 배우자"는 주장을 무엇이라고 하나요?
+            <ul class="options" data-qid="11">
+                <li data-val="1">① 북벌론</li>
+                <li data-val="2">② 북학론</li>
+                <li data-val="3">③ 척화론</li>
+                <li data-val="4">④ 쇄국 정책</li>
+            </ul>
+            <div id="fb-11" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">12.</span> 하멜 일행이 조선에 표류하여 머무는 동안 일어난 일이 아닌 것은?
+            <ul class="options" data-qid="12">
+                <li data-val="1">① 조선의 무기 제조(총과 대포)를 도왔다.</li>
+                <li data-val="2">② 조선 사람들에게 서양의 존재를 알렸다.</li>
+                <li data-val="3">③ 왕의 허락을 받아 자유롭게 고향으로 돌아갔다.</li>
+                <li data-val="4">④ 훈련도감에 소속되어 서양식 군사 훈련법을 가르쳤다.</li>
+            </ul>
+            <div id="fb-12" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">13.</span> 하멜이 조선을 탈출하여 고향인 네덜란드로 돌아간 뒤, 유럽 사람들에게 조선이라는 나라를 처음 알리기 위해 쓴 책의 이름은?
+            <ul class="options" data-qid="13">
+                <li data-val="1">① 지봉유설</li>
+                <li data-val="2">② 열하일기</li>
+                <li data-val="3">③ 하멜 표류기</li>
+                <li data-val="4">④ 동방견문록</li>
+            </ul>
+            <div id="fb-13" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">14.</span> 훈련도감 등과 함께 효종 때 군사력을 키우기 위해 크게 병력을 늘려 북벌 부대의 중심 역할을 했던 군영은 어디인가요?
+            <ul class="options" data-qid="14">
+                <li data-val="1">① 어영청</li>
+                <li data-val="2">② 장용영</li>
+                <li data-val="3">③ 별무반</li>
+                <li data-val="4">④ 삼별초</li>
+            </ul>
+            <div id="fb-14" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">15.</span> 병자호란 이후 청나라의 발전된 문물을 직접 보고 온 사신단이 조선에 남긴 영향으로 볼 수 있는 것은?
+            <ul class="options" data-qid="15">
+                <li data-val="1">① 북벌론이 더욱 거세졌다.</li>
+                <li data-val="2">② 천주교가 국가의 정식 종교로 인정받았다.</li>
+                <li data-val="3">③ 청의 선진 기술과 학문을 수용해야 한다는 북학파가 등장하는 배경이 되었다.</li>
+                <li data-val="4">④ 일본과의 무역을 완전히 끊었다.</li>
+            </ul>
+            <div id="fb-15" class="feedback" style="display:none;"></div>
+        </div>
+
+        <h2>✏️ 2부. 단답식 (16~25번)</h2>
+        
+        <div class="question"><span class="question-number">16.</span> 형인 소현세자가 죽은 뒤 세자가 되어, 인조의 뒤를 이어 조선 제17대 왕이 된 인물은 누구인가요?
+            <input type="text" class="input-box" data-qid="16" placeholder="정답을 입력하세요">
+            <div id="fb-16" class="feedback" style="display:none;"></div>
+            <div id="ans-16" class="real-answer">정답: 효종 (또는 봉림대군)</div>
+        </div>
+        <div class="question"><span class="question-number">17.</span> 효종이 병자호란 때 겪은 굴욕을 씻기 위해 군사력을 키워 청나라를 공격하려 했던 정책의 이름은?
+            <input type="text" class="input-box" data-qid="17" placeholder="정답을 입력하세요">
+            <div id="fb-17" class="feedback" style="display:none;"></div>
+            <div id="ans-17" class="real-answer">정답: 북벌 (또는 북벌정책, 북벌론)</div>
+        </div>
+        <div class="question"><span class="question-number">18.</span> 효종과 뜻을 맞추어 북벌 정책을 이끈 대표적인 서인 학자이자 정치가의 이름은?
+            <input type="text" class="input-box" data-qid="18" placeholder="정답을 입력하세요">
+            <div id="fb-18" class="feedback" style="display:none;"></div>
+            <div id="ans-18" class="real-answer">정답: 송시열</div>
+        </div>
+        <div class="question"><span class="question-number">19.</span> 청나라가 러시아의 흑룡강 남하를 막기 위해 조선에 원군을 요청하여, 조선 조총 부대가 출병한 사건은 무엇인가요?
+            <input type="text" class="input-box" data-qid="19" placeholder="정답을 입력하세요">
+            <div id="fb-19" class="feedback" style="display:none;"></div>
+            <div id="ans-19" class="real-answer">정답: 나선정벌</div>
+        </div>
+        <div class="question"><span class="question-number">20.</span> 나선정벌 당시 러시아 군을 무찌르는 데 큰 역할을 한 조선 군대의 주력 무기는 무엇이었나요?
+            <input type="text" class="input-box" data-qid="20" placeholder="정답을 입력하세요">
+            <div id="fb-20" class="feedback" style="display:none;"></div>
+            <div id="ans-20" class="real-answer">정답: 조총</div>
+        </div>
+        <div class="question"><span class="question-number">21.</span> 서인 세력이 북벌을 명분으로 삼은 바탕에는, 우리를 도와준 명나라를 은인의 나라로 여기는 유교적 '이것'이 깔려 있었습니다. 두 글자의 단어는?
+            <input type="text" class="input-box" data-qid="21" placeholder="정답을 입력하세요">
+            <div id="fb-21" class="feedback" style="display:none;"></div>
+            <div id="ans-21" class="real-answer">정답: 의리 (또는 명분)</div>
+        </div>
+        <div class="question"><span class="question-number">22.</span> 북벌 정책 당시 효종이 군사력을 집중적으로 키우기 위해 병력을 크게 늘린 대표적인 군영의 이름은?
+            <input type="text" class="input-box" data-qid="22" placeholder="정답을 입력하세요">
+            <div id="fb-22" class="feedback" style="display:none;"></div>
+            <div id="ans-22" class="real-answer">정답: 어영청</div>
+        </div>
+        <div class="question"><span class="question-number">23.</span> 1653년 네덜란드 동인도 회사 소속으로 제주도에 표류하여, 서양의 존재를 조선에 알리고 무기 제작에도 참여한 인물은?
+            <input type="text" class="input-box" data-qid="23" placeholder="정답을 입력하세요">
+            <div id="fb-23" class="feedback" style="display:none;"></div>
+            <div id="ans-23" class="real-answer">정답: 하멜</div>
+        </div>
+        <div class="question"><span class="question-number">24.</span> 효종이 북벌을 완수하지 못하고 세상을 떠난 후, 현실적으로 북벌이 불가능해지자 "청나라의 우수한 문물과 과학 기술을 배우자"고 나타난 새로운 주장은?
+            <input type="text" class="input-box" data-qid="24" placeholder="정답을 입력하세요">
+            <div id="fb-24" class="feedback" style="display:none;"></div>
+            <div id="ans-24" class="real-answer">정답: 북학론 (또는 북학)</div>
+        </div>
+        <div class="question"><span class="question-number">25.</span> 효종과 서인 세력의 강력한 북벌 의지에도 불구하고 조선이 공격할 수 없었던 나라는 결과적으로 동아시아의 강력한 대제국으로 성장했습니다. 이 나라의 이름은?
+            <input type="text" class="input-box" data-qid="25" placeholder="정답을 입력하세요">
+            <div id="fb-25" class="feedback" style="display:none;"></div>
+            <div id="ans-25" class="real-answer">정답: 청 (또는 청나라)</div>
+        </div>
+
+        <button class="btn-submit" onclick="gradeAll()">전체 채점하기 및 결과 확인 📝</button>
+
+        <div id="result-container">
+            <h3>🎉 채점 결과 🎉</h3>
+            <div class="score-text">총 <span id="final-score">0</span> / 25 문항 정답</div>
+            <p>틀린 문제는 아래에서 빨간색 표시(❌)와 정답을 확인해 보세요.</p>
+        </div>
+    </div>
+
+    <script>
+        const answers = {
+            1: "2", 2: "2", 3: "1", 4: "3", 5: "3",
+            6: "3", 7: "2", 8: "3", 9: "3", 10: "2",
+            11: "2", 12: "3", 13: "3", 14: "1", 15: "3",
+            
+            16: ["효종", "봉림대군"], 
+            17: ["북벌", "북벌정책", "북벌론"], 
+            18: ["송시열"], 
+            19: ["나선정벌"], 
+            20: ["조총"], 
+            21: ["의리", "명분"], 
+            22: ["어영청"], 
+            23: ["하멜"], 
+            24: ["북학론", "북학"], 
+            25: ["청", "청나라"]
+        };
+
+        let userAnswers = {};
+        document.querySelectorAll('.input-box').forEach(input => {
+            input.addEventListener('blur', function() { userAnswers[this.getAttribute('data-qid')] = this.value; });
+        });
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentNode;
+                const qId = parent.getAttribute('data-qid');
+                Array.from(parent.children).forEach(sib => sib.classList.remove('selected'));
+                this.classList.add('selected');
+                userAnswers[qId] = this.getAttribute('data-val');
+            });
+        });
+        function checkQuestion(qId, val, type) {
+            let isCorrect = false;
+            const fbElement = document.getElementById(`fb-${qId}`);
+            const ansElement = document.getElementById(`ans-${qId}`);
+            if (!val || val.trim() === "") {
+                fbElement.textContent = "⚠️ 답을 입력(선택)해주세요.";
+                fbElement.className = "feedback incorrect";
+                fbElement.style.display = "inline-block";
+                return false;
+            }
+            if (type === 'short') {
+                const normalizedVal = val.replace(/\s+/g, '').toLowerCase(); 
+                isCorrect = answers[qId].map(a => a.replace(/\s+/g, '').toLowerCase()).includes(normalizedVal);
+            } else if (type === 'mcq') {
+                isCorrect = (val === answers[qId]);
+            }
+            if (isCorrect) {
+                fbElement.innerHTML = "✅ 정답입니다!";
+                fbElement.className = "feedback correct";
+                if(ansElement) ansElement.style.display = "none";
+            } else {
+                fbElement.innerHTML = "❌ 틀렸습니다.";
+                fbElement.className = "feedback incorrect";
+                if(ansElement) ansElement.style.display = "block"; 
+            }
+            fbElement.style.display = "inline-block";
+            return isCorrect;
+        }
+        function gradeAll() {
+            let correctCount = 0;
+            document.querySelectorAll('.input-box').forEach(input => { userAnswers[input.getAttribute('data-qid')] = input.value; });
+            for (let i = 1; i <= 25; i++) {
+                if (checkQuestion(i, userAnswers[i] || "", (i <= 15) ? 'mcq' : 'short')) correctCount++;
+            }
+            const resultBox = document.getElementById('result-container');
+            document.getElementById('final-score').textContent = correctCount;
+            resultBox.style.display = 'block';
+            window.scrollTo({ top: resultBox.offsetTop, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
