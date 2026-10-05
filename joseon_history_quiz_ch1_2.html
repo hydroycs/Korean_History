@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국사 뛰어넘기 3 - 독서 퀴즈 (1~2장) 객관식&단답형</title>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #F5F7FA;
+            --text-color: #333;
+            --border-color: #E1E4E8;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+        }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        h2 {
+            color: #2C3E50;
+            margin-top: 40px;
+            padding: 12px 15px;
+            background-color: #E8F4F8;
+            border-radius: 8px;
+            font-size: 1.3em;
+        }
+        h3 {
+            color: #34495E;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #FAFAFA;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            position: relative;
+        }
+        .question-number {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1em;
+            margin-right: 5px;
+        }
+        .options {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+        .options li {
+            margin-bottom: 8px;
+            padding: 10px 12px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options li:hover {
+            background-color: #F0F7FF;
+            border-color: #A9D0F5;
+        }
+        .options li.selected {
+            background-color: #E8F4F8;
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+        .input-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .feedback {
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1em;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .feedback.correct {
+            color: var(--correct-color);
+            background-color: #eafaf1;
+            border: 1px solid var(--correct-color);
+        }
+        .feedback.incorrect {
+            color: var(--incorrect-color);
+            background-color: #fceceb;
+            border: 1px solid var(--incorrect-color);
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: background-color 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #357ABD;
+        }
+        #result-container {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fffde7;
+            border: 2px solid #f1c40f;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .score-text {
+            font-size: 2em;
+            color: #e67e22;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .real-answer {
+            color: var(--correct-color);
+            font-weight: bold;
+            font-size: 0.9em;
+            display: none;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            h1 { font-size: 1.5em; }
+            h2 { font-size: 1.1em; }
+            .btn-submit { font-size: 1.1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 한국사 뛰어넘기 3 독서 퀴즈</h1>
+        <div class="subtitle">1장. 새로운 세력이 떠오르고 고려가 무너지다<br>2장. 성리학의 나라 조선이 세워지다</div>
+        
+        <!-- ================= 1장 ================= -->
+        <h2>제 1장. 새로운 세력이 떠오르고 고려가 무너지다</h2>
+        
+        <h3>✏️ 단답식</h3>
+        <div class="question"><span class="question-number">1.</span> 신흥 무인 세력의 대표로, 고려를 무너뜨리고 조선을 세운 인물은 누구인가요?
+            <input type="text" class="input-box" data-qid="1" placeholder="정답을 입력하세요">
+            <div id="fb-1" class="feedback" style="display:none;"></div>
+            <div id="ans-1" class="real-answer">정답: 이성계</div>
+        </div>
+        <div class="question"><span class="question-number">2.</span> 이성계가 요동 정벌을 가다가 압록강의 섬에서 군대를 되돌린 사건은 무엇인가요?
+            <input type="text" class="input-box" data-qid="2" placeholder="정답을 입력하세요">
+            <div id="fb-2" class="feedback" style="display:none;"></div>
+            <div id="ans-2" class="real-answer">정답: 위화도 회군</div>
+        </div>
+        <div class="question"><span class="question-number">3.</span> 고려 말 새롭게 등장하여 성리학을 바탕으로 개혁을 주장한 세력은 무엇인가요?
+            <input type="text" class="input-box" data-qid="3" placeholder="정답을 입력하세요">
+            <div id="fb-3" class="feedback" style="display:none;"></div>
+            <div id="ans-3" class="real-answer">정답: 신진 사대부</div>
+        </div>
+        <div class="question"><span class="question-number">4.</span> 신진 사대부 중 '고려 왕조를 유지'하며 점진적으로 개혁하려 했던 온건파의 대표 인물은 누구인가요?
+            <input type="text" class="input-box" data-qid="4" placeholder="정답을 입력하세요">
+            <div id="fb-4" class="feedback" style="display:none;"></div>
+            <div id="ans-4" class="real-answer">정답: 정몽주</div>
+        </div>
+        <div class="question"><span class="question-number">5.</span> 정몽주가 이방원 세력에게 암살당한 다리의 이름은 무엇인가요?
+            <input type="text" class="input-box" data-qid="5" placeholder="정답을 입력하세요">
+            <div id="fb-5" class="feedback" style="display:none;"></div>
+            <div id="ans-5" class="real-answer">정답: 선죽교</div>
+        </div>
+        <div class="question"><span class="question-number">6.</span> 고려 말 권문세족의 토지를 빼앗아 관리들에게 나누어 주어 신진 사대부의 경제적 기반이 된 토지 제도는 무엇인가요?
+            <input type="text" class="input-box" data-qid="6" placeholder="정답을 입력하세요">
+            <div id="fb-6" class="feedback" style="display:none;"></div>
+            <div id="ans-6" class="real-answer">정답: 과전법</div>
+        </div>
+        <div class="question"><span class="question-number">7.</span> 이방원이 정몽주의 마음을 떠보고 회유하기 위해 지어 부른 시조의 제목은 무엇인가요?
+            <input type="text" class="input-box" data-qid="7" placeholder="정답을 입력하세요">
+            <div id="fb-7" class="feedback" style="display:none;"></div>
+            <div id="ans-7" class="real-answer">정답: 하여가</div>
+        </div>
+        <div class="question"><span class="question-number">8.</span> 정몽주가 이방원의 시조에 답하여 '고려에 대한 변치 않는 충성'을 표현한 시조의 제목은 무엇인가요?
+            <input type="text" class="input-box" data-qid="8" placeholder="정답을 입력하세요">
+            <div id="fb-8" class="feedback" style="display:none;"></div>
+            <div id="ans-8" class="real-answer">정답: 단심가</div>
+        </div>
+        <div class="question"><span class="question-number">9.</span> 이성계와 함께 조선을 건국하는 데 가장 큰 역할을 한 '급진파 신진 사대부'의 핵심 인물은 누구인가요?
+            <input type="text" class="input-box" data-qid="9" placeholder="정답을 입력하세요">
+            <div id="fb-9" class="feedback" style="display:none;"></div>
+            <div id="ans-9" class="real-answer">정답: 정도전</div>
+        </div>
+        <div class="question"><span class="question-number">10.</span> 공민왕 때 등용되어 권문세족이 불법으로 빼앗은 토지와 노비를 원래대로 돌려놓으려 개혁을 시도한 승려 출신 인물은 누구인가요?
+            <input type="text" class="input-box" data-qid="10" placeholder="정답을 입력하세요">
+            <div id="fb-10" class="feedback" style="display:none;"></div>
+            <div id="ans-10" class="real-answer">정답: 신돈</div>
+        </div>
+
+        <h3>📝 객관식 (11~25번)</h3>
+        <div class="question"><span class="question-number">11.</span> 고려 말 원나라의 세력을 등에 업고 백성들을 괴롭히며 넓은 토지를 차지했던 지배 세력은?
+            <ul class="options" data-qid="11">
+                <li data-val="1">① 권문세족</li>
+                <li data-val="2">② 신진 사대부</li>
+                <li data-val="3">③ 호족</li>
+                <li data-val="4">④ 무신 세력</li>
+            </ul>
+            <div id="fb-11" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">12.</span> 위화도 회군에 대한 설명으로 알맞은 것은?
+            <ul class="options" data-qid="12">
+                <li data-val="1">① 최영 장군이 권력을 잃고 귀양을 간 후 일어났다.</li>
+                <li data-val="2">② 이성계가 군사적 실권을 장악하는 계기가 되었다.</li>
+                <li data-val="3">③ 원나라의 침략을 막기 위해 군대를 돌린 것이다.</li>
+                <li data-val="4">④ 정몽주가 이성계에게 강력히 건의하여 이루어졌다.</li>
+            </ul>
+            <div id="fb-12" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">13.</span> 정도전 등 '급진파 신진 사대부'의 주장으로 가장 알맞은 것은?
+            <ul class="options" data-qid="13">
+                <li data-val="1">① 고려 왕조를 유지하면서 천천히 개혁해야 한다.</li>
+                <li data-val="2">② 고려를 무너뜨리고 새로운 나라를 세워야 한다.</li>
+                <li data-val="3">③ 명나라와 싸워서 요동 정벌해야 한다.</li>
+                <li data-val="4">④ 불교를 나라의 중심 종교로 삼아야 한다.</li>
+            </ul>
+            <div id="fb-13" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">14.</span> 조선 건국의 바탕이 된 학문이자 사상은 무엇인가?
+            <ul class="options" data-qid="14">
+                <li data-val="1">① 불교</li>
+                <li data-val="2">② 도교</li>
+                <li data-val="3">③ 성리학</li>
+                <li data-val="4">④ 천주교</li>
+            </ul>
+            <div id="fb-14" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">15.</span> 조선이 건국된 연도는 언제인가?
+            <ul class="options" data-qid="15">
+                <li data-val="1">① 1388년</li>
+                <li data-val="2">② 1392년</li>
+                <li data-val="3">③ 1443년</li>
+                <li data-val="4">④ 1592년</li>
+            </ul>
+            <div id="fb-15" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">16.</span> 고려 말 최영 장군에 대한 설명으로 옳은 것은?
+            <ul class="options" data-qid="16">
+                <li data-val="1">① 요동 정벌을 적극적으로 추진하였다.</li>
+                <li data-val="2">② 이성계와 함께 조선을 건국하였다.</li>
+                <li data-val="3">③ 신진 사대부들을 이끄는 핵심 인물이었다.</li>
+                <li data-val="4">④ 명나라와 친하게 지내야 한다고 주장했다.</li>
+            </ul>
+            <div id="fb-16" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">17.</span> 신진 사대부들이 성장할 수 있었던 배경으로 가장 알맞은 것은?
+            <ul class="options" data-qid="17">
+                <li data-val="1">① 부모의 벼슬을 그대로 물려받아서</li>
+                <li data-val="2">② 학문을 닦아 과거 시험을 통해 관리로 등용되어서</li>
+                <li data-val="3">③ 무예가 뛰어나 전쟁에서 큰 공을 세워서</li>
+                <li data-val="4">④ 원나라 황제의 적극적인 지원을 받아서</li>
+            </ul>
+            <div id="fb-17" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">18.</span> 이성계 일파가 '과전법'을 실시한 가장 큰 목적은 무엇인가?
+            <ul class="options" data-qid="18">
+                <li data-val="1">① 신진 사대부들의 경제적 기반을 마련하기 위해</li>
+                <li data-val="2">② 모든 백성에게 토지를 똑같이 나누어주기 위해</li>
+                <li data-val="3">③ 권문세족의 권력을 더욱 키워주기 위해</li>
+                <li data-val="4">④ 불교 사찰에 더 많은 땅을 주기 위해</li>
+            </ul>
+            <div id="fb-18" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">19.</span> '조선'이라는 나라 이름이 뜻하는 바는 어느 나라를 계승한다는 것인가?
+            <ul class="options" data-qid="19">
+                <li data-val="1">① 고구려</li>
+                <li data-val="2">② 고조선</li>
+                <li data-val="3">③ 발해</li>
+                <li data-val="4">④ 신라</li>
+            </ul>
+            <div id="fb-19" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">20.</span> 다음 중 새 나라를 세우는 것에 반대하지 않고 찬성한 급진파 신진 사대부는?
+            <ul class="options" data-qid="20">
+                <li data-val="1">① 정몽주</li>
+                <li data-val="2">② 길재</li>
+                <li data-val="3">③ 이색</li>
+                <li data-val="4">④ 조준</li>
+            </ul>
+            <div id="fb-20" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">21.</span> 고려 말, 홍건적과 왜구의 침입을 물리치며 백성들의 지지를 얻어 성장한 세력은?
+            <ul class="options" data-qid="21">
+                <li data-val="1">① 권문세족</li>
+                <li data-val="2">② 신흥 무인 세력</li>
+                <li data-val="3">③ 호족</li>
+                <li data-val="4">④ 귀족 세력</li>
+            </ul>
+            <div id="fb-21" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">22.</span> 고려가 멸망하게 된 결정적인 정치적 군사 사건은 무엇인가?
+            <ul class="options" data-qid="22">
+                <li data-val="1">① 공민왕의 죽음</li>
+                <li data-val="2">② 위화도 회군</li>
+                <li data-val="3">③ 홍건적의 개경 함락</li>
+                <li data-val="4">④ 삼별초의 항쟁</li>
+            </ul>
+            <div id="fb-22" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">23.</span> 선죽교에서 정몽주가 제거된 후 이성계 일파가 한 일은?
+            <ul class="options" data-qid="23">
+                <li data-val="1">① 공양왕을 내쫓고 이성계를 왕으로 추대했다.</li>
+                <li data-val="2">② 명나라와 전쟁을 선포했다.</li>
+                <li data-val="3">③ 정몽주의 제자들을 모두 관리로 등용했다.</li>
+                <li data-val="4">④ 다시 원나라와 친하게 지내기로 결정했다.</li>
+            </ul>
+            <div id="fb-23" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">24.</span> 다음 중 고려 말 백성들의 삶에 대한 설명으로 틀린 것은?
+            <ul class="options" data-qid="24">
+                <li data-val="1">① 홍건적과 왜구의 노략질로 고통받았다.</li>
+                <li data-val="2">② 권문세족에게 억울하게 땅을 빼앗겼다.</li>
+                <li data-val="3">③ 빚을 갚지 못해 노비로 전락하는 경우가 많았다.</li>
+                <li data-val="4">④ 국가에서 토지를 골고루 나누어 주어 살기 좋았다.</li>
+            </ul>
+            <div id="fb-24" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">25.</span> 이성계가 요동 정벌을 반대하며 내세운 '4불가론'의 내용이 아닌 것은?
+            <ul class="options" data-qid="25">
+                <li data-val="1">① 작은 나라가 큰 나라를 거스르는 것은 옳지 않다.</li>
+                <li data-val="2">② 여름철이라 전염병이 돌 위험이 있다.</li>
+                <li data-val="3">③ 장마철이라 활의 아교가 녹아 무기를 쓰기 어렵다.</li>
+                <li data-val="4">④ 명나라 황제가 화해의 편지를 보내왔다.</li>
+            </ul>
+            <div id="fb-25" class="feedback" style="display:none;"></div>
+        </div>
+
+        <!-- ================= 2장 ================= -->
+        <h2>제 2장. 성리학의 나라 조선이 세워지다</h2>
+        
+        <h3>✏️ 단답식</h3>
+        <div class="question"><span class="question-number">26.</span> 조선이 건국 후 도읍(수도)으로 정한 곳은 어디인가요?
+            <input type="text" class="input-box" data-qid="26" placeholder="정답을 입력하세요">
+            <div id="fb-26" class="feedback" style="display:none;"></div>
+            <div id="ans-26" class="real-answer">정답: 한양</div>
+        </div>
+        <div class="question"><span class="question-number">27.</span> 한양을 새 도읍으로 정하고 궁궐과 성문 등의 위치를 유교적 원리에 따라 설계한 중심 인물은 누구인가요?
+            <input type="text" class="input-box" data-qid="27" placeholder="정답을 입력하세요">
+            <div id="fb-27" class="feedback" style="display:none;"></div>
+            <div id="ans-27" class="real-answer">정답: 정도전</div>
+        </div>
+        <div class="question"><span class="question-number">28.</span> 조선의 가장 으뜸이 되는 궁궐로 '큰 복을 누리라'는 뜻을 가진 궁은 무엇인가요?
+            <input type="text" class="input-box" data-qid="28" placeholder="정답을 입력하세요">
+            <div id="fb-28" class="feedback" style="display:none;"></div>
+            <div id="ans-28" class="real-answer">정답: 경복궁</div>
+        </div>
+        <div class="question"><span class="question-number">29.</span> 왕과 왕비, 왕실 조상들의 신위를 모시고 제사를 지내는 사당은 무엇인가요?
+            <input type="text" class="input-box" data-qid="29" placeholder="정답을 입력하세요">
+            <div id="fb-29" class="feedback" style="display:none;"></div>
+            <div id="ans-29" class="real-answer">정답: 종묘</div>
+        </div>
+        <div class="question"><span class="question-number">30.</span> 땅과 곡식의 신에게 풍년을 기원하며 제사를 지내는 곳은 어디인가요?
+            <input type="text" class="input-box" data-qid="30" placeholder="정답을 입력하세요">
+            <div id="fb-30" class="feedback" style="display:none;"></div>
+            <div id="ans-30" class="real-answer">정답: 사직단</div>
+        </div>
+        <div class="question"><span class="question-number">31.</span> 이방원이 권력을 차지하기 위해 정도전 세력과 배다른 동생들을 죽이고 일어난 사건을 무엇이라고 하나요?
+            <input type="text" class="input-box" data-qid="31" placeholder="정답을 입력하세요">
+            <div id="fb-31" class="feedback" style="display:none;"></div>
+            <div id="ans-31" class="real-answer">정답: 왕자의 난</div>
+        </div>
+        <div class="question"><span class="question-number">32.</span> 태종이 억울한 일을 당한 백성이 쳐서 알리도록 궁궐 앞에 설치한 북의 이름은 무엇인가요?
+            <input type="text" class="input-box" data-qid="32" placeholder="정답을 입력하세요">
+            <div id="fb-32" class="feedback" style="display:none;"></div>
+            <div id="ans-32" class="real-answer">정답: 신문고</div>
+        </div>
+        <div class="question"><span class="question-number">33.</span> 태종 때 인구를 파악하기 위해 16세 이상 남자들이 차고 다니게 한 오늘날의 신분증과 같은 것은 무엇인가요?
+            <input type="text" class="input-box" data-qid="33" placeholder="정답을 입력하세요">
+            <div id="fb-33" class="feedback" style="display:none;"></div>
+            <div id="ans-33" class="real-answer">정답: 호패</div>
+        </div>
+        <div class="question"><span class="question-number">34.</span> 조선은 전국을 크게 몇 개의 도(道)로 나누어 다스렸나요? (숫자 또는 글자로 입력)
+            <input type="text" class="input-box" data-qid="34" placeholder="정답을 입력하세요">
+            <div id="fb-34" class="feedback" style="display:none;"></div>
+            <div id="ans-34" class="real-answer">정답: 8도 (팔도)</div>
+        </div>
+        <div class="question"><span class="question-number">35.</span> 태조 이성계가 왕자의 난 이후 왕위를 물려주고 물러나자, 조선의 제2대 왕이 된 인물(이방원의 형)은 누구인가요?
+            <input type="text" class="input-box" data-qid="35" placeholder="정답을 입력하세요">
+            <div id="fb-35" class="feedback" style="display:none;"></div>
+            <div id="ans-35" class="real-answer">정답: 정종</div>
+        </div>
+
+        <h3>📝 객관식 (36~50번)</h3>
+        <div class="question"><span class="question-number">36.</span> 한양을 새 도읍으로 정한 이유로 알맞지 않은 것은?
+            <ul class="options" data-qid="36">
+                <li data-val="1">① 한강이 흘러 배를 통한 물자 이동이 편리하다.</li>
+                <li data-val="2">② 주변이 높은 산으로 둘러싸여 외적 방어에 유리하다.</li>
+                <li data-val="3">③ 국토의 중앙에 위치해 전국을 다스리기 좋다.</li>
+                <li data-val="4">④ 고려의 옛 귀족들이 한양에 많이 살고 있어서 그들의 도움을 받으려 했다.</li>
+            </ul>
+            <div id="fb-36" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">37.</span> 한양 도성의 4대문 이름(흥인지문, 돈의문, 숭례문 등)에 공통적으로 담겨 있는 유교 사상은 무엇인가요?
+            <ul class="options" data-qid="37">
+                <li data-val="1">① 생로병사</li>
+                <li data-val="2">② 인의예지</li>
+                <li data-val="3">③ 홍익인간</li>
+                <li data-val="4">④ 권선징악</li>
+            </ul>
+            <div id="fb-37" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">38.</span> 경복궁을 중심으로 왼쪽(동쪽)과 오른쪽(서쪽)에 각각 배치한 시설이 바르게 짝지어진 것은?
+            <ul class="options" data-qid="38">
+                <li data-val="1">① 동쪽: 종묘, 서쪽: 사직단</li>
+                <li data-val="2">② 동쪽: 사직단, 서쪽: 종묘</li>
+                <li data-val="3">③ 동쪽: 시장, 서쪽: 군대</li>
+                <li data-val="4">④ 동쪽: 숭례문, 서쪽: 흥인지문</li>
+            </ul>
+            <div id="fb-38" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">39.</span> 제3대 왕 태종(이방원)이 실시한 정책이 아닌 것은?
+            <ul class="options" data-qid="39">
+                <li data-val="1">① 사병 혁파 (개인 군대 금지)</li>
+                <li data-val="2">② 호패법 실시</li>
+                <li data-val="3">③ 신문고 설치</li>
+                <li data-val="4">④ 훈민정음(한글) 창제</li>
+            </ul>
+            <div id="fb-39" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">40.</span> 태종이 개인이 거느리던 군대인 '사병'을 모두 없앤 가장 큰 이유는?
+            <ul class="options" data-qid="40">
+                <li data-val="1">① 군대를 유지할 돈이 부족해서</li>
+                <li data-val="2">② 왕권을 위협할 수 있는 반란을 막고 군사력을 왕에게 집중하기 위해</li>
+                <li data-val="3">③ 백성들이 농사지을 일손이 부족해서</li>
+                <li data-val="4">④ 명나라에서 사병을 없애라고 명령해서</li>
+            </ul>
+            <div id="fb-40" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">41.</span> 태종이 호패법을 실시한 주요 목적은 무엇인가요?
+            <ul class="options" data-qid="41">
+                <li data-val="1">① 인구를 파악하여 세금을 제대로 거두고 군역을 지게 하기 위해</li>
+                <li data-val="2">② 노비들을 모두 풀어주기 위해</li>
+                <li data-val="3">③ 상인들이 장사를 잘 할 수 있도록 돕기 위해</li>
+                <li data-val="4">④ 신분에 상관없이 누구나 과거 시험을 보게 하려고</li>
+            </ul>
+            <div id="fb-41" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">42.</span> 조선 시대 지방 행정을 맡기 위해 왕이 고을에 파견한 관리를 부르던 말은?
+            <ul class="options" data-qid="42">
+                <li data-val="1">① 정승</li>
+                <li data-val="2">② 수령 (사또)</li>
+                <li data-val="3">③ 육조 판서</li>
+                <li data-val="4">④ 암행어사</li>
+            </ul>
+            <div id="fb-42" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">43.</span> 정도전이 꿈꾸던 조선의 정치 모습은 어떤 것이었나요?
+            <ul class="options" data-qid="43">
+                <li data-val="1">① 왕이 모든 것을 마음대로 결정하는 정치</li>
+                <li data-val="2">② 뛰어난 재상(신하)이 중심이 되어 이끌어가는 정치</li>
+                <li data-val="3">③ 무신들이 나라를 다스리는 정치</li>
+                <li data-val="4">④ 백성들이 직접 대표를 뽑는 정치</li>
+            </ul>
+            <div id="fb-43" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">44.</span> 제1차 왕자의 난이 일어난 원인으로 가장 알맞은 것은?
+            <ul class="options" data-qid="44">
+                <li data-val="1">① 명나라와의 외교 문제 때문에</li>
+                <li data-val="2">② 이방원이 막내 방석을 세자로 삼은 것에 반발하여 권력을 차지하려고</li>
+                <li data-val="3">③ 백성들이 너무 많은 세금에 반발해서</li>
+                <li data-val="4">④ 불교 세력이 성리학을 반대하여 난을 일으켜서</li>
+            </ul>
+            <div id="fb-44" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">45.</span> 조선 초기 국가의 기틀을 다지는 데 가장 중심이 된 학문적 이념은?
+            <ul class="options" data-qid="45">
+                <li data-val="1">① 성리학</li>
+                <li data-val="2">② 도교</li>
+                <li data-val="3">③ 불교</li>
+                <li data-val="4">④ 실학</li>
+            </ul>
+            <div id="fb-45" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">46.</span> 경복궁의 정문(남쪽 문) 이름은 무엇인가요?
+            <ul class="options" data-qid="46">
+                <li data-val="1">① 숭례문</li>
+                <li data-val="2">② 광화문</li>
+                <li data-val="3">③ 돈화문</li>
+                <li data-val="4">④ 홍화문</li>
+            </ul>
+            <div id="fb-46" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">47.</span> 한양에 백성들이 물건을 사고팔 수 있도록 국가에서 만든 중심 상점 거리는?
+            <ul class="options" data-qid="47">
+                <li data-val="1">① 육조 거리</li>
+                <li data-val="2">② 피맛골</li>
+                <li data-val="3">③ 시전 (운종가)</li>
+                <li data-val="4">④ 벽란도</li>
+            </ul>
+            <div id="fb-47" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">48.</span> 다음 중 제3대 왕 태종 시기에 일어난 일이 아닌 것은?
+            <ul class="options" data-qid="48">
+                <li data-val="1">① 호패법이 실시되었다.</li>
+                <li data-val="2">② 신문고가 설치되었다.</li>
+                <li data-val="3">③ 사병이 혁파되었다.</li>
+                <li data-val="4">④ 정도전이 한양을 설계했다.</li>
+            </ul>
+            <div id="fb-48" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">49.</span> 정도전의 최후에 대한 설명으로 맞는 것은?
+            <ul class="options" data-qid="49">
+                <li data-val="1">① 왕자의 난 때 이방원 세력에게 죽임을 당했다.</li>
+                <li data-val="2">② 늙어서 평화롭게 생을 마감했다.</li>
+                <li data-val="3">③ 스스로 벼슬에서 물러나 시골에 묻혀 살았다.</li>
+                <li data-val="4">④ 명나라로 도망갔다.</li>
+            </ul>
+            <div id="fb-49" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">50.</span> 조선 초기 지방 행정 구역에 대한 설명으로 옳은 것은?
+            <ul class="options" data-qid="50">
+                <li data-val="1">① 전국을 8도로 나누고 각 도에 관찰사를 파견했다.</li>
+                <li data-val="2">② 향, 부곡, 소와 같은 특수 행정 구역을 늘렸다.</li>
+                <li data-val="3">③ 지방 호족들이 자치적으로 다스리게 했다.</li>
+                <li data-val="4">④ 전국을 5도 양계로 나누었다.</li>
+            </ul>
+            <div id="fb-50" class="feedback" style="display:none;"></div>
+        </div>
+
+        <button class="btn-submit" onclick="gradeAll()">전체 채점하기 및 결과 확인 📝</button>
+
+        <div id="result-container">
+            <h3>🎉 채점 결과 🎉</h3>
+            <div class="score-text">총 <span id="final-score">0</span> / 50 문항 정답</div>
+            <p>틀린 문제는 아래에서 빨간색 표시(❌)와 정답을 확인해 보세요.</p>
+        </div>
+    </div>
+
+    <script>
+        // 정답 데이터 (단답형은 유사 정답 배열, 객관식은 번호)
+        const answers = {
+            // 1장 단답식 (1~10)
+            1: ["이성계", "태조"], 
+            2: ["위화도회군", "위화도 회군"], 
+            3: ["신진사대부", "신진 사대부", "사대부"],
+            4: ["정몽주"], 
+            5: ["선죽교"], 
+            6: ["과전법"], 
+            7: ["하여가"], 
+            8: ["단심가"], 
+            9: ["정도전"], 
+            10: ["신돈"],
+            
+            // 1장 객관식 (11~25)
+            11: "1", 12: "2", 13: "2", 14: "3", 15: "2",
+            16: "1", 17: "2", 18: "1", 19: "2", 20: "4",
+            21: "2", 22: "2", 23: "1", 24: "4", 25: "4",
+
+            // 2장 단답식 (26~35)
+            26: ["한양", "한성"], 
+            27: ["정도전"], 
+            28: ["경복궁"], 
+            29: ["종묘"], 
+            30: ["사직단"], 
+            31: ["왕자의난", "왕자의 난", "제1차왕자의난", "1차왕자의난"], 
+            32: ["신문고"], 
+            33: ["호패"], 
+            34: ["8", "8도", "팔도", "팔"], 
+            35: ["정종"],
+            
+            // 2장 객관식 (36~50)
+            36: "4", 37: "2", 38: "1", 39: "4", 40: "2",
+            41: "1", 42: "2", 43: "2", 44: "2", 45: "1",
+            46: "2", 47: "3", 48: "4", 49: "1", 50: "1"
+        };
+
+        let userAnswers = {};
+
+        // 단답식 엔터키 즉시 채점 기능 제거 및 값 저장만 수행
+        document.querySelectorAll('.input-box').forEach(input => {
+            input.addEventListener('blur', function() {
+                const qId = this.getAttribute('data-qid');
+                userAnswers[qId] = this.value;
+            });
+        });
+
+        // 객관식 클릭 이벤트 (선택 효과 및 값 저장)
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentNode;
+                const qId = parent.getAttribute('data-qid');
+                const val = this.getAttribute('data-val');
+                
+                const siblings = parent.children;
+                for(let sib of siblings) {
+                    sib.classList.remove('selected');
+                }
+                
+                this.classList.add('selected');
+                userAnswers[qId] = val;
+            });
+        });
+
+        function checkQuestion(qId, val, type) {
+            let isCorrect = false;
+            const fbElement = document.getElementById(`fb-${qId}`);
+            const ansElement = document.getElementById(`ans-${qId}`);
+            
+            if (!val || val.trim() === "") {
+                fbElement.textContent = "⚠️ 답을 입력(선택)해주세요.";
+                fbElement.className = "feedback incorrect";
+                fbElement.style.display = "inline-block";
+                return false;
+            }
+
+            if (type === 'short') {
+                const normalizedVal = val.replace(/\s+/g, '').toLowerCase(); 
+                const correctArr = answers[qId].map(a => a.replace(/\s+/g, '').toLowerCase());
+                isCorrect = correctArr.includes(normalizedVal);
+                userAnswers[qId] = val; 
+            } else if (type === 'mcq') {
+                isCorrect = (val === answers[qId]);
+            }
+
+            if (isCorrect) {
+                fbElement.innerHTML = "✅ 정답입니다!";
+                fbElement.className = "feedback correct";
+                if(ansElement) ansElement.style.display = "none";
+            } else {
+                fbElement.innerHTML = "❌ 틀렸습니다.";
+                fbElement.className = "feedback incorrect";
+                if(ansElement) ansElement.style.display = "block"; 
+            }
+            fbElement.style.display = "inline-block";
+            return isCorrect;
+        }
+
+        function gradeAll() {
+            let correctCount = 0;
+            
+            // 입력칸 현재 값 업데이트
+            document.querySelectorAll('.input-box').forEach(input => {
+                const qId = input.getAttribute('data-qid');
+                userAnswers[qId] = input.value;
+            });
+
+            // 전체 50문항 채점
+            for (let i = 1; i <= 50; i++) {
+                let type = ((i >= 1 && i <= 10) || (i >= 26 && i <= 35)) ? 'short' : 'mcq';
+                let isCorrect = checkQuestion(i, userAnswers[i] || "", type);
+                
+                if (isCorrect) correctCount++;
+            }
+
+            const resultBox = document.getElementById('result-container');
+            document.getElementById('final-score').textContent = correctCount;
+            resultBox.style.display = 'block';
+            
+            window.scrollTo({
+                top: resultBox.offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
