@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국사 뛰어넘기 3 - 독서 퀴즈 (4장)</title>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #F5F7FA;
+            --text-color: #333;
+            --border-color: #E1E4E8;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+        }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        h2 {
+            color: #2C3E50;
+            margin-top: 40px;
+            padding: 12px 15px;
+            background-color: #E8F4F8;
+            border-radius: 8px;
+            font-size: 1.3em;
+        }
+        h3 {
+            color: #34495E;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #FAFAFA;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            position: relative;
+        }
+        .question-number {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1em;
+            margin-right: 5px;
+        }
+        .options {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+        .options li {
+            margin-bottom: 8px;
+            padding: 10px 12px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options li:hover {
+            background-color: #F0F7FF;
+            border-color: #A9D0F5;
+        }
+        .options li.selected {
+            background-color: #E8F4F8;
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+        .input-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .feedback {
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1em;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .feedback.correct {
+            color: var(--correct-color);
+            background-color: #eafaf1;
+            border: 1px solid var(--correct-color);
+        }
+        .feedback.incorrect {
+            color: var(--incorrect-color);
+            background-color: #fceceb;
+            border: 1px solid var(--incorrect-color);
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: background-color 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #357ABD;
+        }
+        #result-container {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fffde7;
+            border: 2px solid #f1c40f;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .score-text {
+            font-size: 2em;
+            color: #e67e22;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .real-answer {
+            color: var(--correct-color);
+            font-weight: bold;
+            font-size: 0.9em;
+            display: none;
+            margin-top: 5px;
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            h1 { font-size: 1.5em; }
+            h2 { font-size: 1.1em; }
+            .btn-submit { font-size: 1.1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 한국사 뛰어넘기 3 독서 퀴즈</h1>
+        <div class="subtitle">4장. 뛰어난 인물들이 조선을 빛내다</div>
+        
+        <h2>📝 1부. 객관식 (1~15번)</h2>
+        
+        <div class="question"><span class="question-number">1.</span> 조선 시대에 한글을 만들어 백성들을 사랑한 위대한 성군은 누구인가요?
+            <ul class="options" data-qid="1">
+                <li data-val="1">① 태조</li>
+                <li data-val="2">② 태종</li>
+                <li data-val="3">③ 세종</li>
+                <li data-val="4">④ 세조</li>
+            </ul>
+            <div id="fb-1" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">2.</span> 세종이 '백성을 가르치는 바른 소리'라는 뜻으로 창제한 우리 글자의 본래 이름은?
+            <ul class="options" data-qid="2">
+                <li data-val="1">① 가림토</li>
+                <li data-val="2">② 한글</li>
+                <li data-val="3">③ 훈민정음</li>
+                <li data-val="4">④ 이두</li>
+            </ul>
+            <div id="fb-2" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">3.</span> 세종 대왕을 도와 학문을 연구하고 훈민정음 창제 등 여러 편찬 사업을 주도한 학자들의 연구 기관은?
+            <ul class="options" data-qid="3">
+                <li data-val="1">① 성균관</li>
+                <li data-val="2">② 집현전</li>
+                <li data-val="3">③ 규장각</li>
+                <li data-val="4">④ 사간원</li>
+            </ul>
+            <div id="fb-3" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">4.</span> 관노비 출신이었으나 세종에게 뛰어난 기술을 인정받아 벼슬에 오르고, 여러 과학 기구를 발명한 인물은?
+            <ul class="options" data-qid="4">
+                <li data-val="1">① 최무선</li>
+                <li data-val="2">② 장영실</li>
+                <li data-val="3">③ 이순지</li>
+                <li data-val="4">④ 정초</li>
+            </ul>
+            <div id="fb-4" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">5.</span> 조선 세종 때 발명된 스스로 시간을 알려주는 자동 물시계의 이름은?
+            <ul class="options" data-qid="5">
+                <li data-val="1">① 앙부일구</li>
+                <li data-val="2">② 자격루</li>
+                <li data-val="3">③ 혼천의</li>
+                <li data-val="4">④ 측우기</li>
+            </ul>
+            <div id="fb-5" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">6.</span> 장영실 등이 만든 해시계로, 가마솥이 하늘을 향해 열려있는 모양을 한 기구의 이름은?
+            <ul class="options" data-qid="6">
+                <li data-val="1">① 앙부일구</li>
+                <li data-val="2">② 측우기</li>
+                <li data-val="3">③ 자격루</li>
+                <li data-val="4">④ 간의</li>
+            </ul>
+            <div id="fb-6" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">7.</span> 농사에 큰 도움을 주고자 전국 각지에 설치하여 비가 내린 양을 재도록 만든 기구는?
+            <ul class="options" data-qid="7">
+                <li data-val="1">① 수표</li>
+                <li data-val="2">② 풍기대</li>
+                <li data-val="3">③ 혼천의</li>
+                <li data-val="4">④ 측우기</li>
+            </ul>
+            <div id="fb-7" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">8.</span> 우리 땅과 기후에 맞는 농사법을 엮어 농민들에게 보급하기 위해 세종 때 편찬한 농서는?
+            <ul class="options" data-qid="8">
+                <li data-val="1">① 농사직설</li>
+                <li data-val="2">② 향약집성방</li>
+                <li data-val="3">③ 금양잡록</li>
+                <li data-val="4">④ 삼강행실도</li>
+            </ul>
+            <div id="fb-8" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">9.</span> 조선 세종 때 우리나라 풍토에 맞는 약재와 치료법을 정리하여 편찬한 의학 서적은?
+            <ul class="options" data-qid="9">
+                <li data-val="1">① 동의보감</li>
+                <li data-val="2">② 향약집성방</li>
+                <li data-val="3">③ 의방유취</li>
+                <li data-val="4">④ 제중신편</li>
+            </ul>
+            <div id="fb-9" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">10.</span> 세종이 북방의 여진족을 몰아내고 압록강과 두만강 유역으로 영토를 넓혀 설치한 것은?
+            <ul class="options" data-qid="10">
+                <li data-val="1">① 동북 9성</li>
+                <li data-val="2">② 4군 6진</li>
+                <li data-val="3">③ 쌍성총관부</li>
+                <li data-val="4">④ 강동 6주</li>
+            </ul>
+            <div id="fb-10" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">11.</span> 북방의 6진을 개척하는 데 큰 공을 세운 호랑이 같은 장군의 이름은?
+            <ul class="options" data-qid="11">
+                <li data-val="1">① 김종서</li>
+                <li data-val="2">② 최윤덕</li>
+                <li data-val="3">③ 강감찬</li>
+                <li data-val="4">④ 이순신</li>
+            </ul>
+            <div id="fb-11" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">12.</span> 조선 초기 해안가에 자주 출몰하여 약탈을 일삼는 왜구를 소탕하기 위해 세종이 정벌한 곳은?
+            <ul class="options" data-qid="12">
+                <li data-val="1">① 제주도</li>
+                <li data-val="2">② 강화도</li>
+                <li data-val="3">③ 오키나와</li>
+                <li data-val="4">④ 쓰시마섬(대마도)</li>
+            </ul>
+            <div id="fb-12" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">13.</span> 쓰시마섬 정벌을 이끌고 큰 승리를 거두어 왜구를 물리친 장군은 누구인가요?
+            <ul class="options" data-qid="13">
+                <li data-val="1">① 이순신</li>
+                <li data-val="2">② 이종무</li>
+                <li data-val="3">③ 최무선</li>
+                <li data-val="4">④ 박위</li>
+            </ul>
+            <div id="fb-13" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">14.</span> 중국의 기준이 아닌 한양(조선)을 기준으로 하여 천체의 움직임을 계산해 만든 달력(역법서)은?
+            <ul class="options" data-qid="14">
+                <li data-val="1">① 수시력</li>
+                <li data-val="2">② 칠정산</li>
+                <li data-val="3">③ 대통력</li>
+                <li data-val="4">④ 시헌력</li>
+            </ul>
+            <div id="fb-14" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">15.</span> 세종 대에 궁중 음악(아악)을 정리하고 악기를 개량하여 조선 음악의 기틀을 다진 인물은?
+            <ul class="options" data-qid="15">
+                <li data-val="1">① 우륵</li>
+                <li data-val="2">② 박연</li>
+                <li data-val="3">③ 왕산악</li>
+                <li data-val="4">④ 신재효</li>
+            </ul>
+            <div id="fb-15" class="feedback" style="display:none;"></div>
+        </div>
+
+        <h2>✏️ 2부. 단답식 (16~25번)</h2>
+        
+        <div class="question"><span class="question-number">16.</span> 백성을 가르치는 바른 소리라는 뜻으로, 1443년에 세종이 창제한 글자는?
+            <input type="text" class="input-box" data-qid="16" placeholder="정답을 입력하세요">
+            <div id="fb-16" class="feedback" style="display:none;"></div>
+            <div id="ans-16" class="real-answer">정답: 훈민정음 (또는 한글)</div>
+        </div>
+        <div class="question"><span class="question-number">17.</span> 궁궐 안에 설치되어 학문 연구와 왕의 자문을 담당하던 세종 대의 핵심 연구 기관은?
+            <input type="text" class="input-box" data-qid="17" placeholder="정답을 입력하세요">
+            <div id="fb-17" class="feedback" style="display:none;"></div>
+            <div id="ans-17" class="real-answer">정답: 집현전</div>
+        </div>
+        <div class="question"><span class="question-number">18.</span> 원래 동래현의 노비였으나, 뛰어난 손재주로 자격루와 앙부일구를 만든 과학자는?
+            <input type="text" class="input-box" data-qid="18" placeholder="정답을 입력하세요">
+            <div id="fb-18" class="feedback" style="display:none;"></div>
+            <div id="ans-18" class="real-answer">정답: 장영실</div>
+        </div>
+        <div class="question"><span class="question-number">19.</span> 물이 떨어지는 힘을 이용해 저절로 북이나 징을 쳐서 시간을 알려주는 물시계의 이름은?
+            <input type="text" class="input-box" data-qid="19" placeholder="정답을 입력하세요">
+            <div id="fb-19" class="feedback" style="display:none;"></div>
+            <div id="ans-19" class="real-answer">정답: 자격루</div>
+        </div>
+        <div class="question"><span class="question-number">20.</span> 그림자의 길이를 통해 시간과 절기를 동시에 알 수 있는 가마솥 모양의 해시계는?
+            <input type="text" class="input-box" data-qid="20" placeholder="정답을 입력하세요">
+            <div id="fb-20" class="feedback" style="display:none;"></div>
+            <div id="ans-20" class="real-answer">정답: 앙부일구</div>
+        </div>
+        <div class="question"><span class="question-number">21.</span> 세계 최초로 빗물의 양을 정확하게 재기 위해 만들어진 기구는?
+            <input type="text" class="input-box" data-qid="21" placeholder="정답을 입력하세요">
+            <div id="fb-21" class="feedback" style="display:none;"></div>
+            <div id="ans-21" class="real-answer">정답: 측우기</div>
+        </div>
+        <div class="question"><span class="question-number">22.</span> 농민들의 오랜 경험을 모아 우리 땅에 맞는 농사짓는 법을 책으로 펴낸 것의 이름은?
+            <input type="text" class="input-box" data-qid="22" placeholder="정답을 입력하세요">
+            <div id="fb-22" class="feedback" style="display:none;"></div>
+            <div id="ans-22" class="real-answer">정답: 농사직설</div>
+        </div>
+        <div class="question"><span class="question-number">23.</span> 여진족을 몰아내고 압록강과 두만강을 국경선으로 확정짓기 위해 개척한 북방 영토를 일컫는 말은?
+            <input type="text" class="input-box" data-qid="23" placeholder="정답을 입력하세요">
+            <div id="fb-23" class="feedback" style="display:none;"></div>
+            <div id="ans-23" class="real-answer">정답: 4군 6진 (또는 4군과 6진)</div>
+        </div>
+        <div class="question"><span class="question-number">24.</span> 두만강 일대에 6진을 개척하여 영토를 굳건히 한 호랑이 장군은?
+            <input type="text" class="input-box" data-qid="24" placeholder="정답을 입력하세요">
+            <div id="fb-24" class="feedback" style="display:none;"></div>
+            <div id="ans-24" class="real-answer">정답: 김종서</div>
+        </div>
+        <div class="question"><span class="question-number">25.</span> 왜구의 근거지였던 쓰시마섬을 정벌하기 위해 세종이 파견한 장군은?
+            <input type="text" class="input-box" data-qid="25" placeholder="정답을 입력하세요">
+            <div id="fb-25" class="feedback" style="display:none;"></div>
+            <div id="ans-25" class="real-answer">정답: 이종무</div>
+        </div>
+
+        <button class="btn-submit" onclick="gradeAll()">전체 채점하기 및 결과 확인 📝</button>
+
+        <div id="result-container">
+            <h3>🎉 채점 결과 🎉</h3>
+            <div class="score-text">총 <span id="final-score">0</span> / 25 문항 정답</div>
+            <p>틀린 문제는 아래에서 빨간색 표시(❌)와 정답을 확인해 보세요.</p>
+        </div>
+    </div>
+
+    <script>
+        const answers = {
+            1: "3", 2: "3", 3: "2", 4: "2", 5: "2",
+            6: "1", 7: "4", 8: "1", 9: "2", 10: "2",
+            11: "1", 12: "4", 13: "2", 14: "2", 15: "2",
+            
+            16: ["훈민정음", "한글"], 
+            17: ["집현전"], 
+            18: ["장영실"], 
+            19: ["자격루"], 
+            20: ["앙부일구"], 
+            21: ["측우기"], 
+            22: ["농사직설"], 
+            23: ["4군6진", "4군과 6진", "사군육진"], 
+            24: ["김종서"], 
+            25: ["이종무"]
+        };
+
+        let userAnswers = {};
+
+        document.querySelectorAll('.input-box').forEach(input => {
+            input.addEventListener('blur', function() {
+                const qId = this.getAttribute('data-qid');
+                userAnswers[qId] = this.value;
+            });
+        });
+
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentNode;
+                const qId = parent.getAttribute('data-qid');
+                const val = this.getAttribute('data-val');
+                
+                const siblings = parent.children;
+                for(let sib of siblings) {
+                    sib.classList.remove('selected');
+                }
+                
+                this.classList.add('selected');
+                userAnswers[qId] = val;
+            });
+        });
+
+        function checkQuestion(qId, val, type) {
+            let isCorrect = false;
+            const fbElement = document.getElementById(`fb-${qId}`);
+            const ansElement = document.getElementById(`ans-${qId}`);
+            
+            if (!val || val.trim() === "") {
+                fbElement.textContent = "⚠️ 답을 입력(선택)해주세요.";
+                fbElement.className = "feedback incorrect";
+                fbElement.style.display = "inline-block";
+                return false;
+            }
+
+            if (type === 'short') {
+                const normalizedVal = val.replace(/\s+/g, '').toLowerCase(); 
+                const correctArr = answers[qId].map(a => a.replace(/\s+/g, '').toLowerCase());
+                isCorrect = correctArr.includes(normalizedVal);
+            } else if (type === 'mcq') {
+                isCorrect = (val === answers[qId]);
+            }
+
+            if (isCorrect) {
+                fbElement.innerHTML = "✅ 정답입니다!";
+                fbElement.className = "feedback correct";
+                if(ansElement) ansElement.style.display = "none";
+            } else {
+                fbElement.innerHTML = "❌ 틀렸습니다.";
+                fbElement.className = "feedback incorrect";
+                if(ansElement) ansElement.style.display = "block"; 
+            }
+            fbElement.style.display = "inline-block";
+            return isCorrect;
+        }
+
+        function gradeAll() {
+            let correctCount = 0;
+            
+            document.querySelectorAll('.input-box').forEach(input => {
+                const qId = input.getAttribute('data-qid');
+                userAnswers[qId] = input.value;
+            });
+
+            for (let i = 1; i <= 25; i++) {
+                let type = (i <= 15) ? 'mcq' : 'short';
+                let isCorrect = checkQuestion(i, userAnswers[i] || "", type);
+                
+                if (isCorrect) correctCount++;
+            }
+
+            const resultBox = document.getElementById('result-container');
+            document.getElementById('final-score').textContent = correctCount;
+            resultBox.style.display = 'block';
+            
+            window.scrollTo({
+                top: resultBox.offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

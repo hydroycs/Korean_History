@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국사 뛰어넘기 3 - 독서 퀴즈 (3장)</title>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #F5F7FA;
+            --text-color: #333;
+            --border-color: #E1E4E8;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+        }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        h2 {
+            color: #2C3E50;
+            margin-top: 40px;
+            padding: 12px 15px;
+            background-color: #E8F4F8;
+            border-radius: 8px;
+            font-size: 1.3em;
+        }
+        h3 {
+            color: #34495E;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #FAFAFA;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            position: relative;
+        }
+        .question-number {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1em;
+            margin-right: 5px;
+        }
+        .options {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+        .options li {
+            margin-bottom: 8px;
+            padding: 10px 12px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options li:hover {
+            background-color: #F0F7FF;
+            border-color: #A9D0F5;
+        }
+        .options li.selected {
+            background-color: #E8F4F8;
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+        .input-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .feedback {
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1em;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .feedback.correct {
+            color: var(--correct-color);
+            background-color: #eafaf1;
+            border: 1px solid var(--correct-color);
+        }
+        .feedback.incorrect {
+            color: var(--incorrect-color);
+            background-color: #fceceb;
+            border: 1px solid var(--incorrect-color);
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: background-color 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #357ABD;
+        }
+        #result-container {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fffde7;
+            border: 2px solid #f1c40f;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .score-text {
+            font-size: 2em;
+            color: #e67e22;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .real-answer {
+            color: var(--correct-color);
+            font-weight: bold;
+            font-size: 0.9em;
+            display: none;
+            margin-top: 5px;
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            h1 { font-size: 1.5em; }
+            h2 { font-size: 1.1em; }
+            .btn-submit { font-size: 1.1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 한국사 뛰어넘기 3 독서 퀴즈</h1>
+        <div class="subtitle">3장. 유교와 신분제 사회</div>
+        
+        <h2>📝 1부. 객관식 (1~15번)</h2>
+        
+        <div class="question"><span class="question-number">1.</span> 조선이 나라의 근본으로 삼은 종교이자 사상은 무엇인가요?
+            <ul class="options" data-qid="1">
+                <li data-val="1">① 불교</li>
+                <li data-val="2">② 성리학(유교)</li>
+                <li data-val="3">③ 도교</li>
+                <li data-val="4">④ 기독교</li>
+            </ul>
+            <div id="fb-1" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">2.</span> 조선 시대 가장 높은 신분으로, 과거 시험을 통해 관리가 되어 나랏일을 맡았던 계층은?
+            <ul class="options" data-qid="2">
+                <li data-val="1">① 양반</li>
+                <li data-val="2">② 중인</li>
+                <li data-val="3">③ 상민</li>
+                <li data-val="4">④ 천민</li>
+            </ul>
+            <div id="fb-2" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">3.</span> 역관(통역), 의관(의사) 등 전문적인 기술이나 지식을 가지고 양반을 돕던 신분은?
+            <ul class="options" data-qid="3">
+                <li data-val="1">① 양반</li>
+                <li data-val="2">② 중인</li>
+                <li data-val="3">③ 상민</li>
+                <li data-val="4">④ 향리</li>
+            </ul>
+            <div id="fb-3" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">4.</span> 조선 시대 백성의 대부분을 차지했으며, 농사, 수공업, 장사 등을 하며 세금을 내던 계층은?
+            <ul class="options" data-qid="4">
+                <li data-val="1">① 권문세족</li>
+                <li data-val="2">② 중인</li>
+                <li data-val="3">③ 상민</li>
+                <li data-val="4">④ 노비</li>
+            </ul>
+            <div id="fb-4" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">5.</span> 가장 낮은 신분인 천민 중에서 가장 많은 비중을 차지했으며, 재산처럼 사고팔릴 수 있었던 사람들은?
+            <ul class="options" data-qid="5">
+                <li data-val="1">① 백정</li>
+                <li data-val="2">② 광대</li>
+                <li data-val="3">③ 무당</li>
+                <li data-val="4">④ 노비</li>
+            </ul>
+            <div id="fb-5" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">6.</span> 유교에서 임금과 신하, 부모와 자식, 남편과 아내 사이에 지켜야 할 기본적인 도리를 뜻하는 말은?
+            <ul class="options" data-qid="6">
+                <li data-val="1">① 인의예지</li>
+                <li data-val="2">② 삼강오륜</li>
+                <li data-val="3">③ 사농공상</li>
+                <li data-val="4">④ 관혼상제</li>
+            </ul>
+            <div id="fb-6" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">7.</span> 백성들에게 유교 윤리를 쉽게 가르치기 위해 글과 그림으로 설명하여 만든 책은?
+            <ul class="options" data-qid="7">
+                <li data-val="1">① 농사직설</li>
+                <li data-val="2">② 경국대전</li>
+                <li data-val="3">③ 삼강행실도</li>
+                <li data-val="4">④ 동의보감</li>
+            </ul>
+            <div id="fb-7" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">8.</span> 사람이 태어나서 죽을 때까지 치르는 네 가지 큰 의례(성인식, 결혼, 장례, 제사)를 일컫는 말은?
+            <ul class="options" data-qid="8">
+                <li data-val="1">① 삼강오륜</li>
+                <li data-val="2">② 관혼상제</li>
+                <li data-val="3">③ 동방예의</li>
+                <li data-val="4">④ 사농공상</li>
+            </ul>
+            <div id="fb-8" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">9.</span> 조선 시대 아이들이 천자문 등을 배우던 가장 기초적인 서당 교육 기관은?
+            <ul class="options" data-qid="9">
+                <li data-val="1">① 서당</li>
+                <li data-val="2">② 향교</li>
+                <li data-val="3">③ 성균관</li>
+                <li data-val="4">④ 서원</li>
+            </ul>
+            <div id="fb-9" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">10.</span> 국가에서 각 지방에 세운 중등 교육 기관으로, 양반의 자제들이 유교 경전을 배우던 곳은?
+            <ul class="options" data-qid="10">
+                <li data-val="1">① 사부학당</li>
+                <li data-val="2">② 성균관</li>
+                <li data-val="3">③ 향교</li>
+                <li data-val="4">④ 태학</li>
+            </ul>
+            <div id="fb-10" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">11.</span> 조선 시대 최고의 국립 교육 기관으로, 오늘날의 대학교와 같은 역할을 한 곳은?
+            <ul class="options" data-qid="11">
+                <li data-val="1">① 서원</li>
+                <li data-val="2">② 국자감</li>
+                <li data-val="3">③ 성균관</li>
+                <li data-val="4">④ 집현전</li>
+            </ul>
+            <div id="fb-11" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">12.</span> 조선 시대에 관리가 되기 위해 치러야 했던 가장 대표적인 시험 제도는?
+            <ul class="options" data-qid="12">
+                <li data-val="1">① 음서</li>
+                <li data-val="2">② 과거</li>
+                <li data-val="3">③ 화백</li>
+                <li data-val="4">④ 골품제</li>
+            </ul>
+            <div id="fb-12" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">13.</span> 양반의 자식이지만 어머니가 첩인 경우를 일컫는 말로, 벼슬길에 오르는 데 큰 제한을 받았던 신분은?
+            <ul class="options" data-qid="13">
+                <li data-val="1">① 역관</li>
+                <li data-val="2">② 백정</li>
+                <li data-val="3">③ 서얼</li>
+                <li data-val="4">④ 양인</li>
+            </ul>
+            <div id="fb-13" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">14.</span> 과거 시험 중 무관(장군)을 뽑는 시험의 이름은?
+            <ul class="options" data-qid="14">
+                <li data-val="1">① 문과</li>
+                <li data-val="2">② 무과</li>
+                <li data-val="3">③ 잡과</li>
+                <li data-val="4">④ 생원과</li>
+            </ul>
+            <div id="fb-14" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="question"><span class="question-number">15.</span> 조선 초기 여성의 지위에 대한 설명으로 가장 알맞은 것은?
+            <ul class="options" data-qid="15">
+                <li data-val="1">① 남성보다 훨씬 높은 권력을 가졌다.</li>
+                <li data-val="2">② 고려 시대에 비해서는 유교 질서로 인해 차별이 생기기 시작했다.</li>
+                <li data-val="3">③ 언제든지 마음대로 이혼하고 재혼할 수 있었다.</li>
+                <li data-val="4">④ 여성들도 과거 시험에 응시할 수 있었다.</li>
+            </ul>
+            <div id="fb-15" class="feedback" style="display:none;"></div>
+        </div>
+
+        <h2>✏️ 2부. 단답식 (16~25번)</h2>
+        
+        <div class="question"><span class="question-number">16.</span> 조선 시대 신분 중 가장 높은 지위를 차지하며, 학문에 힘쓰고 나랏일을 하던 계층은?
+            <input type="text" class="input-box" data-qid="16" placeholder="정답을 입력하세요">
+            <div id="fb-16" class="feedback" style="display:none;"></div>
+            <div id="ans-16" class="real-answer">정답: 양반</div>
+        </div>
+        <div class="question"><span class="question-number">17.</span> 역관, 의관, 화원(그림) 등 전문적인 기술직에 종사하던 신분 계층은?
+            <input type="text" class="input-box" data-qid="17" placeholder="정답을 입력하세요">
+            <div id="fb-17" class="feedback" style="display:none;"></div>
+            <div id="ans-17" class="real-answer">정답: 중인</div>
+        </div>
+        <div class="question"><span class="question-number">18.</span> 농민, 상인, 수공업자 등으로 구성되어 나라에 세금을 내고 군대에 가야 했던 평민 계층은?
+            <input type="text" class="input-box" data-qid="18" placeholder="정답을 입력하세요">
+            <div id="fb-18" class="feedback" style="display:none;"></div>
+            <div id="ans-18" class="real-answer">정답: 상민</div>
+        </div>
+        <div class="question"><span class="question-number">19.</span> 천민 중에서 주인의 재산으로 여겨져 사고팔리거나 상속될 수 있었던 사람들은?
+            <input type="text" class="input-box" data-qid="19" placeholder="정답을 입력하세요">
+            <div id="fb-19" class="feedback" style="display:none;"></div>
+            <div id="ans-19" class="real-answer">정답: 노비</div>
+        </div>
+        <div class="question"><span class="question-number">20.</span> 부모에게 효도하고 임금에게 충성하는 등 유교의 핵심 실천 윤리인 3가지 강령과 5가지 인륜을 합쳐 부르는 말은?
+            <input type="text" class="input-box" data-qid="20" placeholder="정답을 입력하세요">
+            <div id="fb-20" class="feedback" style="display:none;"></div>
+            <div id="ans-20" class="real-answer">정답: 삼강오륜</div>
+        </div>
+        <div class="question"><span class="question-number">21.</span> 글을 모르는 백성들을 위해 충신, 효자, 열녀의 이야기를 그림과 함께 엮어 펴낸 책의 이름은?
+            <input type="text" class="input-box" data-qid="21" placeholder="정답을 입력하세요">
+            <div id="fb-21" class="feedback" style="display:none;"></div>
+            <div id="ans-21" class="real-answer">정답: 삼강행실도</div>
+        </div>
+        <div class="question"><span class="question-number">22.</span> 마을마다 세워져 한자나 기본적인 유교 경전을 가르쳤던 기초 교육 기관은?
+            <input type="text" class="input-box" data-qid="22" placeholder="정답을 입력하세요">
+            <div id="fb-22" class="feedback" style="display:none;"></div>
+            <div id="ans-22" class="real-answer">정답: 서당</div>
+        </div>
+        <div class="question"><span class="question-number">23.</span> 조선 시대 최고의 교육 기관으로, 소과에 합격한 생원과 진사들이 입학하여 공부하던 곳은?
+            <input type="text" class="input-box" data-qid="23" placeholder="정답을 입력하세요">
+            <div id="fb-23" class="feedback" style="display:none;"></div>
+            <div id="ans-23" class="real-answer">정답: 성균관</div>
+        </div>
+        <div class="question"><span class="question-number">24.</span> 조선에서 실력에 따라 관리를 뽑기 위해 실시한 시험 제도는?
+            <input type="text" class="input-box" data-qid="24" placeholder="정답을 입력하세요">
+            <div id="fb-24" class="feedback" style="display:none;"></div>
+            <div id="ans-24" class="real-answer">정답: 과거 (또는 과거제도)</div>
+        </div>
+        <div class="question"><span class="question-number">25.</span> 양반의 자식 중 정실부인이 아닌 첩에게서 태어난 자식을 가리키는 말로, 관직 진출에 차별을 받았던 신분은?
+            <input type="text" class="input-box" data-qid="25" placeholder="정답을 입력하세요">
+            <div id="fb-25" class="feedback" style="display:none;"></div>
+            <div id="ans-25" class="real-answer">정답: 서얼</div>
+        </div>
+
+        <button class="btn-submit" onclick="gradeAll()">전체 채점하기 및 결과 확인 📝</button>
+
+        <div id="result-container">
+            <h3>🎉 채점 결과 🎉</h3>
+            <div class="score-text">총 <span id="final-score">0</span> / 25 문항 정답</div>
+            <p>틀린 문제는 아래에서 빨간색 표시(❌)와 정답을 확인해 보세요.</p>
+        </div>
+    </div>
+
+    <script>
+        const answers = {
+            1: "2", 2: "1", 3: "2", 4: "3", 5: "4",
+            6: "2", 7: "3", 8: "2", 9: "1", 10: "3",
+            11: "3", 12: "2", 13: "3", 14: "2", 15: "2",
+            
+            16: ["양반"], 
+            17: ["중인"], 
+            18: ["상민", "평민", "양인"], 
+            19: ["노비"], 
+            20: ["삼강오륜"], 
+            21: ["삼강행실도"], 
+            22: ["서당"], 
+            23: ["성균관"], 
+            24: ["과거", "과거제", "과거제도", "과거시험"], 
+            25: ["서얼", "얼자", "서자"]
+        };
+
+        let userAnswers = {};
+
+        document.querySelectorAll('.input-box').forEach(input => {
+            input.addEventListener('blur', function() {
+                const qId = this.getAttribute('data-qid');
+                userAnswers[qId] = this.value;
+            });
+        });
+
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentNode;
+                const qId = parent.getAttribute('data-qid');
+                const val = this.getAttribute('data-val');
+                
+                const siblings = parent.children;
+                for(let sib of siblings) {
+                    sib.classList.remove('selected');
+                }
+                
+                this.classList.add('selected');
+                userAnswers[qId] = val;
+            });
+        });
+
+        function checkQuestion(qId, val, type) {
+            let isCorrect = false;
+            const fbElement = document.getElementById(`fb-${qId}`);
+            const ansElement = document.getElementById(`ans-${qId}`);
+            
+            if (!val || val.trim() === "") {
+                fbElement.textContent = "⚠️ 답을 입력(선택)해주세요.";
+                fbElement.className = "feedback incorrect";
+                fbElement.style.display = "inline-block";
+                return false;
+            }
+
+            if (type === 'short') {
+                const normalizedVal = val.replace(/\s+/g, '').toLowerCase(); 
+                const correctArr = answers[qId].map(a => a.replace(/\s+/g, '').toLowerCase());
+                isCorrect = correctArr.includes(normalizedVal);
+            } else if (type === 'mcq') {
+                isCorrect = (val === answers[qId]);
+            }
+
+            if (isCorrect) {
+                fbElement.innerHTML = "✅ 정답입니다!";
+                fbElement.className = "feedback correct";
+                if(ansElement) ansElement.style.display = "none";
+            } else {
+                fbElement.innerHTML = "❌ 틀렸습니다.";
+                fbElement.className = "feedback incorrect";
+                if(ansElement) ansElement.style.display = "block"; 
+            }
+            fbElement.style.display = "inline-block";
+            return isCorrect;
+        }
+
+        function gradeAll() {
+            let correctCount = 0;
+            
+            document.querySelectorAll('.input-box').forEach(input => {
+                const qId = input.getAttribute('data-qid');
+                userAnswers[qId] = input.value;
+            });
+
+            for (let i = 1; i <= 25; i++) {
+                let type = (i <= 15) ? 'mcq' : 'short';
+                let isCorrect = checkQuestion(i, userAnswers[i] || "", type);
+                
+                if (isCorrect) correctCount++;
+            }
+
+            const resultBox = document.getElementById('result-container');
+            document.getElementById('final-score').textContent = correctCount;
+            resultBox.style.display = 'block';
+            
+            window.scrollTo({
+                top: resultBox.offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
