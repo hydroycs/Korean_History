@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>한국사 뛰어넘기 4 - 1장 간도와 독도는 조선의 영토 퀴즈</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            --accent: #d97706;
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --border: #e5e7eb;
+            --card-bg: #ffffff;
+            --bg-body: #f3f4f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", "맑은 고딕", sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* 상단 고정 진행률 바 */
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .sticky-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        /* 헤더 카드 */
+        .header-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.15);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header-card h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            word-break: keep-all;
+        }
+
+        .header-card p {
+            font-size: 0.95rem;
+            opacity: 0.92;
+            word-break: keep-all;
+        }
+
+        .info-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .info-pill {
+            background: rgba(15, 23, 42, 0.25);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* 섹션 구분 타이틀 */
+        .section-header {
+            background: #ffffff;
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 28px 0 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-header.short-answer {
+            border-left-color: var(--accent);
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .section-header p {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        /* 문제 카드 */
+        .question-card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .question-card.unanswered-warning {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+
+        .question-card.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .question-card.incorrect {
+            border-color: var(--danger);
+            background-color: var(--danger-bg);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .q-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.92rem;
+            flex-shrink: 0;
+        }
+
+        .short-answer-card .q-num {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .q-title {
+            font-size: 1.03rem;
+            font-weight: 700;
+            color: var(--text-main);
+            word-break: keep-all;
+            padding-top: 3px;
+        }
+
+        /* 객관식 보기 스타일 */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.15s ease;
+            font-size: 0.96rem;
+            word-break: keep-all;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-bg);
+        }
+
+        .option-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .option-label.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-bg);
+            font-weight: 600;
+        }
+
+        .option-label.correct-option {
+            border-color: var(--success);
+            background-color: #dcfce7;
+            font-weight: 700;
+            color: #14532d;
+        }
+
+        .option-label.wrong-option {
+            border-color: var(--danger);
+            background-color: #fee2e2;
+            color: #7f1d1d;
+            text-decoration: line-through;
+        }
+
+        /* 단답형 주관식 입력창 */
+        .short-input-wrap {
+            margin-top: 6px;
+        }
+
+        .short-input {
+            width: 100%;
+            padding: 13px 16px;
+            font-size: 1rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #ffffff;
+        }
+
+        .short-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+        }
+
+        /* 채점 피드백 박스 */
+        .feedback-box {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .feedback-status {
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .feedback-status.pass {
+            color: var(--success);
+        }
+
+        .feedback-status.fail {
+            color: var(--danger);
+        }
+
+        .short-answer-reveal {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 700;
+        }
+
+        /* 하단 버튼 및 결과 영역 */
+        .action-area {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* 결과 성적표 카드 */
+        .result-card {
+            display: none;
+            background: #ffffff;
+            border: 3px solid var(--primary);
+            border-radius: 16px;
+            padding: 28px 20px;
+            margin-top: 24px;
+            text-align: center;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            border: 6px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .score-number {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .score-unit {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 8px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* 모달 알림창 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 18px;
+            word-break: keep-all;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .header-card {
+                padding: 22px 18px;
+            }
+            .header-card h1 {
+                font-size: 1.35rem;
+            }
+            .question-card {
+                padding: 16px;
+            }
+            .q-title {
+                font-size: 0.98rem;
+            }
+            .option-label {
+                padding: 11px 12px;
+                font-size: 0.92rem;
+            }
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 고정 진행 상태바 -->
+    <div class="sticky-bar">
+        <div class="sticky-inner">
+            <span class="progress-text" id="progressText">진행률: 0 / 50 (0%)</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header-card">
+            <span class="badge">한국사 뛰어넘기 4 (스푼북) · 제1장</span>
+            <h1>1. 간도와 독도는 조선의 영토</h1>
+            <p>본문과 연표, 심화 읽기자료 내용을 바탕으로 구성된 50문항 종합 퀴즈입니다. 모든 문제를 다 풀어야 채점이 진행됩니다.</p>
+            <div class="info-pills">
+                <span class="info-pill">객관식 40문항 (80점)</span>
+                <span class="info-pill">단답형 주관식 10문항 (20점)</span>
+                <span class="info-pill">총 50문항 · 100점 만점 (문항당 2점)</span>
+            </div>
+        </div>
+
+        <!-- 성적 결과 카드 (채점 후 상단에 표시) -->
+        <div class="result-card" id="resultCard">
+            <div class="score-circle">
+                <span class="score-number" id="finalScore">0</span>
+                <span class="score-unit">/ 100점</span>
+            </div>
+            <h2 id="resultHeadline" style="margin-bottom: 6px; font-size: 1.35rem;">채점 완료!</h2>
+            <p id="resultSubtext" style="color: var(--text-sub); font-size: 0.95rem;"></p>
+            <div class="result-stats">
+                <div class="stat-box">
+                    <div class="stat-label">전체 맞은 문제 수</div>
+                    <div class="stat-value" id="totalCorrectStat">0 / 50</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">객관식 정답 수</div>
+                    <div class="stat-value" id="mcCorrectStat">0 / 40</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">단답형 정답 수</div>
+                    <div class="stat-value" id="saCorrectStat">0 / 10</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1부: 객관식 40문항 -->
+        <div class="section-header">
+            <h2>[1부] 객관식 40문항 (1번 ~ 40번)</h2>
+            <p>각 문제에서 가장 알맞은 보기를 하나씩 골라 주세요. (문항당 2점)</p>
+        </div>
+        <div id="mcContainer"></div>
+
+        <!-- 2부: 단답형 주관식 10문항 -->
+        <div class="section-header short-answer">
+            <h2>[2부] 단답형 주관식 10문항 (41번 ~ 50번)</h2>
+            <p>빈칸에 알맞은 정답을 직접 입력해 주세요. 채점 시 정답과 해설이 함께 표시됩니다. (문항당 2점)</p>
+        </div>
+        <div id="saContainer"></div>
+
+        <!-- 하단 제출 버튼 -->
+        <div class="action-area">
+            <button type="button" class="btn-submit" id="submitBtn" onclick="gradeQuiz()">채점하기 (50문항 완료 후 클릭)</button>
+            <button type="button" class="btn-reset" id="resetBtn" onclick="resetQuiz()">다시 풀기</button>
+        </div>
+    </div>
+
+    <!-- 미완료 문항 안내 모달 -->
+    <div class="modal-overlay" id="warningModal">
+        <div class="modal-box">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">문제를 모두 풀어 주세요!</div>
+            <div class="modal-desc" id="modalMessage">아직 풀지 않은 문제가 있습니다. 모든 문제를 다 풀어야 채점할 수 있습니다.</div>
+            <button type="button" class="modal-btn" onclick="closeModal()">미완료 문제로 이동하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 1부: 객관식 40문제 데이터 (단답형 10문제와 중복되지 않음)
+        const mcQuestions = [
+            {
+                q: "[연표] 1720년 붕당 대립이 극에 달한 가운데 사망한 조선의 왕은 누구인가요?",
+                options: ["숙종", "영조", "정조", "순조"],
+                answer: 0,
+                exp: "연표에 따르면 1720년 붕당 대립이 극에 달한 가운데 숙종이 사망하였습니다."
+            },
+            {
+                q: "[연표] 1776년에 즉위한 조선의 왕은 누구인가요?",
+                options: ["광해군", "숙종", "정조", "헌종"],
+                answer: 2,
+                exp: "연표에서 1776년에 정조가 즉위하였음을 확인할 수 있습니다."
+            },
+            {
+                q: "[연표] 1789년에 관직에 진출한 조선 후기의 대표적인 실학자는 누구인가요?",
+                options: ["박지원", "정약용", "홍대용", "박제가"],
+                answer: 1,
+                exp: "1789년 실학자인 정약용이 관직에 진출하였습니다."
+            },
+            {
+                q: "[연표] 1794년 정조에게 고구마의 중요성을 알리는 글을 올린 인물은 누구인가요?",
+                options: ["서용보", "김육", "조엄", "서유구"],
+                answer: 0,
+                exp: "1794년 서용보가 고구마의 중요성을 알리는 글을 정조에게 올렸습니다."
+            },
+            {
+                q: "[연표] 1801년 관청에 딸려 있는 노비(관노비)를 해방한 조선의 왕은 누구인가요?",
+                options: ["인조", "현종", "정조", "순조"],
+                answer: 3,
+                exp: "1801년 순조가 관청에 딸려 있는 노비를 해방하였습니다."
+            },
+            {
+                q: "[연표] 1805년 <처네 쓴 여인>을 그린 조선 후기의 화가는 누구인가요?",
+                options: ["김홍도", "신윤복", "정선", "장승업"],
+                answer: 1,
+                exp: "1805년 신윤복이 <처네 쓴 여인>을 그렸습니다."
+            },
+            {
+                q: "[연표] 1861년에 <대동여지도>를 만든 인물은 누구인가요?",
+                options: ["정상기", "김정호", "이중환", "한백겸"],
+                answer: 1,
+                exp: "1861년 김정호가 <대동여지도>를 만들었습니다."
+            },
+            {
+                q: "[연표] 1862년에 농민 봉기가 일어난 지역은 어디인가요?",
+                options: ["평양", "춘천", "진주", "나주"],
+                answer: 2,
+                exp: "1862년 진주에서 농민 봉기가 일어났습니다."
+            },
+            {
+                q: "[연표] 1864년에 처형된 인물로, 동학을 창시한 사람은 누구인가요?",
+                options: ["최제우", "최시형", "손병희", "전봉준"],
+                answer: 0,
+                exp: "1864년 동학을 창시한 최제우가 처형되었습니다."
+            },
+            {
+                q: "독도에 대한 우리나라 최초의 기록을 찾아볼 수 있는 역사책과 그 저자가 바르게 짝지어진 것은 무엇인가요?",
+                options: ["일연 - 《삼국유사》", "김부식 - 《삼국사기》", "이승휴 - 《제왕운기》", "각훈 - 《해동고승전》"],
+                answer: 1,
+                exp: "독도에 대한 우리나라 최초의 기록은 김부식이 쓴 《삼국사기》에서 찾아볼 수 있습니다."
+            },
+            {
+                q: "《삼국사기》의 기록에 따르면 신라가 우산국을 정복한 시기는 언제인가요?",
+                options: ["내물왕 5년(360년)", "지증왕 13년(512년)", "법흥왕 19년(532년)", "진흥왕 23년(562년)"],
+                answer: 1,
+                exp: "《삼국사기》에 따르면 신라 지증왕 13년(512년)에 우산국을 정복하였습니다."
+            },
+            {
+                q: "신라 시대에 울릉도와 독도를 지배했던 작은 왕국의 이름은 무엇이었나요?",
+                options: ["탐라국", "우산국", "동예", "옥저"],
+                answer: 1,
+                exp: "당시 우산국은 울릉도와 독도를 지배한 작은 왕국이었고, 독도는 우산도라고 불렸습니다."
+            },
+            {
+                q: "신라가 우산국을 정복할 때 무력 대신 나무로 만든 가짜 사자를 이용해 계략을 쓴 이유로 본문에 나온 것은 무엇인가요?",
+                options: [
+                    "우산국에 철기 무기가 매우 발달해 있었기 때문에",
+                    "우산국 사람들이 신라 내륙까지 들어와 노략질을 하고 어리석고 성질이 사나웠기 때문에",
+                    "신라에 배를 만들 나무가 부족했기 때문에",
+                    "우산국 왕이 사자를 신성한 동물로 숭배했기 때문에"
+                ],
+                answer: 1,
+                exp: "본문에 '우산국 사람들이 신라 내륙까지 들어와 마구 노략질을 하고 있다. 우산국 사람들은 어리석고 성질이 사나우니 계략을 써서 복종시키는 수밖에 없다.'라고 나와 있습니다."
+            },
+            {
+                q: "우산국이 가짜 나무 사자를 보고 두려워하며 항복한 이후, 해마다 신라에 한 일은 무엇인가요?",
+                options: ["금과 은으로 만든 무기를 바쳤다", "해마다 토산물을 바쳤다", "대규모 군사를 파견해 주었다", "전투선을 만들어 바쳤다"],
+                answer: 1,
+                exp: "항복한 때부터 우산국은 해마다 신라에 토산물을 바쳤다고 전해집니다."
+            },
+            {
+                q: "1454년에 만들어진 조선 시대의 책으로, 울릉도(무릉)와 독도(우산)가 우리 영토이며 강원도 울진현에 속한 두 섬이라고 기록된 문헌은 무엇인가요?",
+                options: ["《경국대전》", "《세종실록지리지》", "《동국통감》", "《농사직설》"],
+                answer: 1,
+                exp: "1454년에 만들어진 《세종실록지리지》에 우산(독도)과 무릉(울릉도)이 강원도 울진현에 속한 두 섬이라는 사실이 기록되어 있습니다."
+            },
+            {
+                q: "《세종실록지리지》에 기록된 우산(독도)과 무릉(울릉도)에 대한 설명으로 옳은 것은 무엇인가요?",
+                options: [
+                    "울진현의 서남쪽 바다에 위치해 있다.",
+                    "두 섬은 서로 멀리 떨어져 있지 않아 날씨가 맑으면 서로 바라볼 수 있다.",
+                    "두 섬은 거리가 너무 멀어 어떤 날씨에도 서로 볼 수 없다.",
+                    "고구려 때부터 우산국이라 불렸다고 적혀 있다."
+                ],
+                answer: 1,
+                exp: "《세종실록지리지》에는 '우산(독도)과 무릉(울릉도) 두 섬은 울진현의 정동쪽 바다에 있다. 두 섬은 서로 멀리 떨어져 있지 않아 날씨가 맑으면 서로 바라볼 수 있다.'라고 기록되어 있습니다."
+            },
+            {
+                q: "1530년에 완성된 지리서로, 우산과 무릉 두 섬이 표시된 지도인 <팔도총도>가 실려 있는 책은 무엇인가요?",
+                options: ["《신증동국여지승람》", "《택리지》", "《발해고》", "《열하일기》"],
+                answer: 0,
+                exp: "1530년에 완성된 《신증동국여지승람》의 <팔도총도>에는 두 섬이 표시된 지도가 실려 있습니다."
+            },
+            {
+                q: "울릉도와 독도, 그리고 일본 오키 섬(오키시마) 사이의 지리적 거리에 대한 설명으로 본문 내용과 일치하는 것은 무엇인가요?",
+                options: [
+                    "독도는 울릉도에서 동남쪽으로 87.4km 떨어져 있고, 일본 오키 섬(157.5km)보다 울릉도와의 거리가 훨씬 더 가깝다.",
+                    "독도는 울릉도에서 157.5km 떨어져 있고, 일본 오키 섬에서는 87.4km 떨어져 있다.",
+                    "독도에서 울릉도까지의 거리와 오키 섬까지의 거리는 똑같다.",
+                    "날씨가 맑은 날에는 울릉도보다 오키 섬에서 독도가 더 잘 보인다."
+                ],
+                answer: 0,
+                exp: "독도는 울릉도에서 동남쪽으로 87.4km 떨어져 있고, 독도에서 제일 가까운 일본 영토인 오키 섬은 157.5km 떨어져 있어 울릉도와의 거리가 훨씬 더 가깝습니다."
+            },
+            {
+                q: "조선 후기 울릉도와 독도를 지킨 안용복의 생애와 직업에 대한 설명으로 옳은 것은 무엇인가요?",
+                options: [
+                    "조선 세종 때 태어난 고위 문신이었다.",
+                    "조선 숙종 때인 1650년경에 태어났으며, 전투선의 노를 젓는 수군이자 어부였다.",
+                    "조선 정조 때 규장각에서 일하던 학자였다.",
+                    "부산 동래 부사로 임명된 양반 관리였다."
+                ],
+                answer: 1,
+                exp: "안용복은 조선 숙종 때인 1650년경에 태어났고, 전투선의 노를 젓는 수군이자 어부였습니다."
+            },
+            {
+                q: "1693년 3월, 안용복이 울릉도로 고기잡이를 하러 갔을 때 함께 갔던 어부들은 약 몇 명이었나요?",
+                options: ["10여 명", "40여 명", "100여 명", "300여 명"],
+                answer: 1,
+                exp: "1693년 3월, 안용복은 40여 명의 어부들과 함께 울릉도로 고기잡이를 하러 갔습니다."
+            },
+            {
+                q: "1693년 안용복이 울릉도에서 몰래 고기잡이를 하던 일본 어부들에게 항의하다가 사로잡혀 끌려간 일본의 섬은 어디인가요?",
+                options: ["쓰시마 섬(대마도)", "오키 섬(오키시마)", "규슈", "홋카이도"],
+                answer: 1,
+                exp: "안용복 일행은 일본 어부들에게 사로잡혀 일본 오키 섬으로 끌려가 그곳 관리에게 당당히 항의했습니다."
+            },
+            {
+                q: "1693년 일본에서 풀려나 조선으로 돌아온 안용복이 조선 조정으로부터 받은 처벌과 그 이유는 무엇인가요?",
+                options: [
+                    "일본 어선과 싸움을 벌인 죄로 재산을 몰수당했다.",
+                    "조선 조정의 허가 없이 국경을 넘은 죄로 곤장을 맞고 옥살이를 했다.",
+                    "물고기를 바치지 않은 죄로 수군에서 쫓겨났다.",
+                    "아무런 처벌 없이 즉시 높은 벼슬을 받았다."
+                ],
+                answer: 1,
+                exp: "일본 관리가 조사한 뒤 조선으로 돌려보냈으나, 조정의 허가 없이 국경을 넘은 죄로 곤장을 맞고 옥살이를 했습니다."
+            },
+            {
+                q: "안용복의 첫 번째 도일 이후 조선 정부의 강력한 항의에 따라 일본 정부가 조사하여 내린 조치로 옳은 것은 무엇인가요?",
+                options: [
+                    "1695년 12월 울릉도와 독도가 일본 영토가 아니라는 결론을 내리고, 1696년 1월 일본 어부들이 건너가는 것을 금지했다.",
+                    "울릉도는 조선 땅이고 독도는 일본 땅이라고 절반씩 나누자고 제안했다.",
+                    "일본 해군을 울릉도에 상주시키기로 결정했다.",
+                    "안용복을 일본의 관리로 초빙하겠다고 요청했다."
+                ],
+                answer: 0,
+                exp: "일본은 조사 끝에 1695년 12월 울릉도와 독도가 일본 영토가 아니라는 결론을 내렸고, 1696년 1월 일본 어부들의 도해를 금지했습니다."
+            },
+            {
+                q: "1696년 봄, 두 번째로 일본에 건너가 항의하고 귀국한 안용복이 조선에서 겪은 일로 옳은 것은 무엇인가요?",
+                options: [
+                    "거짓 관리 행세를 하고 국경을 넘은 죄로 사형 선고를 받았으나, 공을 인정해야 한다는 신하들의 주장 덕분에 사형을 면하고 귀양을 갔다.",
+                    "귀국 즉시 영의정으로 임명되어 외교 문서를 직접 작성했다.",
+                    "일본 정부의 요청으로 다시 일본으로 추방되었다.",
+                    "아무런 조사 없이 고향인 동래로 돌아가 여생을 보냈다."
+                ],
+                answer: 0,
+                exp: "귀국한 안용복은 거짓 관리 행세를 하고 국경을 넘은 죄로 사형 선고를 받았지만, 공을 높이 인정해야 한다는 몇몇 신하들 덕분에 사형을 면하고 귀양을 가게 되었습니다."
+            },
+            {
+                q: "안용복의 두 차례에 걸친 활약 이후, 일본이 외교 문서를 통해 울릉도가 조선 영토임을 공식 확인한 해는 언제인가요?",
+                options: ["1650년", "1693년", "1699년", "1712년"],
+                answer: 2,
+                exp: "1699년에 일본은 외교 문서를 통해 울릉도가 조선 영토임을 공식 확인했습니다."
+            },
+            {
+                q: "간도의 지리적 위치와 역사적 배경에 대한 설명으로 옳지 않은 것은 무엇인가요?",
+                options: [
+                    "압록강과 쑹화 강의 상류 지방인 백두산 일대와 두만강 북부 지역이다.",
+                    "현재 중국 지린 성 동남부 지역을 가리킨다.",
+                    "우리 역사에서 고구려와 발해의 옛 땅이었다.",
+                    "조선 시대에는 조선 사람이 단 한 명도 살지 않던 무인도 지역이었다."
+                ],
+                answer: 3,
+                exp: "당시 간도 지방에는 조선 사람들이 많이 정착해서 살고 있었기 때문에 조선과 청나라 사이에 국경을 확실히 해 둘 필요가 생겼습니다."
+            },
+            {
+                q: "16세기 말 간도 일대에 흩어져 살던 여러 부족을 통일하고 중국 명나라를 정복해 나라 이름을 '청'으로 바꾼 민족은 누구인가요?",
+                options: ["거란족", "몽골족", "여진족", "돌궐족"],
+                answer: 2,
+                exp: "간도 일대에 흩어져 살던 여진족은 16세기 말 여러 부족을 통일하고 명나라를 정복해 청나라를 세웠습니다."
+            },
+            {
+                q: "1712년 조선과 청나라가 국경 비석에 새긴 내용에서 두 나라의 경계로 삼은 강이 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "서쪽: 대동강, 동쪽: 두만강",
+                    "서쪽: 압록강, 동쪽: 토문강",
+                    "서쪽: 한강, 동쪽: 낙동강",
+                    "서쪽: 청천강, 동쪽: 쑹화 강"
+                ],
+                answer: 1,
+                exp: "비석에는 '서쪽으로는 압록강, 동쪽으로는 토문강을 조선과 청나라의 경계로 삼는다.'라고 새겨져 있습니다."
+            },
+            {
+                q: "조선과 청나라 사이에 간도를 둘러싼 영토 분쟁이 일어나게 된 직접적인 원인은 무엇이었나요?",
+                options: [
+                    "압록강의 물줄기가 갑자기 말라 버렸기 때문에",
+                    "동쪽의 경계로 삼은 '토문강'의 위치에 대한 해석 차이 때문에",
+                    "백두산 천지의 수심이 달라졌기 때문에",
+                    "비석에 적힌 글자가 모두 지워져 읽을 수 없었기 때문에"
+                ],
+                answer: 1,
+                exp: "문제가 된 것은 동쪽의 경계로 삼은 토문강의 위치였으며, 간도가 어느 나라 영토인지는 토문강의 위치에 달려 있었습니다."
+            },
+            {
+                q: "토문강의 위치를 둘러싼 청나라와 조선의 주장을 바르게 비교한 것은 무엇인가요?",
+                options: [
+                    "청나라는 토문강이 두만강의 다른 이름이라 주장했고, 조선은 토문강이 만주 지역의 쑹화 강 상류를 흐르는 전혀 다른 강이라고 주장했다.",
+                    "청나라는 토문강이 압록강의 지류라고 주장했고, 조선은 두만강과 같은 강이라고 주장했다.",
+                    "두 나라 모두 토문강과 두만강이 같은 강이라는 데 동의했다.",
+                    "조선은 토문강이 백두산 남쪽으로 흐르는 강이라고 주장했다."
+                ],
+                answer: 0,
+                exp: "청나라는 토문강이 두만강의 다른 이름이므로 간도가 청나라 땅이라 우겼고, 조선은 토문강이 쑹화 강 상류를 흐르는 강이므로 토문강과 두만강 사이의 간도는 조선 영토라고 맞섰습니다."
+            },
+            {
+                q: "일본이 우리나라의 외교권을 강제로 빼앗은 조약과, 이후 일본이 간도를 청나라에 넘겨준 연도가 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "1876년 강화도 조약 - 1895년",
+                    "1905년 을사늑약 - 1909년",
+                    "1907년 정미 7조약 - 1919년",
+                    "1910년 한일 병합 조약 - 1945년"
+                ],
+                answer: 1,
+                exp: "1905년 을사늑약 때 우리나라 외교권을 강제로 빼앗은 일본이 1909년 간도를 청나라에 넘겨주었습니다."
+            },
+            {
+                q: "1909년 일본이 우리의 의지와 상관없이 간도를 청나라에 넘겨주는 조건으로 청나라로부터 얻어 낸 것은 무엇인가요?",
+                options: [
+                    "만주 지역의 철도 이권",
+                    "타이완 섬의 통치권",
+                    "산둥 반도의 항구 사용권",
+                    "베이징 주재 외교관 파견권"
+                ],
+                answer: 0,
+                exp: "일본은 청나라로부터 만주 지역의 철도 이권을 얻는 조건으로 1909년 간도를 청나라에 넘겨주었습니다."
+            },
+            {
+                q: "[세계적인 영토 분쟁 지역] 독일과 프랑스의 국경이 맞닿아 있는 '알자스로렌' 지방의 역사에 대한 설명으로 옳지 않은 것은 무엇인가요?",
+                options: [
+                    "9세기부터 독일의 영토였으나 17~18세기에 프랑스 영토가 되었다.",
+                    "1870~1871년 전쟁에서 프랑스가 지면서 독일 영토가 되었다가 제1차 세계 대전 때 독일의 패배로 다시 프랑스 영토가 되었다.",
+                    "1940년 히틀러가 강제로 독일 영토로 삼았지만 1945년 제2차 세계 대전이 끝나면서 프랑스에 되돌려졌다.",
+                    "제2차 세계 대전 이후 유엔(UN)이 직접 통치하는 중립국으로 독립하였다."
+                ],
+                answer: 3,
+                exp: "1945년 제2차 세계 대전이 끝나면서 알자스로렌은 프랑스에게로 되돌려져 현재에 이르고 있습니다."
+            },
+            {
+                q: "1950년 프랑스 외무장관 쉬망이 알자스로렌의 철광석과 독일 루르 지방의 석탄을 공동으로 관리하자고 제안하여 탄생한 기구로, 오늘날 유럽 연합(EU)의 시초가 된 것은 무엇인가요?",
+                options: [
+                    "유럽 석탄 철강 공동체",
+                    "북대서양 조약 기구(NATO)",
+                    "국제 연맹",
+                    "유럽 자유 무역 연합"
+                ],
+                answer: 0,
+                exp: "쉬망의 제안으로 '유럽 석탄 철강 공동체'가 탄생했으며, 이후 유럽 경제 공동체, 유럽 공동체를 거쳐 유럽 연합(EU)으로 발전했습니다."
+            },
+            {
+                q: "알자스로렌 지역에 대한 독일과 프랑스 두 나라의 배려와 평화로운 사회 분위기를 짐작할 수 있는 사례로 본문에 소개된 것은 무엇인가요?",
+                options: [
+                    "지역의 학교에서 독일어와 프랑스 어를 모두 가르치고 있다.",
+                    "매년 두 나라 군대가 합동 군사 퍼레이드를 연다.",
+                    "주민들에게 두 나라의 세금을 모두 면제해 준다.",
+                    "영어만 공식 언어로 사용하도록 법으로 정했다."
+                ],
+                answer: 0,
+                exp: "알자스로렌 지역의 학교에서 독일어와 프랑스 어를 모두 가르치고 있는 것에서 두 나라의 배려와 평화로운 분위기를 짐작할 수 있습니다."
+            },
+            {
+                q: "[독도의 가치 제대로 알기] 독도의 자연환경과 행정 구역에 대한 설명으로 옳지 않은 것은 무엇인가요?",
+                options: [
+                    "우리나라 동쪽 끝에 위치한 화산 섬이다.",
+                    "동도와 서도, 그리고 89개의 크고 작은 섬들로 이루어져 있다.",
+                    "조선 시대에는 강원도 울진현에 속했다.",
+                    "현재 행정 구역은 강원도 강릉시 독도리 1~96번지이다."
+                ],
+                answer: 3,
+                exp: "독도의 현재 행정 구역은 '경상북도 울릉군 울릉읍 독도리 1~96번지'입니다."
+            },
+            {
+                q: "시대에 따라 독도를 불렀던 옛 이름들로 바르게 묶인 것은 무엇인가요?",
+                options: [
+                    "우산, 우산도, 삼봉도, 가지도",
+                    "탐라, 제주, 이어도, 마라도",
+                    "강화도, 교동도, 석모도, 백령도",
+                    "절영도, 가덕도, 거제도, 남해도"
+                ],
+                answer: 0,
+                exp: "독도는 '우산'과 '우산도'로 가장 많이 불렸고 삼봉도, 가지도 등으로 불리기도 했습니다."
+            },
+            {
+                q: "독도는 철새들의 이동 길목에 위치하여 중요한 피난처가 되고 있습니다. 특히 번식지로서 법적으로 보호받고 있는 새 세 종류가 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "괭이갈매기, 슴새, 바다제비",
+                    "두루미, 황새, 저어새",
+                    "독수리, 매, 부엉이",
+                    "청둥오리, 기러기, 고니"
+                ],
+                answer: 0,
+                exp: "독도는 특히 괭이갈매기와 슴새, 바다제비의 번식지로 법적으로 보호받고 있는 천연기념물 생태 보호 지역입니다."
+            },
+            {
+                q: "독도의 경제적·군사적·과학적 가치와 의미에 대한 설명으로 본문 내용과 일치하지 않는 것은 무엇인가요?",
+                options: [
+                    "주변 해역이 황금 어장일 뿐 아니라 바다 밑에는 천연가스가 많이 묻혀 있다.",
+                    "동북아시아 주요 나라들에 군사적으로 중요한 위치여서 기지를 건설해 다양한 군사 정보를 모으고 있다.",
+                    "기상 예보와 지구 환경 등을 연구하는 해양 과학 기지가 들어서기에 좋은 곳이다.",
+                    "현재는 환경 보호를 위해 대한민국이 독도에 대한 영토 주권 행사를 중단한 상태이다."
+                ],
+                answer: 3,
+                exp: "독도는 대한민국의 독립과 주권의 상징으로, 대한민국은 독도에 대한 확실한 영토 주권을 행사하고 있습니다."
+            },
+            {
+                q: "매년 독도의 소중함을 알리기 위해 기념하는 '독도의 날'은 언제인가요?",
+                options: ["3월 1일", "8월 15일", "10월 3일", "10월 25일"],
+                answer: 3,
+                exp: "매년 10월 25일은 독도의 날입니다."
+            }
+        ];
+
+        // 2부: 단답형 주관식 10문제 데이터 (객관식과 중복 없음)
+        const saQuestions = [
+            {
+                q: "신라 지증왕 13년(512년)에 나무로 만든 가짜 사자를 이용한 계략으로 우산국을 정복한 신라의 장군 이름은 누구인가요?",
+                answers: ["이사부", "이사부장군"],
+                displayAnswer: "이사부",
+                exp: "신라 장군 이사부가 나무 사자를 배에 싣고 가 위협하는 계략으로 우산국을 항복시켰습니다."
+            },
+            {
+                q: "조선 시대에 일본인의 외교와 무역을 위해 동래 등에 설치한 장소로, 안용복이 일본어를 익힌 곳의 이름은 무엇인가요?",
+                answers: ["왜관", "동래왜관"],
+                displayAnswer: "왜관",
+                exp: "왜관은 조선 시대에 일본인의 외교와 무역을 위해 설치한 장소이며, 안용복은 동래에 설치한 왜관에서 일본어를 익혔습니다."
+            },
+            {
+                q: "1693년 3월 안용복이 울릉도로 고기잡이를 갔을 때 일본 어부들에게 함께 사로잡혀 일본 오키 섬으로 끌려갔던 동료 어부의 이름은 누구인가요?",
+                answers: ["박어둔"],
+                displayAnswer: "박어둔",
+                exp: "안용복은 동료 박어둔과 함께 일본 어부들에게 사로잡혀 오키 섬으로 끌려갔습니다."
+            },
+            {
+                q: "1696년 봄 안용복이 두 번째로 일본 오키 섬에 갔을 때, 미리 준비해 간 관복을 입고 관리들 앞에서 울릉도와 독도가 조선 땅임을 증명하기 위해 보여 준 지도의 이름은 무엇인가요?",
+                answers: ["조선팔도지도", "<조선팔도지도>"],
+                displayAnswer: "조선팔도지도",
+                exp: "안용복은 오키 섬 관리들 앞에서 <조선팔도지도>를 보여 주며 울릉도와 독도가 조선 땅이라고 항의했습니다."
+            },
+            {
+                q: "조선 숙종 때인 1712년, 조선과 청나라 관리들이 백두산 일대를 직접 찾아가 국경선을 결정한 뒤 백두산 천지 근처에 세운 비석의 이름은 무엇인가요?",
+                answers: ["백두산정계비", "정계비"],
+                displayAnswer: "백두산정계비",
+                exp: "1712년 조선과 청나라가 국경선을 결정하고 백두산 천지 근처에 세운 비석은 백두산정계비입니다."
+            },
+            {
+                q: "19세기 후반 간도 문제를 해결하기 위해 열린 국경 회담에서 '내 머리는 자를 수 있을지언정, 우리 국토는 한 치도 줄일 수가 없소이다.'라며 청나라에 강하게 맞선 조선 측 관리의 이름은 누구인가요?",
+                answers: ["이중하"],
+                displayAnswer: "이중하",
+                exp: "조선 측 관리인 이중하는 토문강과 두만강이 전혀 다른 강임을 들어 청나라의 억지 주장에 당당히 맞섰습니다."
+            },
+            {
+                q: "비석 등에 새겨진 내용을 종이에 그대로 떠 놓은 것을 무엇이라고 하나요? (본문 16쪽 백두산정계비 사진 설명 참고)",
+                answers: ["탁본"],
+                displayAnswer: "탁본",
+                exp: "돌이나 금속 등에 새겨진 글씨를 종이에 그대로 떠 놓은 것을 '탁본'이라고 합니다."
+            },
+            {
+                q: "1900년에 들어서 독도를 부르던 이름으로, 이를 우리말로 풀어 쓰면 '돌섬'(사투리로 '독섬')이 되어 오늘날 '독도'라는 이름의 유래가 된 두 글자 명칭은 무엇인가요?",
+                answers: ["석도"],
+                displayAnswer: "석도",
+                exp: "1900년에 들어서 '석도'라고 불렸는데, 우리말 '돌섬'의 사투리 발음인 '독섬'을 한자로 표기하면서 독도라고 불리게 되었습니다."
+            },
+            {
+                q: "독도 주변 동해의 수심 200미터 아래에 있는 바닷물로, 미네랄이 풍부하고 청정하여 다양한 분야에서 활용되는 이 물은 무엇인가요?",
+                answers: ["해양심층수"],
+                displayAnswer: "해양 심층수",
+                exp: "주변 동해의 수심 200미터 아래에 있는 '해양 심층수'는 미네랄이 풍부하고 청정한 바닷물로 다양한 분야에서 활용됩니다."
+            },
+            {
+                q: "울릉군에서 독도를 찾아오는 방문객에게 발급해 주는 증서의 이름은 무엇인가요?",
+                answers: ["독도명예주민증", "명예주민증"],
+                displayAnswer: "독도 명예 주민증",
+                exp: "울릉군은 독도를 찾아오는 방문객에게 '독도 명예 주민증'을 발급해 주고 있습니다."
+            }
+        ];
+
+        let firstUnansweredElement = null;
+
+        // 초기 렌더링
+        function renderQuiz() {
+            const mcContainer = document.getElementById("mcContainer");
+            const saContainer = document.getElementById("saContainer");
+
+            mcContainer.innerHTML = mcQuestions.map((item, idx) => {
+                const qNum = idx + 1;
+                const optionsHtml = item.options.map((opt, oIdx) => `
+                    <label class="option-label" id="mc_${idx}_label_${oIdx}">
+                        <input type="radio" name="mc_${idx}" value="${oIdx}" onchange="handleMcChange(${idx}, ${oIdx})">
+                        <span>${oIdx + 1}) ${opt}</span>
+                    </label>
+                `).join("");
+
+                return `
+                    <div class="question-card" id="qcard_mc_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="options-list">
+                            ${optionsHtml}
+                        </div>
+                        <div class="feedback-box" id="feedback_mc_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            saContainer.innerHTML = saQuestions.map((item, idx) => {
+                const qNum = idx + 41;
+                return `
+                    <div class="question-card short-answer-card" id="qcard_sa_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="short-input-wrap">
+                            <input type="text" class="short-input" id="sa_input_${idx}" placeholder="정답을 입력하세요" oninput="handleSaInput(${idx})" autocomplete="off">
+                        </div>
+                        <div class="feedback-box" id="feedback_sa_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            updateProgress();
+        }
+
+        function handleMcChange(qIdx, selectedIdx) {
+            const card = document.getElementById(`qcard_mc_${qIdx}`);
+            card.classList.remove("unanswered-warning");
+            for (let i = 0; i < 4; i++) {
+                const lbl = document.getElementById(`mc_${qIdx}_label_${i}`);
+                if (i === selectedIdx) {
+                    lbl.classList.add("selected");
+                } else {
+                    lbl.classList.remove("selected");
+                }
+            }
+            updateProgress();
+        }
+
+        function handleSaInput(sIdx) {
+            const card = document.getElementById(`qcard_sa_${sIdx}`);
+            const val = document.getElementById(`sa_input_${sIdx}`).value.trim();
+            if (val.length > 0) {
+                card.classList.remove("unanswered-warning");
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answeredCount = 0;
+
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (checked) answeredCount++;
+            }
+
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val.length > 0) answeredCount++;
+            }
+
+            const total = mcQuestions.length + saQuestions.length;
+            const percent = Math.round((answeredCount / total) * 100);
+
+            document.getElementById("progressText").textContent = `진행률: ${answeredCount} / ${total} (${percent}%)`;
+            document.getElementById("progressFill").style.width = `${percent}%`;
+        }
+
+        // 문자열 정규화 (공백 및 특수기호 제거)
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, "").replace(/[<>《》"'「」『』()]/g, "").toLowerCase();
+        }
+
+        // 채점 함수
+        function gradeQuiz() {
+            let unansweredNumbers = [];
+            firstUnansweredElement = null;
+
+            // 모든 경고 테두리 초기화
+            document.querySelectorAll(".question-card").forEach(el => el.classList.remove("unanswered-warning"));
+
+            // 1. 객관식 미응답 확인
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (!checked) {
+                    unansweredNumbers.push(i + 1);
+                    const card = document.getElementById(`qcard_mc_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 2. 단답형 주관식 미응답 확인
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val === "") {
+                    unansweredNumbers.push(i + 41);
+                    const card = document.getElementById(`qcard_sa_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 안 푼 문제가 하나라도 있으면 채점하지 않고 경고 메시지 표시
+            if (unansweredNumbers.length > 0) {
+                const previewList = unansweredNumbers.slice(0, 10).join(", ") + (unansweredNumbers.length > 10 ? ` 외 ${unansweredNumbers.length - 10}문항` : "번");
+                document.getElementById("modalMessage").innerHTML = `
+                    아직 풀지 않은 문제가 <strong>${unansweredNumbers.length}개</strong> 있습니다.<br>
+                    모든 문제를 다 풀어야 채점할 수 있습니다!<br>
+                    <span style="display:inline-block; margin-top:8px; font-size:0.86rem; color:#b45309; background:#fef3c7; padding:4px 10px; border-radius:6px;">
+                        미완료 문항: ${previewList}
+                    </span>
+                `;
+                document.getElementById("warningModal").style.display = "flex";
+                return;
+            }
+
+            // 모든 문제를 다 푼 경우 채점 진행
+            let mcCorrect = 0;
+            let saCorrect = 0;
+
+            // 객관식 채점
+            mcQuestions.forEach((item, idx) => {
+                const checked = document.querySelector(`input[name="mc_${idx}"]:checked`);
+                const userChoice = parseInt(checked.value, 10);
+                const isCorrect = (userChoice === item.answer);
+                if (isCorrect) mcCorrect++;
+
+                const card = document.getElementById(`qcard_mc_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                for (let oIdx = 0; oIdx < 4; oIdx++) {
+                    const lbl = document.getElementById(`mc_${idx}_label_${oIdx}`);
+                    const radio = lbl.querySelector("input");
+                    radio.disabled = true;
+                    lbl.classList.remove("correct-option", "wrong-option");
+                    if (oIdx === item.answer) {
+                        lbl.classList.add("correct-option");
+                    } else if (oIdx === userChoice && !isCorrect) {
+                        lbl.classList.add("wrong-option");
+                    }
+                }
+
+                const fb = document.getElementById(`feedback_mc_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (정답: ${item.answer + 1}번 ${item.options[item.answer]})`}
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            // 단답형 주관식 채점 (정답 반드시 표시)
+            saQuestions.forEach((item, idx) => {
+                const inputEl = document.getElementById(`sa_input_${idx}`);
+                const userRaw = inputEl.value.trim();
+                const userNorm = normalizeAnswer(userRaw);
+                const acceptedNorms = item.answers.map(a => normalizeAnswer(a));
+                const isCorrect = acceptedNorms.includes(userNorm);
+                if (isCorrect) saCorrect++;
+
+                inputEl.disabled = true;
+
+                const card = document.getElementById(`qcard_sa_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                const fb = document.getElementById(`feedback_sa_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (입력한 답: ${userRaw})`}
+                    </div>
+                    <div style="margin: 6px 0;">
+                        <span class="short-answer-reveal">정답: ${item.displayAnswer}</span>
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            const totalCorrect = mcCorrect + saCorrect;
+            const totalScore = totalCorrect * 2; // 50문항 * 2점 = 100점 만점
+
+            document.getElementById("finalScore").textContent = totalScore;
+            document.getElementById("totalCorrectStat").textContent = `${totalCorrect} / 50문제`;
+            document.getElementById("mcCorrectStat").textContent = `${mcCorrect} / 40문제`;
+            document.getElementById("saCorrectStat").textContent = `${saCorrect} / 10문제`;
+
+            let msg = "";
+            if (totalScore === 100) {
+                msg = "완벽합니다! 1장 '간도와 독도는 조선의 영토' 내용을 완벽히 마스터하셨네요! 🎉";
+            } else if (totalScore >= 80) {
+                msg = "훌륭해요! 우리 영토의 역사를 아주 잘 이해하고 있습니다. 틀린 문제만 가볍게 복습해 보세요! 👍";
+            } else if (totalScore >= 60) {
+                msg = "잘했어요! 아래 표시된 정답과 해설을 읽으며 헷갈렸던 개념을 다시 정리해 보세요. 😊";
+            } else {
+                msg = "끝까지 문제를 모두 풀어낸 점이 멋집니다! 해설을 꼼꼼히 확인하고 한 번 더 도전해 보세요! 💪";
+            }
+            document.getElementById("resultSubtext").textContent = msg;
+
+            const resultCard = document.getElementById("resultCard");
+            resultCard.style.display = "block";
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("resetBtn").style.display = "block";
+
+            resultCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function closeModal() {
+            document.getElementById("warningModal").style.display = "none";
+            if (firstUnansweredElement) {
+                firstUnansweredElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById("resultCard").style.display = "none";
+            document.getElementById("submitBtn").style.display = "block";
+            document.getElementById("resetBtn").style.display = "none";
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        window.addEventListener("DOMContentLoaded", renderQuiz);
+    </script>
+</body>
+</html>

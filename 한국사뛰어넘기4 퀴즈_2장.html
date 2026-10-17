@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>한국사 뛰어넘기 4 - 2장 갈수록 심해지는 붕당 간의 대립 퀴즈</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            --accent: #d97706;
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --border: #e5e7eb;
+            --card-bg: #ffffff;
+            --bg-body: #f3f4f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", "맑은 고딕", sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* 상단 고정 진행률 바 */
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .sticky-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        /* 헤더 카드 */
+        .header-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.15);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header-card h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            word-break: keep-all;
+        }
+
+        .header-card p {
+            font-size: 0.95rem;
+            opacity: 0.92;
+            word-break: keep-all;
+        }
+
+        .info-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .info-pill {
+            background: rgba(15, 23, 42, 0.25);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* 섹션 구분 타이틀 */
+        .section-header {
+            background: #ffffff;
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 28px 0 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-header.short-answer {
+            border-left-color: var(--accent);
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .section-header p {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        /* 문제 카드 */
+        .question-card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .question-card.unanswered-warning {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+
+        .question-card.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .question-card.incorrect {
+            border-color: var(--danger);
+            background-color: var(--danger-bg);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .q-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.92rem;
+            flex-shrink: 0;
+        }
+
+        .short-answer-card .q-num {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .q-title {
+            font-size: 1.03rem;
+            font-weight: 700;
+            color: var(--text-main);
+            word-break: keep-all;
+            padding-top: 3px;
+        }
+
+        /* 객관식 보기 스타일 */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.15s ease;
+            font-size: 0.96rem;
+            word-break: keep-all;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-bg);
+        }
+
+        .option-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .option-label.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-bg);
+            font-weight: 600;
+        }
+
+        .option-label.correct-option {
+            border-color: var(--success);
+            background-color: #dcfce7;
+            font-weight: 700;
+            color: #14532d;
+        }
+
+        .option-label.wrong-option {
+            border-color: var(--danger);
+            background-color: #fee2e2;
+            color: #7f1d1d;
+            text-decoration: line-through;
+        }
+
+        /* 단답형 주관식 입력창 */
+        .short-input-wrap {
+            margin-top: 6px;
+        }
+
+        .short-input {
+            width: 100%;
+            padding: 13px 16px;
+            font-size: 1rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #ffffff;
+        }
+
+        .short-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+        }
+
+        /* 채점 피드백 박스 */
+        .feedback-box {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .feedback-status {
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .feedback-status.pass {
+            color: var(--success);
+        }
+
+        .feedback-status.fail {
+            color: var(--danger);
+        }
+
+        .short-answer-reveal {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 700;
+        }
+
+        /* 하단 버튼 및 결과 영역 */
+        .action-area {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* 결과 성적표 카드 */
+        .result-card {
+            display: none;
+            background: #ffffff;
+            border: 3px solid var(--primary);
+            border-radius: 16px;
+            padding: 28px 20px;
+            margin-top: 24px;
+            text-align: center;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            border: 6px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .score-number {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .score-unit {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 8px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* 모달 알림창 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 18px;
+            word-break: keep-all;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .header-card {
+                padding: 22px 18px;
+            }
+            .header-card h1 {
+                font-size: 1.35rem;
+            }
+            .question-card {
+                padding: 16px;
+            }
+            .q-title {
+                font-size: 0.98rem;
+            }
+            .option-label {
+                padding: 11px 12px;
+                font-size: 0.92rem;
+            }
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 고정 진행 상태바 -->
+    <div class="sticky-bar">
+        <div class="sticky-inner">
+            <span class="progress-text" id="progressText">진행률: 0 / 50 (0%)</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header-card">
+            <span class="badge">한국사 뛰어넘기 4 (스푼북) · 제2장</span>
+            <h1>2. 갈수록 심해지는 붕당 간의 대립</h1>
+            <p>본문과 연표, 세계 역사 이야기, 만화(대쪽 선비 김육) 내용을 바탕으로 구성된 50문항 종합 퀴즈입니다. 모든 문제를 다 풀어야 채점이 진행됩니다.</p>
+            <div class="info-pills">
+                <span class="info-pill">객관식 40문항 (80점)</span>
+                <span class="info-pill">단답형 주관식 10문항 (20점)</span>
+                <span class="info-pill">총 50문항 · 100점 만점 (문항당 2점)</span>
+            </div>
+        </div>
+
+        <!-- 성적 결과 카드 (채점 후 상단에 표시) -->
+        <div class="result-card" id="resultCard">
+            <div class="score-circle">
+                <span class="score-number" id="finalScore">0</span>
+                <span class="score-unit">/ 100점</span>
+            </div>
+            <h2 id="resultHeadline" style="margin-bottom: 6px; font-size: 1.35rem;">채점 완료!</h2>
+            <p id="resultSubtext" style="color: var(--text-sub); font-size: 0.95rem;"></p>
+            <div class="result-stats">
+                <div class="stat-box">
+                    <div class="stat-label">전체 맞은 문제 수</div>
+                    <div class="stat-value" id="totalCorrectStat">0 / 50</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">객관식 정답 수</div>
+                    <div class="stat-value" id="mcCorrectStat">0 / 40</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">단답형 정답 수</div>
+                    <div class="stat-value" id="saCorrectStat">0 / 10</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1부: 객관식 40문항 -->
+        <div class="section-header">
+            <h2>[1부] 객관식 40문항 (1번 ~ 40번)</h2>
+            <p>각 문제에서 가장 알맞은 보기를 하나씩 골라 주세요. (문항당 2점)</p>
+        </div>
+        <div id="mcContainer"></div>
+
+        <!-- 2부: 단답형 주관식 10문항 -->
+        <div class="section-header short-answer">
+            <h2>[2부] 단답형 주관식 10문항 (41번 ~ 50번)</h2>
+            <p>빈칸에 알맞은 정답을 직접 입력해 주세요. 채점 시 정답과 해설이 함께 표시됩니다. (문항당 2점)</p>
+        </div>
+        <div id="saContainer"></div>
+
+        <!-- 하단 제출 버튼 -->
+        <div class="action-area">
+            <button type="button" class="btn-submit" id="submitBtn" onclick="gradeQuiz()">채점하기 (50문항 완료 후 클릭)</button>
+            <button type="button" class="btn-reset" id="resetBtn" onclick="resetQuiz()">다시 풀기</button>
+        </div>
+    </div>
+
+    <!-- 미완료 문항 안내 모달 -->
+    <div class="modal-overlay" id="warningModal">
+        <div class="modal-box">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">문제를 모두 풀어 주세요!</div>
+            <div class="modal-desc" id="modalMessage">아직 풀지 않은 문제가 있습니다. 모든 문제를 다 풀어야 채점할 수 있습니다.</div>
+            <button type="button" class="modal-btn" onclick="closeModal()">미완료 문제로 이동하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 1부: 객관식 40문제 데이터 (단답형 10문제와 중복되지 않음)
+        const mcQuestions = [
+            {
+                q: "[연표] 백두산정계비를 세운 해는 언제인가요?",
+                options: ["1696년", "1712년", "1720년", "1776년"],
+                answer: 1,
+                exp: "연표에서 1712년에 백두산정계비를 세웠음을 확인할 수 있습니다."
+            },
+            {
+                q: "[연표] 1720년 붕당 대립이 극에 달한 가운데 사망한 조선의 임금은 누구인가요?",
+                options: ["현종", "숙종", "영조", "정조"],
+                answer: 1,
+                exp: "2장 도입부 연표에 붉은 글씨로 '1720년 붕당 대립이 극에 달한 가운데 숙종이 사망하다'라고 표시되어 있습니다."
+            },
+            {
+                q: "[연표] 1776년에 왕위에 오른 조선의 임금은 누구인가요?",
+                options: ["인조", "효종", "정조", "순조"],
+                answer: 2,
+                exp: "연표에 따르면 1776년에 정조가 즉위하였습니다."
+            },
+            {
+                q: "[연표] 1789년에 관직에 진출한 조선 후기의 실학자는 누구인가요?",
+                options: ["정약용", "김육", "박지원", "이익"],
+                answer: 0,
+                exp: "1789년 실학자인 정약용이 관직에 진출하였습니다."
+            },
+            {
+                q: "[연표] 1794년 정조에게 고구마의 중요성을 알리는 글을 올린 인물은 누구인가요?",
+                options: ["심의겸", "김효원", "서용보", "김만중"],
+                answer: 2,
+                exp: "1794년 서용보가 고구마의 중요성을 알리는 글을 정조에게 올렸습니다."
+            },
+            {
+                q: "[연표] 1801년 관청에 딸려 있는 노비를 해방한 조선의 왕은 누구인가요?",
+                options: ["선조", "광해군", "숙종", "순조"],
+                answer: 3,
+                exp: "1801년 순조가 관청에 딸려 있는 노비를 해방하였습니다."
+            },
+            {
+                q: "[연표] 1805년 <처네 쓴 여인>을 그린 화가는 누구인가요?",
+                options: ["김홍도", "신윤복", "정선", "강세황"],
+                answer: 1,
+                exp: "1805년 신윤복이 <처네 쓴 여인>을 그렸습니다."
+            },
+            {
+                q: "[연표] 1861년에 <대동여지도>를 만든 인물은 누구인가요?",
+                options: ["김정호", "정상호", "이중환", "최제우"],
+                answer: 0,
+                exp: "1861년 김정호가 <대동여지도>를 만들었습니다."
+            },
+            {
+                q: "[연표] 1862년에 농민 봉기가 일어난 지역과, 1864년에 처형된 동학 창시자가 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "가평 - 김육",
+                    "경주 - 심충겸",
+                    "진주 - 최제우",
+                    "전주 - 전봉준"
+                ],
+                answer: 2,
+                exp: "1862년 진주에서 농민 봉기가 일어났고, 1864년 동학을 창시한 최제우가 처형되었습니다."
+            },
+            {
+                q: "조선에서 지방에 있던 학자들이 중앙 정계에 많이 등용되면서 여러 붕당이 처음 생겨나기 시작한 시기의 왕은 누구인가요?",
+                options: ["태종", "세종", "선조", "순조"],
+                answer: 2,
+                exp: "조선 선조 때 지방에서 학문을 배우고 연구하던 사람들이 중앙 정계에 많이 등용되면서 여러 붕당이 생겨났습니다."
+            },
+            {
+                q: "선조 때 중앙 정계에 진출하여 붕당을 형성한 사람들의 특징으로 가장 알맞은 것은 무엇인가요?",
+                options: [
+                    "외국에서 무역을 통해 막대한 재산을 모은 상인들이었다.",
+                    "지방에서 훌륭한 스승 밑에서 높은 학문의 경지를 이루어 학문에 기초한 정치적 생각이 뚜렷한 사람들이었다.",
+                    "학문보다는 무예와 전쟁 기술만을 전문적으로 익힌 무관들이었다.",
+                    "정치적 생각에 차이가 없어 늘 똑같은 한목소리만 내던 사람들이었다."
+                ],
+                answer: 1,
+                exp: "이들은 훌륭한 스승 밑에서 높은 학문의 경지를 이룬 사람들이어서 학문에 기초한 정치적 생각이 뚜렷했고, 다른 정치적 생각을 가진 사람들과 대립하며 붕당이 생겨났습니다."
+            },
+            {
+                q: "정치인들의 다툼과 정당 경쟁에 대한 본문의 설명으로 옳은 것은 무엇인가요?",
+                options: [
+                    "정치인들의 다툼은 세계 역사에서 오직 조선에서만 일어난 특수한 일이다.",
+                    "모든 정치인이 똑같은 생각으로 한목소리만 내야 사회가 빠르게 발전할 수 있다.",
+                    "세계 어느 나라에서나 있었던 일반적인 현상이며, 오늘날에도 정당을 중심으로 국민의 의견을 더 잘 반영하기 위해 서로 경쟁한다.",
+                    "붕당 대립에는 오직 부정적인 측면만 있고 긍정적인 측면은 전혀 없었다."
+                ],
+                answer: 2,
+                exp: "정치인들의 다툼은 세계 어느 나라에서나 있었던 일반적인 현상이며, 조선의 붕당 대립에도 긍정적인 측면과 부정적인 측면이 모두 있었습니다."
+            },
+            {
+                q: "선조 때 붕당이 처음으로 나누어졌을 때의 두 세력 이름은 무엇인가요?",
+                options: ["동인과 서인", "남인과 북인", "노론과 소론", "개화파와 위정척사파"],
+                answer: 0,
+                exp: "붕당은 선조 때 처음 동인과 서인으로 나누어졌습니다."
+            },
+            {
+                q: "조선 후기에 붕당들이 대립하며 다투었던 가장 중요한 핵심 문제 중 하나로 본문에서 제시한 질문은 무엇인가요?",
+                options: [
+                    "어떻게 하면 외국과의 전쟁을 피할 것인가?",
+                    "어떻게 하면 나라 정치를 잘 이끌어 갈 것인가?",
+                    "어떻게 하면 궁궐을 더 화려하게 지을 것인가?",
+                    "어떻게 하면 상업을 금지할 것인가?"
+                ],
+                answer: 1,
+                exp: "본문에서는 '어떻게 하면 나라 정치를 잘 이끌어 갈 것인가?'가 조선 후기 붕당들이 다툰 중요한 핵심 문제 중 하나였다고 설명합니다."
+            },
+            {
+                q: "선조 때 처음 동인과 서인으로 나뉘게 된 직접적인 정치적 원인(쟁점)은 무엇이었나요?",
+                options: [
+                    "수도를 한양에서 다른 곳으로 옮길 것인가 하는 문제",
+                    "정치를 제대로 이끌기 위해 비리를 일삼던 왕의 외가 세력을 어떻게 할 것이냐 하는 문제",
+                    "청나라와 무역을 할 것인가 말 것인가 하는 문제",
+                    "한글 소설의 보급을 허용할 것인가 하는 문제"
+                ],
+                answer: 1,
+                exp: "선조 때 동인과 서인으로 나뉜 것은 비리를 일삼던 왕의 외가 세력을 어떻게 할 것이냐 하는 문제에 대해 정치적 의견이 서로 달랐기 때문입니다."
+            },
+            {
+                q: "선조 때 이조 전랑 후보로 추천되면서 동인과 서인이 대립하는 계기가 된 인물은 누구의 동생 누구였나요?",
+                options: [
+                    "김효원의 아우 김충원",
+                    "심의겸의 아우 심충겸",
+                    "송시열의 아우 송준길",
+                    "김육의 아우 김만중"
+                ],
+                answer: 1,
+                exp: "심의겸의 아우 심충겸이 이조 전랑 후보로 추천되었을 때 김효원과 동인 세력이 반대하면서 서인 세력과 대립하였습니다."
+            },
+            {
+                q: "심충겸이 관직 후보로 추천되었을 때, 김효원을 비롯한 동인 세력과 심의겸을 비롯한 서인 세력이 내세운 주장이 바르게 연결된 것은 무엇인가요?",
+                options: [
+                    "동인: 왕의 외가 세력이 정치에 끼어들지 못하게 해야 한다 / 서인: 능력을 갖춘 인물을 왕의 외가라고 해서 무조건 반대할 것은 없다",
+                    "동인: 왕의 외가에게 모든 관직을 주어야 한다 / 서인: 과거 시험을 아예 폐지해야 한다",
+                    "동인: 심충겸에게 영의정 자리를 주어야 한다 / 서인: 심충겸을 귀양 보내야 한다",
+                    "동인: 무관에게만 관직을 주어야 한다 / 서인: 외가 출신만 관직에 등용해야 한다"
+                ],
+                answer: 0,
+                exp: "김효원과 동인은 비리를 저질러 정치를 어지럽게 한 왕의 외가 출신이 정치에 끼어들지 못하게 해야 한다고 주장했고, 심의겸과 서인은 능력을 갖춘 인물을 왕의 외가라고 해서 무조건 반대할 것까지는 없다고 맞섰습니다."
+            },
+            {
+                q: "나라의 올바른 방향을 둘러싸고 논쟁을 벌일 때 나타난 붕당 정치의 긍정적인 면(장점)으로 옳지 않은 것은 무엇인가요?",
+                options: [
+                    "바른 정치를 하기 위해 서로 토론하며 경쟁하여 나랏일 운영에 도움이 되었다.",
+                    "여러 붕당이 함께 정치를 이끌어 가며 서로 비판하고 견제하였다.",
+                    "어느 한 붕당이 권력을 독점하는 것을 막을 수 있었다.",
+                    "백성들의 삶을 돌보는 문제를 완전히 뒷전으로 미루게 되었다."
+                ],
+                answer: 3,
+                exp: "백성들의 삶을 돌보는 문제가 뒷전으로 밀려난 것은 붕당이 예절과 법도에만 매달려 권력 다툼에 치우쳤을 때 나타난 부정적인 모습입니다."
+            },
+            {
+                q: "붕당이 점차 나라에 도움이 되는 정치보다 권력을 잡기 위한 경쟁에 치우치는 모습을 보여 준 대표적인 사건은 무엇인가요?",
+                options: [
+                    "상복을 입는 기간을 둘러싼 서인과 남인의 대립",
+                    "백두산정계비 건립을 둘러싼 대립",
+                    "고구마 재배 방법을 둘러싼 대립",
+                    "관청 노비 해방을 둘러싼 대립"
+                ],
+                answer: 0,
+                exp: "권력을 잡기 위한 경쟁에 치우친 대표적 예가 상복을 둘러싼 서인과 남인 사이의 대립입니다."
+            },
+            {
+                q: "오늘날 보면 하찮은 문제일 수도 있는 '상복 입는 기간'을 놓고 서인과 남인이 치열하게 대립한 까닭은 무엇인가요?",
+                options: [
+                    "상복을 만드는 옷감의 가격이 너무 비쌌기 때문에",
+                    "유학을 따르는 조선의 지배층에게 예절과 법도는 오늘날 반드시 지켜야 하는 법률만큼 중요한 것이었기 때문에",
+                    "상복을 입는 기간 동안에는 세금을 전혀 걷을 수 없었기 때문에",
+                    "외국 사신들이 상복 입는 기간을 정해 달라고 요구했기 때문에"
+                ],
+                answer: 1,
+                exp: "유학을 따르는 조선 지배층에게 예절과 법도는 오늘날의 법률만큼 중요했기 때문에 이를 놓고 서인과 남인이 날카롭게 대립했습니다."
+            },
+            {
+                q: "본문 28쪽에 소개된 《효종국장도감도청의궤》는 무엇을 기록해 놓은 책인가요?",
+                options: [
+                    "왕이나 왕비 등의 장례 과정",
+                    "조선 팔도의 지리와 인구수",
+                    "농사를 짓는 새로운 기술",
+                    "전쟁에서 승리한 장군들의 업적"
+                ],
+                answer: 0,
+                exp: "'국장도감도청의궤'는 왕, 왕비 등의 장례 과정을 기록해 놓은 책이며, 《효종국장도감도청의궤》에는 효종의 장례 행렬 등이 그려져 있습니다."
+            },
+            {
+                q: "선대 임금인 효종과 효종의 왕비가 죽었을 때 상복 입는 기간을 둘러싸고 서인과 남인이 두 차례나 크게 대립했던 시기의 임금은 누구인가요?",
+                options: ["선조", "인조", "현종", "정조"],
+                answer: 2,
+                exp: "효종과 효종의 왕비 사망에 따른 상복 논쟁은 효종의 뒤를 이은 현종 때 일어났습니다."
+            },
+            {
+                q: "원래 조선의 예법에서는 아들이 죽으면 부모가 얼마 동안 상복을 입도록 정해져 있었나요?",
+                options: [
+                    "맏아들이 죽으면 5년, 둘째 이하 아들의 경우는 3년",
+                    "맏아들이 죽으면 3년, 둘째 이하 아들의 경우는 1년",
+                    "맏아들이 죽으면 1년, 둘째 이하 아들의 경우는 6개월",
+                    "맏아들과 둘째 아들 구분 없이 모두 3년"
+                ],
+                answer: 1,
+                exp: "원래 조선에서는 맏아들이 죽으면 부모가 3년간 상복을 입고, 둘째 이하 아들의 경우는 1년간 상복을 입었습니다."
+            },
+            {
+                q: "인조의 둘째 아들이었던 효종이 왕위에 오르게 된 이유는 무엇인가요?",
+                options: [
+                    "맏아들이었던 소현 세자가 일찍 죽는 바람에 왕위에 올랐다.",
+                    "인조에게 아들이 효종 한 명뿐이었기 때문이다.",
+                    "소현 세자가 스스로 왕위를 효종에게 양보했기 때문이다.",
+                    "남인들이 무력으로 효종을 왕위에 앉혔기 때문이다."
+                ],
+                answer: 0,
+                exp: "효종은 인조의 둘째 아들이었으나, 맏아들인 소현 세자가 일찍 죽는 바람에 왕위에 올랐습니다."
+            },
+            {
+                q: "효종이 죽었을 때 효종의 새어머니가 상복을 입을 기간에 대해 남인과 서인이 주장한 내용이 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "남인: 왕위에 올랐으므로 맏아들처럼 3년 / 서인: 둘째 아들이므로 1년",
+                    "남인: 둘째 아들이므로 1년 / 서인: 왕위에 올랐으므로 맏아들처럼 3년",
+                    "남인: 왕이므로 5년 / 서인: 맏아들이므로 3년",
+                    "남인: 6개월 / 서인: 2년"
+                ],
+                answer: 0,
+                exp: "남인은 효종이 비록 둘째 아들이지만 왕위에 올랐으므로 맏아들과 같이 3년 동안 상복을 입어야 한다고 주장했고, 서인은 효종이 맏아들이 아니므로 1년 동안 상복을 입는 게 옳다고 맞섰습니다."
+            },
+            {
+                q: "효종이 죽었을 때 일어난 첫 번째 상복 논쟁의 결과로 옳은 것은 무엇인가요?",
+                options: [
+                    "현종이 남인의 주장을 받아들여 남인이 승리하였다.",
+                    "현종이 서인의 주장을 받아들이면서 서인의 승리로 끝났고, 남인은 권력 밖으로 밀려났다.",
+                    "서인과 남인이 타협하여 2년 동안 상복을 입기로 하였다.",
+                    "현종이 서인과 남인 모두를 정계에서 쫓아냈다."
+                ],
+                answer: 1,
+                exp: "현종이 서인의 1년 상복 주장을 받아들이면서 서인의 승리로 끝났고, 남인은 권력 밖으로 밀려났습니다."
+            },
+            {
+                q: "첫 번째 상복 논쟁이 끝난 지 15년 뒤, 다시 상복 문제가 일어난 계기와 그 결과로 옳은 것은 무엇인가요?",
+                options: [
+                    "효종의 왕비가 죽자 다시 상복 문제가 일어났고, 결국 남인의 주장이 받아들여져 남인이 서인을 밀어내고 정권을 잡았다.",
+                    "현종이 죽자 상복 문제가 일어났고, 다시 서인이 승리하여 정권을 유지했다.",
+                    "인현 왕후가 죽자 상복 문제가 일어났고, 북인이 정권을 잡았다.",
+                    "소현 세자가 죽자 상복 문제가 일어났고, 동인이 정권을 잡았다."
+                ],
+                answer: 0,
+                exp: "15년 뒤 효종의 왕비가 죽자 다시 상복 문제가 일어났으며, 이번에는 남인의 주장이 받아들여져 남인이 서인을 밀어내고 정권을 잡았습니다."
+            },
+            {
+                q: "상복을 둘러싼 두 차례의 대립 이후 서인과 남인의 갈등이 깊어지면서 나타난 모습으로 본문 내용과 일치하지 않는 것은 무엇인가요?",
+                options: [
+                    "아예 담을 쌓고 지내며 서로 결혼도 하지 않았다.",
+                    "길에서 마주쳐도 인사조차 하지 않았다.",
+                    "예절과 법도에만 매달려 권력 다툼을 벌이느라 백성들의 삶을 돌보는 중요한 문제는 뒷전으로 밀려났다.",
+                    "아무리 갈등이 심해도 혼인은 반드시 상대 붕당 가문과만 맺도록 법으로 정했다."
+                ],
+                answer: 3,
+                exp: "서인과 남인은 갈등이 깊어져 아예 담을 쌓고 지내며 서로 결혼도 하지 않았고 길에서 마주쳐도 인사조차 하지 않았습니다."
+            },
+            {
+                q: "그전까지는 뜻이 다르다고 상대편 붕당 사람들을 죽이는 보복이 없었으나, 붕당 대립이 피로 얼룩진 보복과 앙갚음으로 바뀌기 시작한 것은 어느 왕 때부터인가요?",
+                options: ["선조", "광해군", "현종", "숙종"],
+                answer: 3,
+                exp: "숙종 때부터는 붕당 대립이 상대편 붕당 사람들을 죽이는 피로 얼룩진 보복과 앙갚음으로 바뀌기 시작했습니다."
+            },
+            {
+                q: "숙종이 붕당 대립을 억누르고 왕권을 키우기 위해 사용한 정치적 방법은 무엇이었나요?",
+                options: [
+                    "서인과 남인을 똑같은 수로 임명하여 절대 바꾸지 않았다.",
+                    "힘이 커진 붕당을 한꺼번에 내쫓고 다른 붕당에게 권력을 넘겨주어 왕에게 충성을 다하게 하려 했다.",
+                    "모든 붕당을 해산시키고 왕족들에게만 벼슬을 주었다.",
+                    "신하들의 투표를 통해 정권을 잡을 붕당을 결정하게 했다."
+                ],
+                answer: 1,
+                exp: "숙종은 서인의 힘이 너무 커진다 싶으면 한꺼번에 내쫓고 남인에게 정권을 넘겨주었다가, 남인이 권력을 휘두른다 싶으면 모조리 내쫓고 서인을 다시 불러들이곤 했습니다."
+            },
+            {
+                q: "숙종이 정권을 한꺼번에 바꾸는 일을 반복한 결과 나타난 상황으로 옳은 것은 무엇인가요?",
+                options: [
+                    "붕당 대립이 완전히 사라지고 평화로운 정치가 이루어졌다.",
+                    "정권이 바뀔 때마다 상대 붕당에 반역자 누명을 씌워 유배를 보내거나 사약을 내려 죽이는 피의 보복이 이어져 정치가 불안해지고 왕권마저 흔들렸다.",
+                    "서인과 남인이 하나로 합쳐져 새로운 단일 붕당을 만들었다.",
+                    "양반들이 모두 벼슬을 버리고 고향으로 내려가 농사를 지었다."
+                ],
+                answer: 1,
+                exp: "결과는 숙종의 뜻대로 되지 않았고, 정치 판세가 한꺼번에 바뀌면서 상대 붕당을 반역자로 몰아 죽이는 피의 보복이 이어져 정치가 불안해지고 왕권마저 흔들렸습니다."
+            },
+            {
+                q: "붕당 대립이 가장 심한 시대에 살았던 숙종의 왕비 '인현 왕후'에 대한 설명으로 옳은 것은 무엇인가요?",
+                options: [
+                    "남인 집안 출신으로 평생 한 번도 왕비 자리에서 물러난 적이 없다.",
+                    "서인 집안 출신으로, 서인이 세력을 잃자 중전 자리에서 쫓겨났다가 서인이 세력을 되찾자 왕비 자리를 되찾았다.",
+                    "궁녀 출신으로 인조의 총애를 받아 왕비가 되었다.",
+                    "영국으로 건너가 외교 활동을 펼쳤다."
+                ],
+                answer: 1,
+                exp: "서인 집안 출신이었던 인현 왕후는 서인이 세력을 잃자 중전 자리에서 쫓겨났다가 서인이 세력을 되찾자 왕비 자리를 되찾았습니다."
+            },
+            {
+                q: "숙종 때 김만중이 인현 왕후와 장 희빈의 갈등을 양반 가문의 본부인과 첩과의 갈등에 빗대어 한글 소설을 지은 까닭은 무엇인가요?",
+                options: [
+                    "인현 왕후를 내쫓은 숙종의 잘못을 비판하기 위해서",
+                    "장 희빈이 중전에 오른 것을 축하하기 위해서",
+                    "남인 세력의 정치적 입장을 널리 홍보하기 위해서",
+                    "청나라의 소설 문화를 그대로 모방하기 위해서"
+                ],
+                answer: 0,
+                exp: "김만중은 소설 속에서 인현 왕후와 장 희빈의 갈등을 본부인과 첩의 갈등에 빗대어 묘사하며 인현 왕후를 내쫓은 숙종의 잘못을 비판했습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 조선의 장 희빈과 영국의 왕비 앤 불린의 공통점으로 본문에 소개된 내용은 무엇인가요?",
+                options: [
+                    "두 사람 모두 평생 결혼하지 않고 여왕으로서 나라를 다스렸다.",
+                    "왕비를 밀어내고 왕비 자리에 올랐으며, 나중에 두 여인 모두 남편인 왕에 의해 비극적인 최후(사약·처형)를 맞았다.",
+                    "두 사람 모두 왕의 첫 번째 본부인이었으나 전쟁 중에 전사했다.",
+                    "두 사람 모두 아들을 열 명씩 낳아 왕실의 번영을 이끌었다."
+                ],
+                answer: 1,
+                exp: "장 희빈과 앤 불린은 왕비를 밀어내고 왕비 자리에 올랐다는 점과, 장 희빈은 숙종이 내린 사약을 먹고 숨을 거두고 앤 불린은 헨리 8세에 의해 처형되는 등 남편인 왕에 의해 비극적인 최후를 맞았다는 공통점이 있습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 영국 국왕 헨리 8세와 두 번째 왕비 앤 불린 사이에서 태어난 딸로, 훗날 영국의 여왕이 된 인물은 누구인가요?",
+                options: [
+                    "빅토리아 여왕",
+                    "엘리자베스 1세 여왕",
+                    "메리 1세 여왕",
+                    "잔 다르크"
+                ],
+                answer: 1,
+                exp: "앤 불린은 헨리 8세와 왕비를 이혼시키고 왕과 결혼해서 딸을 낳았는데, 이 딸이 나중에 엘리자베스 1세 여왕이 되었습니다."
+            },
+            {
+                q: "[대쪽 선비 김육] 김육이 젊은 시절 성균관 유생이었을 때 겪은 일과 생활 모습으로 옳은 것은 무엇인가요?",
+                options: [
+                    "광해군의 정책에 반대하다가 쫓겨나 경기도 가평에서 10여 년간 농사를 짓고 숯을 구워 팔며 살았다.",
+                    "선조의 총애를 받아 스무 살에 영의정에 올랐다.",
+                    "장사를 하여 큰 부자가 된 뒤 양반 신분을 돈으로 샀다.",
+                    "청나라로 유학을 떠나 20년 동안 의학을 공부했다."
+                ],
+                answer: 0,
+                exp: "김육은 성균관 유생 때 광해군의 정책에 반대하다 쫓겨난 뒤 경기도 가평에서 10여 년간 농사를 짓고 숯을 구워 팔며 살면서 백성들의 고통을 덜어 주는 정치를 하겠다고 결심했습니다."
+            },
+            {
+                q: "[대쪽 선비 김육] 세금 제도가 개편되기 전에 백성들이 가장 큰 고통을 겪었던 세금 징수 문제는 무엇이었나요?",
+                options: [
+                    "세금으로 쌀을 바친 데 이어 고을에서 나지도 않는 특산물까지 바치라고 하여 빚을 내서 다른 지방에서 사다가 바쳐야 했다.",
+                    "모든 백성에게 금과 은으로만 세금을 내라고 강요했다.",
+                    "어린아이들에게까지 군대에 가는 대신 말을 바치라고 했다.",
+                    "외국 상인들에게 직접 세금을 내도록 했다."
+                ],
+                answer: 0,
+                exp: "백성들은 농사짓기도 바쁜데 고을에서 나지도 않는 특산물을 바치라고 하여 빚을 내서 다른 지방에서 사다가 세금을 바쳐야 할 정도로 큰 고통을 겪었습니다."
+            },
+            {
+                q: "[대쪽 선비 김육] 광해군이 특산물 대신 가지고 있는 땅의 크기에 따라 쌀로 세금을 바치는 법을 가장 먼저 실시한 지역은 어디인가요?",
+                options: ["경기도", "강원도", "평안도", "제주도"],
+                answer: 0,
+                exp: "광해군은 특산물 대신 가지고 있는 땅의 크기에 따라 쌀로 세금을 바치는 대동법을 경기도부터 실시하였습니다."
+            },
+            {
+                q: "[대쪽 선비 김육] 인조 때 관직에 진출한 김육이 이 세금 제도를 다른 지방에도 확대 실시하자고 주장했을 때 양반들이 반대한 이유는 무엇인가요?",
+                options: [
+                    "양반들이 직접 농사를 지어야 했기 때문에",
+                    "땅의 크기에 따라 세금을 내게 되어 땅을 많이 가진 양반들이 세금을 더 많이 내야 했기 때문에",
+                    "쌀 대신 다시 특산물로 세금을 내고 싶어 했기 때문에",
+                    "나라의 재정이 너무 많아지는 것을 걱정했기 때문에"
+                ],
+                answer: 1,
+                exp: "땅이 없는 가난한 백성들은 낼 세금이 줄어들었지만, 땅을 많이 가진 양반들은 세금을 더 많이 내야 했기 때문에 양반들이 강하게 반대했습니다."
+            },
+            {
+                q: "[대쪽 선비 김육] 김육의 노력 덕분에 이 세금 제도가 효종 때와 숙종 때 확대 실시된 지역과, 전국적으로 실시되기까지 걸린 시간이 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "효종: 충청도·전라도 / 숙종: 경상도·황해도 / 100년 만에 전국 실시",
+                    "효종: 경상도·황해도 / 숙종: 충청도·전라도 / 10년 만에 전국 실시",
+                    "효종: 경기도·강원도 / 숙종: 함경도·평안도 / 30년 만에 전국 실시",
+                    "효종: 전라도·제주도 / 숙종: 경기도·충청도 / 300년 만에 전국 실시"
+                ],
+                answer: 0,
+                exp: "영의정까지 지내며 청렴하게 살았던 김육의 노력으로 효종 때 충청도와 전라도에, 숙종 때 경상도와 황해도까지 확대되어 100년 만에 전국적으로 실시될 수 있었습니다."
+            }
+        ];
+
+        // 2부: 단답형 주관식 10문제 데이터 (객관식과 중복 없음)
+        const saQuestions = [
+            {
+                q: "정치적으로나 학문적으로 뜻이 같은 사람끼리 뭉친 세력을 가리키는 말로, 선조 때 처음 동인과 서인으로 나누어진 이 정치 집단을 무엇이라고 하나요?",
+                answers: ["붕당"],
+                displayAnswer: "붕당",
+                exp: "정치적으로나 학문적으로 뜻이 같은 사람끼리 뭉친 세력을 '붕당'이라고 합니다."
+            },
+            {
+                q: "선비가 모여서 학문을 강론하고 유명한 학자나 충절을 지키다가 죽은 사람을 제사 지내던 곳으로, 경주 옥산서원이 대표적이며 나중에 붕당에 가담하기도 했던 이 기관은 무엇인가요?",
+                answers: ["서원"],
+                displayAnswer: "서원",
+                exp: "인재들이 먹고 자며 글공부를 하고 제사를 지내던 '서원'은 나중에 붕당에 가담하기도 했습니다."
+            },
+            {
+                q: "선조 때 심의겸의 아우 심충겸이 이 관직의 후보로 추천되면서 김효원을 비롯한 동인 세력과 심의겸을 비롯한 서인 세력이 나뉘어 대립하게 되었습니다. 이 관직의 이름은 무엇인가요?",
+                answers: ["이조전랑"],
+                displayAnswer: "이조 전랑",
+                exp: "심충겸이 '이조 전랑' 후보로 추천되었을 때 왕의 외가 출신이라는 이유로 동인이 반대하면서 동인과 서인의 대립이 시작되었습니다."
+            },
+            {
+                q: "현종 때 선대 임금인 효종과 효종의 왕비가 죽자 얼마 동안 상복을 입어야 하는지를 두고 서인과 남인이 두 차례나 치열하게 대립했습니다. 이때 상복을 입어야 했던 효종의 새어머니는 누구인가요?",
+                answers: ["자의대비"],
+                displayAnswer: "자의 대비",
+                exp: "효종과 효종의 왕비가 죽었을 때 효종의 새어머니인 '자의 대비'가 상복을 입는 기간(3년 또는 1년 등)을 두고 서인과 남인이 대립했습니다."
+            },
+            {
+                q: "서인(노론)의 지도자로 상복 논쟁과 붕당 대립의 중심에 있었으며, 숙종 때 붕당 대립에 휘말려 사약을 받고 죽은 인물은 누구인가요? (본문 30쪽 초상화 설명 참고)",
+                answers: ["송시열"],
+                displayAnswer: "송시열",
+                exp: "송시열은 서인(노론)의 지도자로 붕당 대립에 휘말려 사약을 받고 죽었습니다."
+            },
+            {
+                q: "붕당 대립이 가장 심한 시대에 살았던 숙종과 인현 왕후가 나란히 묻혀 있는 왕릉의 이름은 무엇인가요? (본문 31쪽 사진 설명 참고)",
+                answers: ["명릉"],
+                displayAnswer: "명릉",
+                exp: "숙종과 인현 왕후가 나란히 묻혀 있는 능의 이름은 '명릉'입니다."
+            },
+            {
+                q: "숙종 때 김만중이 지은 한글 소설로, 인현 왕후와 장 희빈의 갈등을 양반 가문의 본부인과 첩과의 갈등에 빗대어 묘사하며 평민과 양반 모두에게 인기를 끌었던 소설의 제목은 무엇인가요?",
+                answers: ["사씨남정기"],
+                displayAnswer: "사씨남정기",
+                exp: "《사씨남정기》는 김만중이 지은 한글 소설로, 인현 왕후를 내쫓은 숙종의 잘못을 양반 가문의 본부인과 첩의 갈등에 빗대어 비판한 작품입니다."
+            },
+            {
+                q: "궁녀로 왕궁에서 지내다가 숙종의 총애를 받아 한때 중전의 자리에 올랐던 장 희빈이 낳은 아들로, 숙종의 뒤를 이어 왕위에 오른 임금은 누구인가요?",
+                answers: ["경종"],
+                displayAnswer: "경종",
+                exp: "장 희빈이 낳은 아들은 숙종의 뒤를 이어 왕위에 오른 '경종'입니다."
+            },
+            {
+                q: "영국 국왕 헨리 8세의 두 번째 왕비로, 왕비의 시녀였다가 왕비를 밀어내고 왕비가 되었으나 나중에 억울한 누명을 쓰고 처형되어 조선의 장 희빈과 비슷한 삶을 살았던 인물은 누구인가요?",
+                answers: ["앤불린"],
+                displayAnswer: "앤 불린",
+                exp: "영국 헨리 8세의 두 번째 왕비이자 엘리자베스 1세의 어머니인 '앤 불린'은 왕비를 밀어내고 왕비가 되었다가 왕에 의해 비극적 최후를 맞았습니다."
+            },
+            {
+                q: "특산물 대신 가지고 있는 땅의 크기에 따라 쌀로 세금을 바치게 한 법으로, 광해군 때 경기도에서 처음 실시되고 김육의 노력으로 숙종 때 전국적으로 실시된 이 제도의 이름은 무엇인가요?",
+                answers: ["대동법"],
+                displayAnswer: "대동법",
+                exp: "'대동법'은 특산물 대신 땅의 크기에 따라 쌀로 세금을 바치게 하여 땅 없는 백성들의 부담을 덜어 준 제도입니다."
+            }
+        ];
+
+        let firstUnansweredElement = null;
+
+        // 초기 렌더링
+        function renderQuiz() {
+            const mcContainer = document.getElementById("mcContainer");
+            const saContainer = document.getElementById("saContainer");
+
+            mcContainer.innerHTML = mcQuestions.map((item, idx) => {
+                const qNum = idx + 1;
+                const optionsHtml = item.options.map((opt, oIdx) => `
+                    <label class="option-label" id="mc_${idx}_label_${oIdx}">
+                        <input type="radio" name="mc_${idx}" value="${oIdx}" onchange="handleMcChange(${idx}, ${oIdx})">
+                        <span>${oIdx + 1}) ${opt}</span>
+                    </label>
+                `).join("");
+
+                return `
+                    <div class="question-card" id="qcard_mc_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="options-list">
+                            ${optionsHtml}
+                        </div>
+                        <div class="feedback-box" id="feedback_mc_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            saContainer.innerHTML = saQuestions.map((item, idx) => {
+                const qNum = idx + 41;
+                return `
+                    <div class="question-card short-answer-card" id="qcard_sa_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="short-input-wrap">
+                            <input type="text" class="short-input" id="sa_input_${idx}" placeholder="정답을 입력하세요" oninput="handleSaInput(${idx})" autocomplete="off">
+                        </div>
+                        <div class="feedback-box" id="feedback_sa_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            updateProgress();
+        }
+
+        function handleMcChange(qIdx, selectedIdx) {
+            const card = document.getElementById(`qcard_mc_${qIdx}`);
+            card.classList.remove("unanswered-warning");
+            for (let i = 0; i < 4; i++) {
+                const lbl = document.getElementById(`mc_${qIdx}_label_${i}`);
+                if (i === selectedIdx) {
+                    lbl.classList.add("selected");
+                } else {
+                    lbl.classList.remove("selected");
+                }
+            }
+            updateProgress();
+        }
+
+        function handleSaInput(sIdx) {
+            const card = document.getElementById(`qcard_sa_${sIdx}`);
+            const val = document.getElementById(`sa_input_${sIdx}`).value.trim();
+            if (val.length > 0) {
+                card.classList.remove("unanswered-warning");
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answeredCount = 0;
+
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (checked) answeredCount++;
+            }
+
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val.length > 0) answeredCount++;
+            }
+
+            const total = mcQuestions.length + saQuestions.length;
+            const percent = Math.round((answeredCount / total) * 100);
+
+            document.getElementById("progressText").textContent = `진행률: ${answeredCount} / ${total} (${percent}%)`;
+            document.getElementById("progressFill").style.width = `${percent}%`;
+        }
+
+        // 문자열 정규화 (공백 및 특수기호 제거)
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, "").replace(/[<>《》"'「」『』()]/g, "").toLowerCase();
+        }
+
+        // 채점 함수
+        function gradeQuiz() {
+            let unansweredNumbers = [];
+            firstUnansweredElement = null;
+
+            // 모든 경고 테두리 초기화
+            document.querySelectorAll(".question-card").forEach(el => el.classList.remove("unanswered-warning"));
+
+            // 1. 객관식 미응답 확인
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (!checked) {
+                    unansweredNumbers.push(i + 1);
+                    const card = document.getElementById(`qcard_mc_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 2. 단답형 주관식 미응답 확인
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val === "") {
+                    unansweredNumbers.push(i + 41);
+                    const card = document.getElementById(`qcard_sa_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 안 푼 문제가 하나라도 있으면 채점하지 않고 경고 메시지 표시
+            if (unansweredNumbers.length > 0) {
+                const previewList = unansweredNumbers.slice(0, 10).join(", ") + (unansweredNumbers.length > 10 ? ` 외 ${unansweredNumbers.length - 10}문항` : "번");
+                document.getElementById("modalMessage").innerHTML = `
+                    아직 풀지 않은 문제가 <strong>${unansweredNumbers.length}개</strong> 있습니다.<br>
+                    모든 문제를 다 풀어야 채점할 수 있습니다!<br>
+                    <span style="display:inline-block; margin-top:8px; font-size:0.86rem; color:#b45309; background:#fef3c7; padding:4px 10px; border-radius:6px;">
+                        미완료 문항: ${previewList}
+                    </span>
+                `;
+                document.getElementById("warningModal").style.display = "flex";
+                return;
+            }
+
+            // 모든 문제를 다 푼 경우 채점 진행
+            let mcCorrect = 0;
+            let saCorrect = 0;
+
+            // 객관식 채점
+            mcQuestions.forEach((item, idx) => {
+                const checked = document.querySelector(`input[name="mc_${idx}"]:checked`);
+                const userChoice = parseInt(checked.value, 10);
+                const isCorrect = (userChoice === item.answer);
+                if (isCorrect) mcCorrect++;
+
+                const card = document.getElementById(`qcard_mc_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                for (let oIdx = 0; oIdx < 4; oIdx++) {
+                    const lbl = document.getElementById(`mc_${idx}_label_${oIdx}`);
+                    const radio = lbl.querySelector("input");
+                    radio.disabled = true;
+                    lbl.classList.remove("correct-option", "wrong-option");
+                    if (oIdx === item.answer) {
+                        lbl.classList.add("correct-option");
+                    } else if (oIdx === userChoice && !isCorrect) {
+                        lbl.classList.add("wrong-option");
+                    }
+                }
+
+                const fb = document.getElementById(`feedback_mc_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (정답: ${item.answer + 1}번 ${item.options[item.answer]})`}
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            // 단답형 주관식 채점 (정답 반드시 표시)
+            saQuestions.forEach((item, idx) => {
+                const inputEl = document.getElementById(`sa_input_${idx}`);
+                const userRaw = inputEl.value.trim();
+                const userNorm = normalizeAnswer(userRaw);
+                const acceptedNorms = item.answers.map(a => normalizeAnswer(a));
+                const isCorrect = acceptedNorms.includes(userNorm);
+                if (isCorrect) saCorrect++;
+
+                inputEl.disabled = true;
+
+                const card = document.getElementById(`qcard_sa_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                const fb = document.getElementById(`feedback_sa_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (입력한 답: ${userRaw})`}
+                    </div>
+                    <div style="margin: 6px 0;">
+                        <span class="short-answer-reveal">정답: ${item.displayAnswer}</span>
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            const totalCorrect = mcCorrect + saCorrect;
+            const totalScore = totalCorrect * 2; // 50문항 * 2점 = 100점 만점
+
+            document.getElementById("finalScore").textContent = totalScore;
+            document.getElementById("totalCorrectStat").textContent = `${totalCorrect} / 50문제`;
+            document.getElementById("mcCorrectStat").textContent = `${mcCorrect} / 40문제`;
+            document.getElementById("saCorrectStat").textContent = `${saCorrect} / 10문제`;
+
+            let msg = "";
+            if (totalScore === 100) {
+                msg = "완벽합니다! 2장 '갈수록 심해지는 붕당 간의 대립' 내용을 완벽히 마스터하셨네요! 🎉";
+            } else if (totalScore >= 80) {
+                msg = "훌륭해요! 조선 후기 붕당 정치의 흐름과 대동법을 아주 잘 이해하고 있습니다. 틀린 문제만 가볍게 복습해 보세요! 👍";
+            } else if (totalScore >= 60) {
+                msg = "잘했어요! 아래 표시된 정답과 해설을 읽으며 헷갈렸던 개념을 다시 정리해 보세요. 😊";
+            } else {
+                msg = "끝까지 문제를 모두 풀어낸 점이 멋집니다! 해설을 꼼꼼히 확인하고 한 번 더 도전해 보세요! 💪";
+            }
+            document.getElementById("resultSubtext").textContent = msg;
+
+            const resultCard = document.getElementById("resultCard");
+            resultCard.style.display = "block";
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("resetBtn").style.display = "block";
+
+            resultCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function closeModal() {
+            document.getElementById("warningModal").style.display = "none";
+            if (firstUnansweredElement) {
+                firstUnansweredElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById("resultCard").style.display = "none";
+            document.getElementById("submitBtn").style.display = "block";
+            document.getElementById("resetBtn").style.display = "none";
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        window.addEventListener("DOMContentLoaded", renderQuiz);
+    </script>
+</body>
+</html>
