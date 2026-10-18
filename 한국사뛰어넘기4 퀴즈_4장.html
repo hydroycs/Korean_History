@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>한국사 뛰어넘기 4 - 4장 실학자들이 꿈꾼 세상 퀴즈</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            --accent: #d97706;
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --border: #e5e7eb;
+            --card-bg: #ffffff;
+            --bg-body: #f3f4f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", "맑은 고딕", sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* 상단 고정 진행률 바 */
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .sticky-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        /* 헤더 카드 */
+        .header-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.15);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header-card h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            word-break: keep-all;
+        }
+
+        .header-card p {
+            font-size: 0.95rem;
+            opacity: 0.92;
+            word-break: keep-all;
+        }
+
+        .info-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .info-pill {
+            background: rgba(15, 23, 42, 0.25);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* 섹션 구분 타이틀 */
+        .section-header {
+            background: #ffffff;
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 28px 0 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-header.short-answer {
+            border-left-color: var(--accent);
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .section-header p {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        /* 문제 카드 */
+        .question-card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .question-card.unanswered-warning {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+
+        .question-card.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .question-card.incorrect {
+            border-color: var(--danger);
+            background-color: var(--danger-bg);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .q-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.92rem;
+            flex-shrink: 0;
+        }
+
+        .short-answer-card .q-num {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .q-title {
+            font-size: 1.03rem;
+            font-weight: 700;
+            color: var(--text-main);
+            word-break: keep-all;
+            padding-top: 3px;
+        }
+
+        /* 객관식 보기 스타일 */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.15s ease;
+            font-size: 0.96rem;
+            word-break: keep-all;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-bg);
+        }
+
+        .option-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .option-label.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-bg);
+            font-weight: 600;
+        }
+
+        .option-label.correct-option {
+            border-color: var(--success);
+            background-color: #dcfce7;
+            font-weight: 700;
+            color: #14532d;
+        }
+
+        .option-label.wrong-option {
+            border-color: var(--danger);
+            background-color: #fee2e2;
+            color: #7f1d1d;
+            text-decoration: line-through;
+        }
+
+        /* 단답형 주관식 입력창 */
+        .short-input-wrap {
+            margin-top: 6px;
+        }
+
+        .short-input {
+            width: 100%;
+            padding: 13px 16px;
+            font-size: 1rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #ffffff;
+        }
+
+        .short-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+        }
+
+        /* 채점 피드백 박스 */
+        .feedback-box {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .feedback-status {
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .feedback-status.pass {
+            color: var(--success);
+        }
+
+        .feedback-status.fail {
+            color: var(--danger);
+        }
+
+        .short-answer-reveal {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 700;
+        }
+
+        /* 하단 버튼 및 결과 영역 */
+        .action-area {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* 결과 성적표 카드 */
+        .result-card {
+            display: none;
+            background: #ffffff;
+            border: 3px solid var(--primary);
+            border-radius: 16px;
+            padding: 28px 20px;
+            margin-top: 24px;
+            text-align: center;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            border: 6px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .score-number {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .score-unit {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 8px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* 모달 알림창 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 18px;
+            word-break: keep-all;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .header-card {
+                padding: 22px 18px;
+            }
+            .header-card h1 {
+                font-size: 1.35rem;
+            }
+            .question-card {
+                padding: 16px;
+            }
+            .q-title {
+                font-size: 0.98rem;
+            }
+            .option-label {
+                padding: 11px 12px;
+                font-size: 0.92rem;
+            }
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 고정 진행 상태바 -->
+    <div class="sticky-bar">
+        <div class="sticky-inner">
+            <span class="progress-text" id="progressText">진행률: 0 / 50 (0%)</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header-card">
+            <span class="badge">한국사 뛰어넘기 4 (스푼북) · 제4장</span>
+            <h1>4. 실학자들이 꿈꾼 세상</h1>
+            <p>본문과 연표, 세계 역사와 우리, 만화(조선 최고의 과학 수사관 정약용) 내용을 바탕으로 구성된 50문항 종합 퀴즈입니다. 모든 문제를 다 풀어야 채점이 진행됩니다.</p>
+            <div class="info-pills">
+                <span class="info-pill">객관식 40문항 (80점)</span>
+                <span class="info-pill">단답형 주관식 10문항 (20점)</span>
+                <span class="info-pill">총 50문항 · 100점 만점 (문항당 2점)</span>
+            </div>
+        </div>
+
+        <!-- 성적 결과 카드 (채점 후 상단에 표시) -->
+        <div class="result-card" id="resultCard">
+            <div class="score-circle">
+                <span class="score-number" id="finalScore">0</span>
+                <span class="score-unit">/ 100점</span>
+            </div>
+            <h2 id="resultHeadline" style="margin-bottom: 6px; font-size: 1.35rem;">채점 완료!</h2>
+            <p id="resultSubtext" style="color: var(--text-sub); font-size: 0.95rem;"></p>
+            <div class="result-stats">
+                <div class="stat-box">
+                    <div class="stat-label">전체 맞은 문제 수</div>
+                    <div class="stat-value" id="totalCorrectStat">0 / 50</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">객관식 정답 수</div>
+                    <div class="stat-value" id="mcCorrectStat">0 / 40</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">단답형 정답 수</div>
+                    <div class="stat-value" id="saCorrectStat">0 / 10</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1부: 객관식 40문항 -->
+        <div class="section-header">
+            <h2>[1부] 객관식 40문항 (1번 ~ 40번)</h2>
+            <p>각 문제에서 가장 알맞은 보기를 하나씩 골라 주세요. (문항당 2점)</p>
+        </div>
+        <div id="mcContainer"></div>
+
+        <!-- 2부: 단답형 주관식 10문항 -->
+        <div class="section-header short-answer">
+            <h2>[2부] 단답형 주관식 10문항 (41번 ~ 50번)</h2>
+            <p>빈칸에 알맞은 정답을 직접 입력해 주세요. 채점 시 정답과 해설이 함께 표시됩니다. (문항당 2점)</p>
+        </div>
+        <div id="saContainer"></div>
+
+        <!-- 하단 제출 버튼 -->
+        <div class="action-area">
+            <button type="button" class="btn-submit" id="submitBtn" onclick="gradeQuiz()">채점하기 (50문항 완료 후 클릭)</button>
+            <button type="button" class="btn-reset" id="resetBtn" onclick="resetQuiz()">다시 풀기</button>
+        </div>
+    </div>
+
+    <!-- 미완료 문항 안내 모달 -->
+    <div class="modal-overlay" id="warningModal">
+        <div class="modal-box">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">문제를 모두 풀어 주세요!</div>
+            <div class="modal-desc" id="modalMessage">아직 풀지 않은 문제가 있습니다. 모든 문제를 다 풀어야 채점할 수 있습니다.</div>
+            <button type="button" class="modal-btn" onclick="closeModal()">미완료 문제로 이동하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 1부: 객관식 40문제 데이터 (단답형 10문제와 중복되지 않음)
+        const mcQuestions = [
+            {
+                q: "[연표] 1712년에 세운 국경 비석과, 1720년 붕당 대립이 극에 달한 가운데 사망한 왕이 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "백두산정계비 - 숙종",
+                    "진흥왕 순수비 - 영조",
+                    "백두산정계비 - 정조",
+                    "광개토대왕릉비 - 순조"
+                ],
+                answer: 0,
+                exp: "연표에서 1712년에 백두산정계비를 세웠고, 1720년에 숙종이 사망하였음을 확인할 수 있습니다."
+            },
+            {
+                q: "[연표] 1776년에 즉위한 조선의 왕은 누구인가요?",
+                options: ["광해군", "숙종", "영조", "정조"],
+                answer: 3,
+                exp: "연표에 따르면 1776년에 정조가 즉위하였습니다."
+            },
+            {
+                q: "[연표] 4장 도입부 연표에 붉은 글씨로 강조된 해로, 실학자인 정약용이 관직에 진출한 연도는 언제인가요?",
+                options: ["1750년", "1776년", "1789년", "1801년"],
+                answer: 2,
+                exp: "연표에 붉은 글씨로 '1789년 실학자인 정약용이 관직에 진출하다'라고 표시되어 있습니다."
+            },
+            {
+                q: "[연표] 1794년에 서용보가 정조에게 올린 글의 핵심 내용은 무엇이었나요?",
+                options: [
+                    "고구마의 중요성을 알리는 내용",
+                    "관청 노비를 해방하자는 내용",
+                    "청나라와 전쟁을 벌이자는 내용",
+                    "전국 지도를 제작하자는 내용"
+                ],
+                answer: 0,
+                exp: "1794년 서용보가 고구마의 중요성을 알리는 글을 정조에게 올렸습니다."
+            },
+            {
+                q: "[연표] 1801년 순조가 해방한 대상은 누구인가요?",
+                options: [
+                    "전쟁 포로로 잡혀 온 외국인",
+                    "관청에 딸려 있는 노비",
+                    "귀양을 간 양반 관리들",
+                    "국경을 지키던 군사들"
+                ],
+                answer: 1,
+                exp: "1801년 순조가 관청에 딸려 있는 노비를 해방하였습니다."
+            },
+            {
+                q: "[연표] 1805년 신윤복이 그린 그림의 제목은 무엇인가요?",
+                options: [
+                    "<단오풍정>",
+                    "<처네 쓴 여인>",
+                    "<씨름>",
+                    "<인왕제색도>"
+                ],
+                answer: 1,
+                exp: "1805년 신윤복이 <처네 쓴 여인>을 그렸습니다."
+            },
+            {
+                q: "[연표] 1861년에 <대동여지도>를 만든 인물은 누구인가요?",
+                options: ["유형원", "박지원", "김정호", "최제우"],
+                answer: 2,
+                exp: "1861년 김정호가 <대동여지도>를 만들었습니다."
+            },
+            {
+                q: "[연표] 1862년에 농민 봉기가 일어난 지역과, 1864년에 처형된 동학 창시자가 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "진주 - 최제우",
+                    "부안 - 유형원",
+                    "강진 - 정약용",
+                    "한양 - 박제가"
+                ],
+                answer: 0,
+                exp: "1862년 진주에서 농민 봉기가 일어났고, 1864년 동학을 창시한 최제우가 처형되었습니다."
+            },
+            {
+                q: "조선 후기에 '실학자'들이 나타나게 된 역사적 배경과 그들이 연구한 학문의 특징으로 가장 알맞은 것은 무엇인가요?",
+                options: [
+                    "임진왜란과 병자호란을 겪은 뒤 지배층이 낡은 틀에 갇혀 문제를 해결하지 못하자, 실생활에 보탬이 되고 현실을 개혁할 수 있는 학문을 연구했다.",
+                    "나라가 너무 평화롭고 부유하여 양반들의 여가 생활과 시 짓기만을 위한 학문을 연구했다.",
+                    "외국과의 교류를 완전히 끊고 오직 고대 신화만을 연구했다.",
+                    "백성들의 삶에는 관심을 두지 않고 왕실의 장례 절차만을 연구했다."
+                ],
+                answer: 0,
+                exp: "두 번의 큰 전쟁 이후 지배층이 낡은 틀에 갇혀 문제를 해결하지 못하자, 백성들을 걱정하며 실생활에 보탬이 되고 현실을 개혁할 수 있는 학문을 연구하는 실학자들이 나타났습니다."
+            },
+            {
+                q: "유형원, 이익, 정약용 같은 실학자들은 당시 조선 사회의 모든 문제의 원인이 무엇에 있다고 보았나요?",
+                options: [
+                    "농사짓는 농민들이 자기 땅을 갖지 못한 데 원인이 있다고 보았다.",
+                    "농민들이 너무 많은 땅을 가지고 있어 양반들이 가난해진 데 원인이 있다고 보았다.",
+                    "상인들이 물건을 너무 싸게 파는 데 원인이 있다고 보았다.",
+                    "나라에 군사가 너무 많은 데 원인이 있다고 보았다."
+                ],
+                answer: 0,
+                exp: "이들은 농사짓는 농민들이 자기 땅을 갖지 못한 데 모든 사회 문제의 원인이 있다고 보고 토지 제도를 바로잡아야 한다고 생각했습니다."
+            },
+            {
+                q: "처음으로 실학의 문을 연 선구자 '유형원'이 한양의 양반 집안에서 태어났음에도 과거 공부와 벼슬자리를 마다하고 32세에 내려가 학문 연구에 몰두한 곳(할아버지가 한때 살았던 곳)은 어디인가요?",
+                options: [
+                    "경기도 가평",
+                    "전라도 부안",
+                    "전라남도 강진",
+                    "경상도 진주"
+                ],
+                answer: 1,
+                exp: "유형원은 과거 공부를 그만두고 벼슬자리도 마다하며 32세에 할아버지가 한때 살았던 전라도 부안으로 내려가 학문 연구에 몰두했습니다."
+            },
+            {
+                q: "유형원이 부안에서 직접 지켜본 당시 농촌의 현실과 가난한 농민들의 생활 모습으로 옳은 것은 무엇인가요?",
+                options: [
+                    "양반들이 거의 모든 땅을 차지해 농민들은 땅을 빌려야 했고, 수확의 반을 양반에게 바치고 세금까지 떼면 굶주림과 가난에서 벗어날 수 없었다.",
+                    "농민들이 모두 자기 땅을 충분히 가지고 있었으나 세금이 전혀 없어 게을러졌다.",
+                    "양반들이 농민들에게 땅을 무료로 나누어 주고 수확물도 전혀 가져가지 않았다.",
+                    "농민들은 농사를 짓지 않고 모두 청나라로 무역을 떠났다."
+                ],
+                answer: 0,
+                exp: "당시 양반들이 거의 모든 땅을 차지하고 있어서 농민들은 양반의 땅을 빌려 수확의 반을 바쳐야 했고, 세금까지 떼고 나면 가난에서 벗어날 수 없었습니다."
+            },
+            {
+                q: "유형원이 토지가 나라의 근본이라고 생각하며 내놓은 토지 제도 개혁 주장은 무엇인가요?",
+                options: [
+                    "모든 토지를 양반들에게만 나누어 주고 농민은 품삯만 받게 해야 한다.",
+                    "모든 토지를 일단 나라의 것으로 만든 다음, 직접 농사를 짓는 농민에게 골고루 나눠 주어야 한다.",
+                    "토지를 외국 상인들에게 팔아 나라의 재정을 채워야 한다.",
+                    "농사짓는 땅을 모두 없애고 시장을 만들어야 한다."
+                ],
+                answer: 1,
+                exp: "유형원은 모든 토지를 일단 나라의 것으로 만든 다음, 직접 농사를 짓는 농민에게 골고루 나눠 주어야 백성들이 편안해지고 나라가 튼튼해진다고 주장했습니다."
+            },
+            {
+                q: "유형원의 생각을 이어받아 발전시킨 실학자 '이익'이 일찌감치 벼슬을 포기하고 시골로 내려가 직접 농사를 짓게 된 까닭은 무엇인가요?",
+                options: [
+                    "붕당 대립의 소용돌이 속에서 아버지와 형을 잇달아 잃는 불행을 겪었기 때문에",
+                    "과거 시험에 열 번 넘게 떨어져 글공부에 흥미를 잃었기 때문에",
+                    "왕으로부터 시골에 내려가 농사를 지으라는 명령을 받았기 때문에",
+                    "장사를 해서 큰돈을 벌고 싶었기 때문에"
+                ],
+                answer: 0,
+                exp: "이익은 붕당 대립의 소용돌이 속에서 아버지와 형을 잇달아 잃는 불행을 겪은 뒤 일찌감치 벼슬을 포기하고 시골로 내려가 직접 농사를 지었습니다."
+            },
+            {
+                q: "이익이 힘 있는 사람이 땅을 많이 차지하는 것을 막고 땅 없는 백성이 사라지게 하기 위해 내놓은 개혁안은 무엇인가요?",
+                options: [
+                    "한 사람이 가질 수 있는 땅의 크기를 제한해야 한다.",
+                    "땅을 가장 많이 가진 사람에게 높은 벼슬을 주어야 한다.",
+                    "농민들이 땅을 사고파는 것을 무조건 장려해야 한다.",
+                    "양반들에게는 세금을 완전히 면제해 주어야 한다."
+                ],
+                answer: 0,
+                exp: "이익은 백성이 부유해야 나라가 부유해진다며, 한 사람이 가질 수 있는 땅의 크기를 제한해야 힘 있는 사람이 땅을 독점하는 것을 막을 수 있다고 주장했습니다."
+            },
+            {
+                q: "이익이 제자들에게 농사의 중요성을 일깨우며 선비와 농사꾼의 역할에 대해 펼친 주장으로 옳은 것은 무엇인가요?",
+                options: [
+                    "선비는 오직 글만 읽어야 하고 농사꾼은 절대 벼슬을 해서는 안 된다.",
+                    "선비도 농사를 짓고, 농사꾼도 벼슬을 할 수 있어야 하며, 몸소 농사의 어려움을 아는 자 가운데 재능과 덕망 있는 자를 가려 등용해야 한다.",
+                    "선비와 농사꾼 모두 농사를 그만두고 군인이 되어야 한다.",
+                    "농사는 노비들에게만 맡기고 평민 이상은 모두 관리가 되어야 한다."
+                ],
+                answer: 1,
+                exp: "이익은 제자들에게 직접 농사를 지으라고 했으며, 선비도 농사를 짓고 농사꾼도 벼슬을 할 수 있어야 한다고 주장했습니다."
+            },
+            {
+                q: "정조의 총애를 받으며 개혁 작업에 참여했던 정약용은 정조가 죽은 뒤 벼슬에서 내쫓겨 몇 년 동안이나 귀양살이(유배)를 했나요?",
+                options: ["3년 동안", "8년 동안", "18년 동안", "30년 동안"],
+                answer: 2,
+                exp: "정약용은 정조가 죽은 뒤 벼슬에서 내쫓겨 18년 동안이나 귀양살이를 하며 백성의 고통을 직접 눈으로 보았습니다."
+            },
+            {
+                q: "정약용이 18년 동안의 유배 기간 중 전라남도 강진에서 10년 넘게 지내며 저술한 책은 모두 약 몇 권에 이르나요?",
+                options: ["10여 권", "50여 권", "100여 권", "500여 권"],
+                answer: 3,
+                exp: "정약용은 강진 유배지에서 500여 권의 저서를 쓰며 나라와 백성을 구할 방법을 깊이 연구했습니다."
+            },
+            {
+                q: "정약용이 토지 제도를 개선하기 위해 내놓은 방안의 핵심 내용은 무엇인가요?",
+                options: [
+                    "마을 단위로 땅을 공동으로 소유하는 공동 농장을 만들어 함께 농사짓고, 일한 만큼 수확을 나누어 갖도록 해야 한다.",
+                    "일한 양과 상관없이 모든 마을 사람에게 똑같은 양의 수확물을 나누어 주어야 한다.",
+                    "마을에서 가장 나이가 많은 양반 한 명에게 모든 땅을 몰아주어야 한다.",
+                    "농민들이 각자 흩어져 산속에서 화전을 일구도록 해야 한다."
+                ],
+                answer: 0,
+                exp: "정약용은 마을 단위로 공동 농장을 만들어 함께 농사짓고, 일을 많이 한 사람은 많이 가져가고 적게 한 사람은 적게 가져가도록 일한 만큼 수확을 나누자고 주장했습니다."
+            },
+            {
+                q: "정약용이 백성들을 쥐어짜는 못된 관리들의 잘못을 비판하며 지방관과 백성의 관계에 대해 남긴 말로 옳은 것은 무엇인가요?",
+                options: [
+                    "백성들은 오직 지방관을 섬기고 먹여 살리기 위해 태어난 존재이다.",
+                    "백성들의 피와 땀으로 지방관이 떵떵거리고 사니, 백성들이 지방관을 위해 태어난 것인가? 아니다. 지방관이 백성을 위해 있는 것이다.",
+                    "지방관은 왕의 명령만 따르면 될 뿐 백성들의 삶은 신경 쓸 필요가 없다.",
+                    "지방관 자리를 없애고 상인들에게 고을을 다스리게 해야 한다."
+                ],
+                answer: 1,
+                exp: "정약용은 '백성들이 지방관을 위해 태어난 것인가? 아니다. 지방관이 백성을 위해 있는 것이다.'라며 못된 관리들의 잘못을 바로잡아야 한다고 강조했습니다."
+            },
+            {
+                q: "1818년 정약용이 관리들이 지켜야 할 지침을 쓴 책에서 강조한 관리의 자세와, 정약용이 굳게 믿었던 정치 철학으로 바르게 연결된 것은 무엇인가요?",
+                options: [
+                    "청렴하고 검소하게 생활하며 백성들을 사랑하고 보살필 것 / 나라의 주인은 백성이며, 백성을 위한 정치가 최고의 정치이다.",
+                    "화려한 옷을 입고 권위를 세울 것 / 나라의 주인은 양반이며, 양반을 위한 정치가 최고의 정치이다.",
+                    "세금을 최대한 많이 걷어 재산을 모을 것 / 강한 군대를 키우는 것만이 유일한 정치이다.",
+                    "재판을 하지 않고 죄인을 엄벌할 것 / 법으로만 백성을 다스리는 것이 최고의 정치이다."
+                ],
+                answer: 0,
+                exp: "정약용은 관리들에게 청렴·검소한 생활과 백성 사랑을 강조했으며, 나라의 주인은 백성이며 백성을 위한 정치가 최고의 정치라고 굳게 믿었습니다."
+            },
+            {
+                q: "토지 개혁을 중시한 학자들과 달리, 박지원과 박제가 같은 실학자들은 무엇을 살려야 조선의 문제를 해결할 수 있다고 주장했나요?",
+                options: [
+                    "상공업",
+                    "성리학 예법",
+                    "음서 제도",
+                    "가마 제작 기술"
+                ],
+                answer: 0,
+                exp: "박지원과 박제가 같은 실학자들은 상공업을 살려야 조선의 문제를 해결할 수 있다고 주장했습니다."
+            },
+            {
+                q: "박지원이 사절단에 끼어 처음으로 청나라에 가게 된 해는 언제인가요?",
+                options: ["1712년", "1750년", "1780년", "1818년"],
+                answer: 2,
+                exp: "1780년 박지원은 사절단에 끼어 처음으로 청나라에 가게 되었습니다."
+            },
+            {
+                q: "박지원이 청나라를 직접 여행하면서 눈으로 확인한 청나라의 모습으로 옳은 것은 무엇인가요?",
+                options: [
+                    "전쟁으로 도시가 모두 파괴되어 사람들이 굶주리고 있었다.",
+                    "도시마다 번창한 시장, 궁궐과 성곽, 배와 수레, 각종 생활용품에 이르기까지 조선보다 더 발전한 문명국으로 우뚝 서 있었다.",
+                    "도로와 다리가 전혀 없어 사람들이 물건을 등에 지고만 옮기고 있었다.",
+                    "조선보다 기술과 문화가 훨씬 뒤떨어진 오랑캐 나라에 불과했다."
+                ],
+                answer: 1,
+                exp: "박지원이 직접 본 청나라는 번창한 시장, 궁궐과 성곽, 배와 수레, 생활용품 등 어느 것 하나 조선보다 못한 것이 없는 발전된 문명국이었습니다."
+            },
+            {
+                q: "청나라의 발전된 모습을 본 박지원이 당시 청나라를 '오랑캐'라며 멸시만 하던 조선 사람들에게 한 말로 옳은 것은 무엇인가요?",
+                options: [
+                    "뒤떨어진 조선의 힘으로 청나라를 정벌하는 것은 불가능하며, 백성들에게 유익하고 나라에 이롭다면 오랑캐의 것이라 할지라도 배울 만한 것은 배워야 한다.",
+                    "청나라가 발전했더라도 오랑캐의 문물은 단 하나도 받아들여서는 안 된다.",
+                    "지금 당장 군사를 일으켜 청나라의 수도를 공격해야 한다.",
+                    "청나라 사신들이 조선에 들어오지 못하도록 국경을 완전히 폐쇄해야 한다."
+                ],
+                answer: 0,
+                exp: "박지원은 오랑캐라고 멸시만 할 것이 아니라 백성들에게 유익하고 나라에 이롭다면 오랑캐의 것이라도 배울 만한 것은 배워야 한다고 주장했습니다."
+            },
+            {
+                q: "청나라에서 돌아온 박지원이 뒤떨어진 조선의 현실을 개혁하고 나라를 부강하게 하기 위해 힘써야 한다고 주장한 두 가지는 무엇인가요?",
+                options: [
+                    "상공업을 발전시키고 청나라와의 무역에 힘써야 한다.",
+                    "시장을 모두 닫고 농업에만 집중해야 한다.",
+                    "과거 시험 과목을 늘리고 서원을 더 많이 지어야 한다.",
+                    "화폐 사용을 금지하고 물물 교환만 해야 한다."
+                ],
+                answer: 0,
+                exp: "박지원은 조선의 현실을 개혁하고 나라를 부강하게 하려면 상공업을 발전시키고 청나라와의 무역에 힘써야 한다고 주장했습니다."
+            },
+            {
+                q: "청나라를 배워야 한다는 주장을 가장 강하게 펼친 실학자 '박제가'에 대한 설명으로 옳은 것은 무엇인가요?",
+                options: [
+                    "박지원의 가르침을 이어받은 제자였고, 정조가 아끼던 규장각의 학자이기도 했다.",
+                    "유형원의 스승이었으며 평생 한 번도 청나라에 가 본 적이 없었다.",
+                    "청나라와의 무역을 반대하고 쇄국 정책을 주장한 무관이었다.",
+                    "전라도 부안에서 태어나 평생 농사만 지은 농민이었다."
+                ],
+                answer: 0,
+                exp: "박제가는 박지원의 가르침을 이어받은 제자였고, 정조가 아끼던 규장각의 학자였으며 여러 차례 청나라를 다녀왔습니다."
+            },
+            {
+                q: "박제가가 청나라의 잘 정비된 도로와 교량을 보고, 조선에서도 상품 유통을 활발하게 하여 상공업을 발달시키기 위해 이용하자고 주장한 두 가지 운송 수단은 무엇인가요?",
+                options: [
+                    "가마와 뗏목",
+                    "수레와 배",
+                    "열기구와 증기선",
+                    "자전거와 기차"
+                ],
+                answer: 1,
+                exp: "박제가는 청나라처럼 수레와 배를 이용하면 상품 유통이 활발해져 전국에 시장이 생겨나고 농업과 수공업이 번성할 수 있다고 주장했습니다."
+            },
+            {
+                q: "근검절약을 미덕으로 여기던 당시 조선 사회에서 박제가가 '소비'와 '절약'에 관해 펼친 색다른 주장은 무엇이었나요?",
+                options: [
+                    "절약은 오히려 소비를 억제하고 생산을 막는 요인이므로, 소비를 권장해야 생산이 활발해진다.",
+                    "백성들이 물건을 아예 쓰지 않고 무조건 아껴야만 생산이 늘어난다.",
+                    "왕실과 양반만 소비를 줄이고 평민들은 세금을 두 배로 내야 한다.",
+                    "모든 생활용품을 집에서 직접 만들어 쓰고 시장에서는 절대 사지 말아야 한다."
+                ],
+                answer: 0,
+                exp: "박제가는 절약이 오히려 소비를 억제하고 생산을 막는 요인이라며, 소비를 권장해야 생산이 활발해진다는 새로운 주장을 폈습니다."
+            },
+            {
+                q: "박제가가 나라의 경제가 어려워진 이유를 무엇 때문이라고 진단했으며, 이에 대해 내놓은 놀라운 주장은 무엇인가요?",
+                options: [
+                    "학문을 한답시고 놀고먹는 양반이 갈수록 불어난 데 원인이 있으므로, 상공업을 업신여기는 풍조를 고쳐 양반도 상업에 종사해야 한다.",
+                    "상인의 수가 너무 많아졌기 때문이므로 상인들을 모두 농민으로 바꾸어야 한다.",
+                    "양반들이 상업에 너무 많이 종사하고 있으므로 양반의 상업 활동을 법으로 금지해야 한다.",
+                    "외국 물건이 너무 많이 들어왔기 때문이므로 무역을 완전히 중단해야 한다."
+                ],
+                answer: 0,
+                exp: "박제가는 놀고먹는 양반이 갈수록 불어난 탓에 나라 경제가 어려워졌다며, 상공업에 종사하는 것은 조금도 부끄러운 일이 아니니 양반도 상업에 종사해야 한다고 주장했습니다."
+            },
+            {
+                q: "실학자들이 여러 갈래로 조선의 문제를 해결하는 개혁안을 내놓았음에도 그들의 주장이 현실을 개혁하는 데 반영되지 못한 이유는 무엇인가요?",
+                options: [
+                    "실학자들 대부분이 권력에서 밀려난 양반이어서 자신들의 개혁안을 현실 정치에서 실행할 만큼 큰 힘을 갖지 못했기 때문에",
+                    "실학자들이 개혁안을 책으로 남기지 않고 모두 불태워 버렸기 때문에",
+                    "백성들이 실학자들의 개혁안을 모두 반대했기 때문에",
+                    "실학자들이 스스로 개혁안이 잘못되었다고 포기했기 때문에"
+                ],
+                answer: 0,
+                exp: "실학자들 대부분이 권력에서 밀려난 양반이어서 자신들의 개혁안을 현실 정치에서 실행할 수 있을 만큼 큰 힘을 갖지 못했기 때문입니다."
+            },
+            {
+                q: "[세계 역사와 우리] 정약용은 정치를 비롯해 여러 분야에 두루 능통한 팔방미인형 학자였습니다. 본문에 소개된 정약용의 활약 분야로 바르게 묶인 것은 무엇인가요?",
+                options: [
+                    "정치, 경제, 건축, 과학, 의학",
+                    "서양 음악 작곡, 오페라 공연, 발레",
+                    "항해술, 해적 퇴치, 유화 그리기",
+                    "비행기 조종, 잠수함 제작, 전신기 발명"
+                ],
+                answer: 0,
+                exp: "정약용은 정치를 비롯하여 경제, 건축, 과학, 의학에 이르기까지 두루 능통한 팔방미인형 학자로, 화성 설계도와 거중기 등을 고안했습니다."
+            },
+            {
+                q: "[세계 역사와 우리] <모나리자>를 그린 화가로도 유명한 만능 천재 레오나르도 다빈치가 모든 방면에서 발휘한 직업과 재능으로 본문에 언급되지 않은 것은 무엇인가요?",
+                options: [
+                    "화가, 시인, 음악가",
+                    "건축가, 공학자, 발명가",
+                    "식물학, 지질학, 기하학 연구자",
+                    "오스만 제국의 친위 부대 사령관"
+                ],
+                answer: 3,
+                exp: "레오나르도 다빈치는 화가이자 시인, 음악가, 건축가, 공학자, 발명가였으며 식물학, 지질학, 기하학 등에 관해서도 많은 연구를 했습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 레오나르도 다빈치가 비행 물체에 관심을 가지고 곤충과 날아다니는 동물을 관찰하며 공기의 흐름을 연구해 설계한 기계들로 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "낙하산, 헬리콥터, 다이빙 보드",
+                    "거중기, 자격루, 측우기",
+                    "증기 기관차, 자동차, 로켓",
+                    "나침반, 화약, 금속 활자"
+                ],
+                answer: 0,
+                exp: "다빈치는 곤충과 날아다니는 동물을 관찰하고 공기의 흐름을 연구해 낙하산, 헬리콥터, 다이빙 보드 등 각종 기계를 설계했습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 레오나르도 다빈치가 인체의 구조와 비밀을 밝히기 위해 직접 수행한 일은 무엇인가요?",
+                options: [
+                    "사람 시체를 해부하여 세밀한 인체 해부도까지 그렸다.",
+                    "전 세계를 배로 일주하며 각 민족의 키를 측정했다.",
+                    "현미경을 발명하여 세균을 처음으로 촬영했다.",
+                    "왕실 병원을 세워 수천 명의 환자를 수술했다."
+                ],
+                answer: 0,
+                exp: "다빈치는 사람 시체를 해부하여 세밀한 인체 해부도까지 그리며 예술과 과학의 비밀을 밝혔습니다."
+            },
+            {
+                q: "[조선 최고의 과학 수사관 정약용] 정조가 정약용에게 미심쩍은 부분이 있다며 다시 수사하도록 명령한 '함봉련 사건'은 몇 년 전에 일어났던 사건인가요?",
+                options: ["1년 전", "3년 전", "10년 전", "30년 전"],
+                answer: 2,
+                exp: "정조는 10년 전에 일어난 함봉련 사건을 수사하는 데 미심쩍은 부분이 있어 보인다며 정약용에게 재수사를 명했습니다."
+            },
+            {
+                q: "[조선 최고의 과학 수사관 정약용] 함봉련 사건에서 지방 유지인 김태명이 지방 관청의 나졸과 다투게 된 원인은 무엇이었나요?",
+                options: [
+                    "김태명이 당연히 바쳐야 할 세금을 내지 않자 나졸이 세금 대신 김태명의 소를 가져가려 했기 때문에",
+                    "나졸이 김태명의 집에서 몰래 쌀을 훔치려 했기 때문에",
+                    "김태명의 머슴 함봉련이 나졸의 말을 훔쳤기 때문에",
+                    "나졸이 김태명에게 돈을 빌리고 갚지 않았기 때문에"
+                ],
+                answer: 0,
+                exp: "지방 유지인 김태명이 세금을 내지 않자 지방 관청의 나졸이 세금 대신 소를 가져가려 했고, 김태명은 소를 빼앗기지 않으려고 나졸을 밀쳐 냈습니다."
+            },
+            {
+                q: "[조선 최고의 과학 수사관 정약용] 정약용이 10년 전 수사 보고서를 꼼꼼히 검토하여 밝혀낸 사건의 진실은 무엇이었나요?",
+                options: [
+                    "시체에 몽둥이 자국이 없고 등엔 상처가 전혀 없으며 가슴에만 상처가 있으므로, 나졸의 가슴을 여러 번 짓찧은 김태명이 진짜 범인이고 등을 떠민 머슴 함봉련은 누명을 쓴 것이다.",
+                    "나졸의 등에 깊은 몽둥이 상처가 있으므로 머슴 함봉련과 김태명 두 사람 모두 범인이다.",
+                    "나졸은 아무런 상처 없이 지병으로 스스로 쓰러져 죽은 것이다.",
+                    "제3의 인물이 독약을 먹여 나졸을 살해한 것이다."
+                ],
+                answer: 0,
+                exp: "정약용은 시체에 몽둥이 자국이 없고 가슴에만 상처가 있으며 등에는 상처가 전혀 없다는 점을 통해, 나졸의 가슴을 여러 번 짓찧은 김태명이 범인이고 등을 떠민 함봉련은 누명을 썼음을 밝혀냈습니다."
+            },
+            {
+                q: "[조선 최고의 과학 수사관 정약용] 정약용의 재수사 보고를 받은 정조가 10년 동안 억울한 옥살이를 한 함봉련에게 내린 처분은 무엇인가요?",
+                options: [
+                    "함봉련을 즉시 석방하고 고생한 그에게 새 옷을 내리도록 하였다.",
+                    "죄는 없지만 관청 나졸과 다투었으므로 1년 더 감옥에 두도록 하였다.",
+                    "함봉련을 지방 관청의 나졸로 임명하였다.",
+                    "함봉련에게 김태명의 모든 땅을 넘겨주도록 하였다."
+                ],
+                answer: 0,
+                exp: "정조는 '함봉련을 석방하라! 고생한 그에게 새 옷을 내리도록 하라!'라고 명하여 함봉련은 10년 만에 억울한 누명을 벗었습니다."
+            },
+            {
+                q: "[조선 최고의 과학 수사관 정약용] 함봉련 사건을 해결한 정약용이 관리들에게 강조한 수사와 재판의 올바른 자세는 무엇인가요?",
+                options: [
+                    "억울한 사람이 벌을 받지 않고 죄지은 사람이 합당한 벌을 받을 수 있도록 신중하고 철저히 수사하여 올바른 판결을 내려야 한다.",
+                    "신분이 높고 돈이 많은 사람의 말만 믿고 빠르게 재판을 끝내야 한다.",
+                    "한 번 내려진 판결은 설령 미심쩍은 부분이 있더라도 절대 다시 수사해서는 안 된다.",
+                    "수사 보고서에는 시체의 상처 기록을 남기지 말아야 한다."
+                ],
+                answer: 0,
+                exp: "정약용은 관리들이 억울한 사람이 벌을 받지 않고 죄지은 사람이 합당한 벌을 받을 수 있도록 철저히 수사하고 올바른 판결을 내려야 한다고 강조했습니다."
+            }
+        ];
+
+        // 2부: 단답형 주관식 10문제 데이터 (객관식과 중복 없음)
+        const saQuestions = [
+            {
+                q: "처음으로 실학의 문을 연 선구자 유형원이 전라도 부안에서 나라를 부강하게 만드는 방법과 토지 제도 개혁 등을 연구하여 쓴 책의 이름은 무엇인가요? (본문 55쪽 사진 설명 참고)",
+                answers: ["반계수록"],
+                displayAnswer: "반계수록",
+                exp: "실학의 선구자 유형원이 나라를 부강하게 만드는 방법을 연구하여 쓴 저서는 《반계수록》입니다."
+            },
+            {
+                q: "유형원의 생각을 이어받아 한층 발전시킨 실학자 이익이 나라를 부강하게 만드는 방법 등에 대해 연구하여 쓴 책의 이름은 무엇인가요? (본문 55쪽 사진 설명 참고)",
+                answers: ["성호사설"],
+                displayAnswer: "성호사설",
+                exp: "이익이 나라를 부강하게 만드는 방법 등을 연구하여 쓴 저서는 《성호사설》입니다."
+            },
+            {
+                q: "정약용이 18년 동안의 유배 기간 중 10년 넘게 지내며 500여 권의 저서를 쓴 곳으로, 전라남도 강진에 있는 이 집의 이름은 무엇인가요? (본문 56쪽 사진 설명 참고)",
+                answers: ["다산초당"],
+                displayAnswer: "다산초당",
+                exp: "정약용이 전라남도 강진에서 10년 넘게 머물며 방대한 저서를 집필한 곳은 '다산초당'입니다."
+            },
+            {
+                q: "1818년 정약용이 지방관을 비롯한 관리들이 지켜야 할 지침과 올바른 마음가짐, 청렴과 백성 사랑을 강조하며 쓴 책의 이름은 무엇인가요?",
+                answers: ["목민심서"],
+                displayAnswer: "목민심서",
+                exp: "《목민심서》는 1818년 정약용이 지방관을 비롯한 관리들이 지켜야 할 지침과 백성을 사랑하는 마음가짐에 대해 쓴 책입니다."
+            },
+            {
+                q: "1780년 사절단에 끼어 청나라에 다녀온 박지원이 쓴 책으로, 지금도 독특하고 생생한 여행기라는 평가를 받고 있는 저서의 이름은 무엇인가요?",
+                answers: ["열하일기"],
+                displayAnswer: "열하일기",
+                exp: "박지원이 청나라에 다녀와서 쓴 《열하일기》는 청나라의 발전된 문물을 생생하게 기록한 여행기입니다."
+            },
+            {
+                q: "조선 후기에 8폭 병풍으로 그려진 18세기 후반의 그림으로, 중국풍의 옷이나 건물 모양과 함께 활기찬 성 안의 시장 생활 모습을 보여 주는 그림의 제목은 무엇인가요? (본문 58쪽 그림 설명 참고)",
+                answers: ["태평성시도"],
+                displayAnswer: "태평성시도",
+                exp: "18세기 후반 활기찬 성 안의 시장과 생활 모습을 8폭 병풍으로 그린 그림은 <태평성시도>입니다."
+            },
+            {
+                q: "박지원의 제자이자 규장각 학자였던 박제가가 중국(청나라)의 발전된 문물과 기술을 배워야 한다고 주장하며 쓴 저서의 이름은 무엇인가요?",
+                answers: ["북학의"],
+                displayAnswer: "북학의",
+                exp: "박제가가 청나라의 발전된 문물과 기술을 배우고 상공업을 진흥해야 한다고 주장하며 쓴 책은 《북학의》입니다."
+            },
+            {
+                q: "팔방미인형 학자였던 정약용이 화성 건설 때 백성들의 일손을 덜어 주기 위해 거중기와 함께 만든 수레의 이름은 무엇인가요? (본문 61쪽 설명 참고)",
+                answers: ["유형거"],
+                displayAnswer: "유형거",
+                exp: "정약용은 화성 건설 때 백성들의 일손을 덜어 주기 위해 거중기와 함께 '유형거'라는 수레를 만들었습니다."
+            },
+            {
+                q: "정약용이 정조의 화성 행차를 위해 한강 위에 배를 죽 잇대어 놓고 건널 수 있도록 설계한 다리의 이름은 무엇인가요? (본문 61쪽 설명 참고)",
+                answers: ["배다리", "주교"],
+                displayAnswer: "배다리",
+                exp: "정약용은 정조의 행차를 위해 한강에 놓일 '배다리'를 설계하여 안전하게 강을 건널 수 있게 했습니다."
+            },
+            {
+                q: "정약용이 함봉련 사건 등을 계기로 관리들이 수사와 재판에 참고하여 억울한 사람이 벌을 받지 않고 올바른 판결을 내릴 수 있도록 자신이 맡았던 사건들을 기록해 남긴 조선 최고의 수사 지침서 이름은 무엇인가요?",
+                answers: ["흠흠신서"],
+                displayAnswer: "흠흠신서",
+                exp: "정약용이 관리들이 수사와 재판에 참고하여 신중하고 올바른 판결을 내릴 수 있도록 쓴 수사 지침서는 《흠흠신서》입니다."
+            }
+        ];
+
+        let firstUnansweredElement = null;
+
+        // 초기 렌더링
+        function renderQuiz() {
+            const mcContainer = document.getElementById("mcContainer");
+            const saContainer = document.getElementById("saContainer");
+
+            mcContainer.innerHTML = mcQuestions.map((item, idx) => {
+                const qNum = idx + 1;
+                const optionsHtml = item.options.map((opt, oIdx) => `
+                    <label class="option-label" id="mc_${idx}_label_${oIdx}">
+                        <input type="radio" name="mc_${idx}" value="${oIdx}" onchange="handleMcChange(${idx}, ${oIdx})">
+                        <span>${oIdx + 1}) ${opt}</span>
+                    </label>
+                `).join("");
+
+                return `
+                    <div class="question-card" id="qcard_mc_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="options-list">
+                            ${optionsHtml}
+                        </div>
+                        <div class="feedback-box" id="feedback_mc_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            saContainer.innerHTML = saQuestions.map((item, idx) => {
+                const qNum = idx + 41;
+                return `
+                    <div class="question-card short-answer-card" id="qcard_sa_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="short-input-wrap">
+                            <input type="text" class="short-input" id="sa_input_${idx}" placeholder="정답을 입력하세요" oninput="handleSaInput(${idx})" autocomplete="off">
+                        </div>
+                        <div class="feedback-box" id="feedback_sa_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            updateProgress();
+        }
+
+        function handleMcChange(qIdx, selectedIdx) {
+            const card = document.getElementById(`qcard_mc_${qIdx}`);
+            card.classList.remove("unanswered-warning");
+            for (let i = 0; i < 4; i++) {
+                const lbl = document.getElementById(`mc_${qIdx}_label_${i}`);
+                if (i === selectedIdx) {
+                    lbl.classList.add("selected");
+                } else {
+                    lbl.classList.remove("selected");
+                }
+            }
+            updateProgress();
+        }
+
+        function handleSaInput(sIdx) {
+            const card = document.getElementById(`qcard_sa_${sIdx}`);
+            const val = document.getElementById(`sa_input_${sIdx}`).value.trim();
+            if (val.length > 0) {
+                card.classList.remove("unanswered-warning");
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answeredCount = 0;
+
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (checked) answeredCount++;
+            }
+
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val.length > 0) answeredCount++;
+            }
+
+            const total = mcQuestions.length + saQuestions.length;
+            const percent = Math.round((answeredCount / total) * 100);
+
+            document.getElementById("progressText").textContent = `진행률: ${answeredCount} / ${total} (${percent}%)`;
+            document.getElementById("progressFill").style.width = `${percent}%`;
+        }
+
+        // 문자열 정규화 (공백 및 특수기호 제거)
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, "").replace(/[<>《》"'「」『』()]/g, "").toLowerCase();
+        }
+
+        // 채점 함수
+        function gradeQuiz() {
+            let unansweredNumbers = [];
+            firstUnansweredElement = null;
+
+            // 모든 경고 테두리 초기화
+            document.querySelectorAll(".question-card").forEach(el => el.classList.remove("unanswered-warning"));
+
+            // 1. 객관식 미응답 확인
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (!checked) {
+                    unansweredNumbers.push(i + 1);
+                    const card = document.getElementById(`qcard_mc_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 2. 단답형 주관식 미응답 확인
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val === "") {
+                    unansweredNumbers.push(i + 41);
+                    const card = document.getElementById(`qcard_sa_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 안 푼 문제가 하나라도 있으면 채점하지 않고 경고 메시지 표시
+            if (unansweredNumbers.length > 0) {
+                const previewList = unansweredNumbers.slice(0, 10).join(", ") + (unansweredNumbers.length > 10 ? ` 외 ${unansweredNumbers.length - 10}문항` : "번");
+                document.getElementById("modalMessage").innerHTML = `
+                    아직 풀지 않은 문제가 <strong>${unansweredNumbers.length}개</strong> 있습니다.<br>
+                    모든 문제를 다 풀어야 채점할 수 있습니다!<br>
+                    <span style="display:inline-block; margin-top:8px; font-size:0.86rem; color:#b45309; background:#fef3c7; padding:4px 10px; border-radius:6px;">
+                        미완료 문항: ${previewList}
+                    </span>
+                `;
+                document.getElementById("warningModal").style.display = "flex";
+                return;
+            }
+
+            // 모든 문제를 다 푼 경우 채점 진행
+            let mcCorrect = 0;
+            let saCorrect = 0;
+
+            // 객관식 채점
+            mcQuestions.forEach((item, idx) => {
+                const checked = document.querySelector(`input[name="mc_${idx}"]:checked`);
+                const userChoice = parseInt(checked.value, 10);
+                const isCorrect = (userChoice === item.answer);
+                if (isCorrect) mcCorrect++;
+
+                const card = document.getElementById(`qcard_mc_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                for (let oIdx = 0; oIdx < 4; oIdx++) {
+                    const lbl = document.getElementById(`mc_${idx}_label_${oIdx}`);
+                    const radio = lbl.querySelector("input");
+                    radio.disabled = true;
+                    lbl.classList.remove("correct-option", "wrong-option");
+                    if (oIdx === item.answer) {
+                        lbl.classList.add("correct-option");
+                    } else if (oIdx === userChoice && !isCorrect) {
+                        lbl.classList.add("wrong-option");
+                    }
+                }
+
+                const fb = document.getElementById(`feedback_mc_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (정답: ${item.answer + 1}번 ${item.options[item.answer]})`}
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            // 단답형 주관식 채점 (정답 반드시 표시)
+            saQuestions.forEach((item, idx) => {
+                const inputEl = document.getElementById(`sa_input_${idx}`);
+                const userRaw = inputEl.value.trim();
+                const userNorm = normalizeAnswer(userRaw);
+                const acceptedNorms = item.answers.map(a => normalizeAnswer(a));
+                const isCorrect = acceptedNorms.includes(userNorm);
+                if (isCorrect) saCorrect++;
+
+                inputEl.disabled = true;
+
+                const card = document.getElementById(`qcard_sa_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                const fb = document.getElementById(`feedback_sa_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (입력한 답: ${userRaw})`}
+                    </div>
+                    <div style="margin: 6px 0;">
+                        <span class="short-answer-reveal">정답: ${item.displayAnswer}</span>
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            const totalCorrect = mcCorrect + saCorrect;
+            const totalScore = totalCorrect * 2; // 50문항 * 2점 = 100점 만점
+
+            document.getElementById("finalScore").textContent = totalScore;
+            document.getElementById("totalCorrectStat").textContent = `${totalCorrect} / 50문제`;
+            document.getElementById("mcCorrectStat").textContent = `${mcCorrect} / 40문제`;
+            document.getElementById("saCorrectStat").textContent = `${saCorrect} / 10문제`;
+
+            let msg = "";
+            if (totalScore === 100) {
+                msg = "완벽합니다! 4장 '실학자들이 꿈꾼 세상' 내용을 완벽히 마스터하셨네요! 🎉";
+            } else if (totalScore >= 80) {
+                msg = "훌륭해요! 조선 후기 실학자들의 개혁 사상을 아주 잘 이해하고 있습니다. 틀린 문제만 가볍게 복습해 보세요! 👍";
+            } else if (totalScore >= 60) {
+                msg = "잘했어요! 아래 표시된 정답과 해설을 읽으며 헷갈렸던 개념을 다시 정리해 보세요. 😊";
+            } else {
+                msg = "끝까지 문제를 모두 풀어낸 점이 멋집니다! 해설을 꼼꼼히 확인하고 한 번 더 도전해 보세요! 💪";
+            }
+            document.getElementById("resultSubtext").textContent = msg;
+
+            const resultCard = document.getElementById("resultCard");
+            resultCard.style.display = "block";
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("resetBtn").style.display = "block";
+
+            resultCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function closeModal() {
+            document.getElementById("warningModal").style.display = "none";
+            if (firstUnansweredElement) {
+                firstUnansweredElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById("resultCard").style.display = "none";
+            document.getElementById("submitBtn").style.display = "block";
+            document.getElementById("resetBtn").style.display = "none";
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        window.addEventListener("DOMContentLoaded", renderQuiz);
+    </script>
+</body>
+</html>
