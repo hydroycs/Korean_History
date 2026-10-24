@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>장복이, 창대와 함께하는 열하일기 - 독서 확인 50문항 퀴즈</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            --accent: #d97706;
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --border: #e5e7eb;
+            --card-bg: #ffffff;
+            --bg-body: #f3f4f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", "맑은 고딕", sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* 상단 고정 진행률 바 */
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .sticky-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        /* 헤더 카드 */
+        .header-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.15);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header-card h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            word-break: keep-all;
+        }
+
+        .header-card p {
+            font-size: 0.95rem;
+            opacity: 0.92;
+            word-break: keep-all;
+        }
+
+        .info-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .info-pill {
+            background: rgba(15, 23, 42, 0.25);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* 섹션 구분 타이틀 */
+        .section-header {
+            background: #ffffff;
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 28px 0 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-header.short-answer {
+            border-left-color: var(--accent);
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .section-header p {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        /* 문제 카드 */
+        .question-card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .question-card.unanswered-warning {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+
+        .question-card.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .question-card.incorrect {
+            border-color: var(--danger);
+            background-color: var(--danger-bg);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .q-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.92rem;
+            flex-shrink: 0;
+        }
+
+        .short-answer-card .q-num {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .q-title {
+            font-size: 1.03rem;
+            font-weight: 700;
+            color: var(--text-main);
+            word-break: keep-all;
+            padding-top: 3px;
+        }
+
+        /* 객관식 보기 스타일 */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.15s ease;
+            font-size: 0.96rem;
+            word-break: keep-all;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-bg);
+        }
+
+        .option-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .option-label.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-bg);
+            font-weight: 600;
+        }
+
+        .option-label.correct-option {
+            border-color: var(--success);
+            background-color: #dcfce7;
+            font-weight: 700;
+            color: #14532d;
+        }
+
+        .option-label.wrong-option {
+            border-color: var(--danger);
+            background-color: #fee2e2;
+            color: #7f1d1d;
+            text-decoration: line-through;
+        }
+
+        /* 단답형 주관식 입력창 */
+        .short-input-wrap {
+            margin-top: 6px;
+        }
+
+        .short-input {
+            width: 100%;
+            padding: 13px 16px;
+            font-size: 1rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #ffffff;
+        }
+
+        .short-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+        }
+
+        /* 채점 피드백 박스 */
+        .feedback-box {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .feedback-status {
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .feedback-status.pass {
+            color: var(--success);
+        }
+
+        .feedback-status.fail {
+            color: var(--danger);
+        }
+
+        .short-answer-reveal {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 700;
+        }
+
+        /* 하단 버튼 및 결과 영역 */
+        .action-area {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* 결과 성적표 카드 */
+        .result-card {
+            display: none;
+            background: #ffffff;
+            border: 3px solid var(--primary);
+            border-radius: 16px;
+            padding: 28px 20px;
+            margin-top: 24px;
+            text-align: center;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            border: 6px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .score-number {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .score-unit {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 8px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* 모달 알림창 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 18px;
+            word-break: keep-all;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .header-card {
+                padding: 22px 18px;
+            }
+            .header-card h1 {
+                font-size: 1.35rem;
+            }
+            .question-card {
+                padding: 16px;
+            }
+            .q-title {
+                font-size: 0.98rem;
+            }
+            .option-label {
+                padding: 11px 12px;
+                font-size: 0.92rem;
+            }
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 고정 진행 상태바 -->
+    <div class="sticky-bar">
+        <div class="sticky-inner">
+            <span class="progress-text" id="progressText">진행률: 0 / 50 (0%)</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header-card">
+            <span class="badge">독서 확인 종합 퀴즈 · 글 강민경 / 펴낸곳 (주)현암사</span>
+            <h1>『장복이, 창대와 함께하는 열하일기』</h1>
+            <p>하인 장복이와 마두 창대의 시선으로 따라가는 연암 나리의 청나라 여행기! 책을 처음부터 끝까지 꼼꼼하게 읽었는지 확인하는 50문항 퀴즈입니다.</p>
+            <div class="info-pills">
+                <span class="info-pill">객관식 40문항 (80점)</span>
+                <span class="info-pill">단답형 주관식 10문항 (20점)</span>
+                <span class="info-pill">총 50문항 · 100점 만점 (문항당 2점)</span>
+            </div>
+        </div>
+
+        <!-- 성적 결과 카드 (채점 후 상단에 표시) -->
+        <div class="result-card" id="resultCard">
+            <div class="score-circle">
+                <span class="score-number" id="finalScore">0</span>
+                <span class="score-unit">/ 100점</span>
+            </div>
+            <h2 id="resultHeadline" style="margin-bottom: 6px; font-size: 1.35rem;">채점 완료!</h2>
+            <p id="resultSubtext" style="color: var(--text-sub); font-size: 0.95rem;"></p>
+            <div class="result-stats">
+                <div class="stat-box">
+                    <div class="stat-label">전체 맞은 문제 수</div>
+                    <div class="stat-value" id="totalCorrectStat">0 / 50</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">객관식 정답 수</div>
+                    <div class="stat-value" id="mcCorrectStat">0 / 40</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">단답형 정답 수</div>
+                    <div class="stat-value" id="saCorrectStat">0 / 10</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1부: 객관식 40문항 -->
+        <div class="section-header">
+            <h2>[1부] 객관식 40문항 (1번 ~ 40번)</h2>
+            <p>책의 내용과 일치하는 가장 알맞은 보기를 하나씩 골라 주세요. (문항당 2점)</p>
+        </div>
+        <div id="mcContainer"></div>
+
+        <!-- 2부: 단답형 주관식 10문항 -->
+        <div class="section-header short-answer">
+            <h2>[2부] 단답형 주관식 10문항 (41번 ~ 50번)</h2>
+            <p>빈칸에 알맞은 핵심 단어나 인물의 이름을 직접 입력해 주세요. 채점 시 정답과 해설이 함께 표시됩니다. (문항당 2점)</p>
+        </div>
+        <div id="saContainer"></div>
+
+        <!-- 하단 제출 버튼 -->
+        <div class="action-area">
+            <button type="button" class="btn-submit" id="submitBtn" onclick="gradeQuiz()">채점하기 (50문항 완료 후 클릭)</button>
+            <button type="button" class="btn-reset" id="resetBtn" onclick="resetQuiz()">다시 풀기</button>
+        </div>
+    </div>
+
+    <!-- 미완료 문항 안내 모달 -->
+    <div class="modal-overlay" id="warningModal">
+        <div class="modal-box">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">문제를 모두 풀어 주세요!</div>
+            <div class="modal-desc" id="modalMessage">아직 풀지 않은 문제가 있습니다. 모든 문제를 다 풀어야 채점할 수 있습니다.</div>
+            <button type="button" class="modal-btn" onclick="closeModal()">미완료 문제로 이동하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 1부: 객관식 40문제 데이터 (단답형 10문제와 중복되지 않음)
+        const mcQuestions = [
+            {
+                q: "이 책 『장복이, 창대와 함께하는 열하일기』가 기존의 《열하일기》 책들과 다른 가장 큰 특징은 무엇인가요?",
+                options: [
+                    "양반인 연암 나리가 아니라 그를 모시던 하인 장복이와 마두의 시선으로 여행 과정을 그렸다.",
+                    "청나라 황제가 조선을 여행하며 겪은 일을 일기 형식으로 썼다.",
+                    "실제 역사와 상관없이 미래의 우주여행을 상상하여 쓴 과학 소설이다.",
+                    "전쟁터에 나간 장군들의 무용담만을 모아서 기록한 책이다."
+                ],
+                answer: 0,
+                exp: "이 책은 이제껏 누구도 눈여겨보지 않았던 실존 인물인 하인 장복이와 마두의 시선으로 연암 나리와 함께한 5개월여의 여정을 생생하게 풀어냈습니다."
+            },
+            {
+                q: "1780년(정조 4년) 조선의 사행단이 청나라로 먼 여행을 떠나게 된 공식적인 목적은 무엇이었나요?",
+                options: [
+                    "청나라 황제(건륭제)의 칠순(70세) 생일을 축하하기 위해서",
+                    "청나라와 국경 전쟁을 벌여 옛 고구려 땅을 되찾기 위해서",
+                    "서양의 신대륙을 탐험할 큰 배를 사 오기 위해서",
+                    "청나라에서 열리는 세계 무술 대회에 참가하기 위해서"
+                ],
+                answer: 0,
+                exp: "연암 나리가 속한 사행단은 청나라 건륭제의 70세 생일을 축하하기 위해 파견된 사절단이었습니다."
+            },
+            {
+                q: "벼슬이 없던 연암 나리가 청나라에 가는 사행단에 합류할 수 있었던 까닭은 무엇인가요?",
+                options: [
+                    "사행단 대표(정사)로 임명된 팔촌 형 박명원의 수행원(자제군관) 자격으로 따라갈 수 있었다.",
+                    "어명을 몰래 위조하여 통역관으로 변장하고 따라갔다.",
+                    "장복이와 신분을 바꾸어 마부로 취직해서 따라갔다.",
+                    "청나라 황제가 연암 나리를 특별히 혼자만 초청했기 때문이다."
+                ],
+                answer: 0,
+                exp: "연암 나리는 사행단의 정사로 임명된 팔촌 형 박명원의 자제군관(사신을 수행하는 집안사람) 자격으로 청나라 여행길에 올랐습니다."
+            },
+            {
+                q: "여행을 막 시작할 무렵, 하인 장복이와 마두가 가지고 있던 생각과 삶의 모습으로 가장 알맞은 것은 무엇인가요?",
+                options: [
+                    "미천한 신분에 글도 몰라 남다른 꿈을 가져 본 적이 없고, 그저 주어진 일로 하루하루를 살아가는 인물들이었다.",
+                    "어릴 때부터 한문을 깊이 공부하여 과거 시험에 급제할 꿈을 꾸고 있었다.",
+                    "청나라 말을 유창하게 구사하여 통역관이 되려는 목표가 뚜렷했다.",
+                    "양반들보다 재산이 훨씬 많아 거만한 태도를 보였다."
+                ],
+                answer: 0,
+                exp: "장복이와 그의 동료 마두는 당시 가장 미천한 신분 계급에 속해 있었으며, 글을 깨친 적도 없고 자신만의 꿈을 가져 본 적도 없었습니다."
+            },
+            {
+                q: "사행단이 조선 땅의 마지막 고을인 의주를 지나 청나라 땅으로 들어설 때 건너야 했던 강은 무엇인가요?",
+                options: [
+                    "한강",
+                    "낙동강",
+                    "압록강",
+                    "영산강"
+                ],
+                answer: 2,
+                exp: "사행단은 의주에서 압록강을 건너 청나라 땅으로 들어섰습니다."
+            },
+            {
+                q: "강을 건너 청나라의 첫 관문인 책문(변문)에 들어선 장복이와 일행이 청나라의 거리와 집들을 보고 느낀 점은 무엇인가요?",
+                options: [
+                    "그동안 '오랑캐 나라'라며 무시했는데, 집들이 자로 잰 듯 반듯하고 거리가 질서 정연하며 시장이 번창해 깜짝 놀랐다.",
+                    "집들이 모두 쓰러져 가고 거리에 사람이 한 명도 없어 실망했다.",
+                    "조선의 초가집과 생김새가 완전히 똑같아서 아무런 감흥이 없었다.",
+                    "청나라 사람들이 모두 나무 위에서 생활하고 있어 신기해했다."
+                ],
+                answer: 0,
+                exp: "미개한 오랑캐라고 업신여겼던 청나라의 변두리 마을조차 집들이 반듯하고 시장이 번성한 것을 보고 큰 충격을 받았습니다."
+            },
+            {
+                q: "연암 나리가 사행길에서 장복이와 마두에게 자주 강조한 '마음의 눈으로 보아라'라는 말의 참된 뜻은 무엇인가요?",
+                options: [
+                    "눈을 감고 상상 속의 괴물만을 떠올리라는 뜻이다.",
+                    "겉모습이나 기존의 편견에 갇히지 말고, 사물의 진짜 모습과 이치를 열린 마음으로 살펴보라는 뜻이다.",
+                    "청나라의 물건은 부정이 타니 아예 쳐다보지도 말라는 뜻이다.",
+                    "밤에는 앞이 보이지 않으니 낮에만 길을 걸으라는 뜻이다."
+                ],
+                answer: 1,
+                exp: "연암은 눈앞의 겉모습이나 '청나라는 오랑캐'라는 편견에 속지 말고 마음의 눈으로 본질을 제대로 보아야 한다고 가르쳤습니다."
+            },
+            {
+                q: "연암 나리가 끝없이 펼쳐진 드넓은 요동 벌판을 바라보며 “한바탕 울기 좋은 곳이로구나!”라고 말한 까닭은 무엇인가요?",
+                options: [
+                    "다리가 너무 아프고 배가 고파서 서러운 마음이 들었기 때문에",
+                    "고향을 떠나온 슬픔 때문에 당장 집으로 돌아가고 싶어서",
+                    "갓 태어난 아기가 답답한 배 속에서 나와 울음을 터뜨리듯, 좁은 조선을 벗어나 탁 트인 새로운 세상을 마주한 벅찬 감동 때문에",
+                    "청나라 군사들이 길을 막고 위협하여 무서웠기 때문에"
+                ],
+                answer: 2,
+                exp: "연암은 울음이 슬플 때만 나오는 것이 아니라, 갓난아기가 세상에 나올 때처럼 답답한 가슴이 탁 트이고 큰 감동을 느꼈을 때도 나온다고 설명했습니다."
+            },
+            {
+                q: "「벽돌로 쌓은 성」에서 연암 나리가 청나라의 건축 방식을 보며 조선에서도 꼭 배워야 한다고 생각한 점은 무엇인가요?",
+                options: [
+                    "자연석을 일일이 깎아 쓰는 대신 똑같은 틀로 찍어 구운 자재를 쓰면 성곽과 집을 훨씬 빠르고 튼튼하게 지을 수 있다는 점",
+                    "종이와 풀만으로 성벽을 쌓으면 비용이 전혀 들지 않는다는 점",
+                    "집을 지을 때 기둥을 세우지 않고 천막만 치면 편리하다는 점",
+                    "성벽을 아주 낮게 쌓아 누구나 쉽게 넘어 다닐 수 있게 한 점"
+                ],
+                answer: 0,
+                exp: "연암은 크기가 일정하고 단단한 구운 자재를 사용해 성곽과 집을 빈틈없이 쌓는 청나라의 기술이 매우 실용적이라고 보았습니다."
+            },
+            {
+                q: "연암 나리는 집의 기초를 단단히 다지는 것에 비유하며, 사람이 살아가는 데 가장 중요한 기초가 무엇이라고 말했나요?",
+                options: [
+                    "높은 신분과 많은 재산",
+                    "스스로를 잘 알고 그에 따라 하고 싶은 일을 간직하는 것",
+                    "남들보다 힘이 세고 싸움을 잘하는 것",
+                    "양반에게 잘 보여 좋은 옷을 얻어 입는 것"
+                ],
+                answer: 1,
+                exp: "연암은 사람에게 가장 단단한 기초는 '스스로를 잘 알고, 그에 따라 하고 싶은 일을 간직하는 것'이라고 일깨워 주었습니다."
+            },
+            {
+                q: "「밤마다 사라지는 나리」에서 낮 동안의 고된 행군에도 불구하고 연암 나리가 밤마다 숙소에서 사라진 이유는 무엇이었나요?",
+                options: [
+                    "청나라의 거리와 상점을 둘러보고, 신분을 가리지 않고 청나라 사람들과 어울려 이야기를 나누며 새로운 문물을 배우기 위해서",
+                    "숙소 밥이 맛이 없어 몰래 혼자만 맛있는 음식을 사 먹기 위해서",
+                    "조선으로 도망갈 지름길을 혼자 찾아보기 위해서",
+                    "밤마다 산속에 들어가 무술 수련을 하기 위해서"
+                ],
+                answer: 0,
+                exp: "연암은 새로운 것을 보고 배우기 위해 밤잠을 아끼며 청나라 선비·상인들과 필담을 나누고 거리 문화를 탐구했습니다."
+            },
+            {
+                q: "연암 나리가 청나라 사람들과 말은 통하지 않아도 서로의 생각을 깊이 주고받을 수 있었던 방법은 무엇이었나요?",
+                options: [
+                    "종이에 한자로 글을 써서 대화를 나누는 '필담(筆談)'을 이용했다.",
+                    "장복이가 청나라 말을 완벽하게 통역해 주었다.",
+                    "서양 선교사에게 영어로 통역을 부탁했다.",
+                    "말은 한마디도 하지 않고 오직 춤으로만 뜻을 전했다."
+                ],
+                answer: 0,
+                exp: "당시 조선의 학자와 청나라 지식인들은 발음은 달라도 같은 한자를 썼기 때문에 붓으로 글을 써서 대화하는 필담을 나누었습니다."
+            },
+            {
+                q: "연암 나리가 밤마다 청나라 사람들과 어울리는 모습을 본 다른 조선 양반 사신들의 반응과 이에 대한 연암의 태도는 어떠했나요?",
+                options: [
+                    "다른 양반들은 체통 없이 오랑캐 상인들과 어울린다며 수군거렸으나, 연암은 개의치 않고 배울 점이 있다면 누구에게든 다가갔다.",
+                    "모든 양반 사신들이 연암을 따라 밤마다 상인들과 어울렸다.",
+                    "연암이 양반들의 비판을 듣고 부끄러워하며 다시는 숙소 밖으로 나가지 않았다.",
+                    "사행단 대표가 연암을 즉시 조선으로 돌려보냈다."
+                ],
+                answer: 0,
+                exp: "체면과 신분에 얽매인 다른 양반들과 달리 연암은 열린 마음으로 청나라의 다양한 사람들과 교류했습니다."
+            },
+            {
+                q: "「에그머니나, 괴물!」에서 사행단 일행이 길을 가다가 괴물처럼 생긴 신기한 동물을 만났을 때 연암 나리는 무엇을 하고 있었나요?",
+                options: [
+                    "말 위에서 코 고는 소리가 천둥치듯 하고 입으로 파리가 드나들어도 모를 정도로 깊이 졸고 있었다.",
+                    "길가 우물에서 세수를 하느라 뒤돌아 서 있었다.",
+                    "마차 안에서 한시(漢詩)를 짓느라 밖을 보지 못했다.",
+                    "먼저 앞장서서 달려가느라 그 자리에 없었다."
+                ],
+                answer: 0,
+                exp: "밤새도록 글을 쓰고 구경하느라 잠이 부족했던 연암 나리는 말 위에서 세상모르고 깊이 졸다가 그 동물을 직접 보지 못했습니다."
+            },
+            {
+                q: "잠에서 깬 연암 나리가 신기한 동물을 보지 못한 것을 아쉬워하며 마두에게 보인 행동으로 옳은 것은 무엇인가요?",
+                options: [
+                    "자신을 깨우지 않았다며 마두에게 곤장을 때렸다.",
+                    "양반의 체면을 내려놓고 마두에게 허리를 바싹 숙이며 “그래, 그 모양이 어찌 생겼더냐?”라고 애타는 눈빛으로 물었다.",
+                    "그까짓 짐승은 볼 가치도 없다며 무시하고 지나갔다.",
+                    "거짓말을 한다며 마두의 말을 전혀 믿어 주지 않았다."
+                ],
+                answer: 1,
+                exp: "호기심 많은 연암은 아랫사람인 마두에게 허리를 바싹 숙여가며 동물의 생김새를 꼬치꼬치 물었고, 마두는 나리가 못 본 것을 자기가 봤다는 사실에 우쭐해하며 신나게 설명했습니다."
+            },
+            {
+                q: "「기와 조각과 똥 덩어리」에서 연암 나리가 청나라의 거리와 집들을 살펴보며 가장 감탄한 것은 무엇이었나요?",
+                options: [
+                    "황금과 보석으로 집의 지붕을 화려하게 장식한 것",
+                    "쓸모없어 보이는 깨진 기와 조각, 조약돌, 심지어 가축의 똥오줌까지도 하나도 버리지 않고 알뜰하고 아름답게 활용하는 실용 정신",
+                    "오래된 집은 무조건 허물고 새로 짓는 모습",
+                    "길거리에 쓰레기를 마음껏 버려도 아무도 치우지 않는 자유로운 모습"
+                ],
+                answer: 1,
+                exp: "연암은 버려지기 쉬운 깨진 기와 조각으로 아름다운 담장 무늬를 만들고, 똥오줌을 알뜰히 모아 쓰는 청나라의 실용성을 높이 평가했습니다."
+            },
+            {
+                q: "청나라 사람들이 깨진 기와 조각과 돌멩이를 활용해 만든 것은 무엇이었나요?",
+                options: [
+                    "서로 아귀를 맞추어 꽃무늬나 기하학적 무늬를 낸 아름다운 담벼락과 마당 바닥",
+                    "전쟁터에서 적군에게 던지는 무기",
+                    "말에게 먹이는 사료 그릇",
+                    "비 오는 날 쓰는 우산"
+                ],
+                answer: 0,
+                exp: "깨진 기와 조각을 버리지 않고 두 장씩 마주 붙이거나 조약돌과 섞어 물결·꽃무늬 등 멋진 담장과 바닥을 만들었습니다."
+            },
+            {
+                q: "마두와 장복이가 “우리는 저 똥오줌이나 깨진 기와 조각보다도 못한 존재가 아닐까”라며 걱정했을 때 연암 나리가 해 준 말은 무엇인가요?",
+                options: [
+                    "“하인과 마부는 원래 기와 조각처럼 주인이 쓰는 대로 쓰이다 버려지는 운명이니라.”",
+                    "“사람으로 태어나서 어찌 다른 사람의 손길만 기다리겠느냐? 스스로의 가치는 스스로가 매기는 게야. 다른 사람에게 맡길 것이 아닌 게야.”",
+                    "“돈을 많이 벌어야만 사람 구실을 할 수 있으니 장사를 시작하거라.”",
+                    "“양반으로 다시 태어나기 전에는 가치를 찾을 수 없느니라.”"
+                ],
+                answer: 1,
+                exp: "연암은 사물과 달리 사람은 남의 손길에 따라 가치가 정해지는 것이 아니라, 스스로의 가치를 스스로 매기는 존재라고 일깨워 주었습니다."
+            },
+            {
+                q: "「적은 내 안에 있으니」에서 천하의 요새라는 성문과 만리장성을 둘러본 연암 나리가 들려준 역사적 교훈은 무엇인가요?",
+                options: [
+                    "아무리 성벽을 높고 튼튼하게 쌓아도 나라 안의 정치가 어지럽고 백성의 마음이 떠나면 내부에서부터 무너진다.",
+                    "조선도 농사를 모두 멈추고 압록강부터 한양까지 거대한 성벽만 쌓아야 한다.",
+                    "전쟁에서 이기려면 무조건 성문을 걸어 잠그고 밖에 나오지 말아야 한다.",
+                    "성벽의 높이가 높을수록 왕의 수명이 길어진다."
+                ],
+                answer: 0,
+                exp: "만리장성과 천하제일의 관문을 가지고도 결국 멸망한 명나라의 역사를 통해, 진짜 적은 성 밖이 아니라 내부의 부패와 분열(내 안)에 있음을 강조했습니다."
+            },
+            {
+                q: "「고려보에서 생긴 일」에 나오는 마을 ‘고려보’는 어떤 곳이었나요?",
+                options: [
+                    "옛날 전쟁 때 끌려오거나 정착한 조선(고려) 사람들의 후손이 모여 살며 떡 등을 만들어 팔던 마을",
+                    "청나라 황제의 보물 창고가 숨겨져 있던 비밀 군사 기지",
+                    "서양 상인들만 출입할 수 있었던 항구 마을",
+                    "사람이 아무도 살지 않는 사막 한가운데의 오아시스"
+                ],
+                answer: 0,
+                exp: "고려보는 청나라 땅 안에 조선(고려) 사람들의 후손이 모여 살던 마을이었습니다."
+            },
+            {
+                q: "고려보를 지나며 사행단 일행이 겪은 일을 통해 알 수 있는 교훈으로 가장 알맞은 것은 무엇인가요?",
+                options: [
+                    "상대방이 누구든 얕잡아 보거나 속이려 하지 않고 정직과 예의로 대해야 신뢰를 얻을 수 있다.",
+                    "낯선 마을을 지날 때는 돈을 내지 않고 음식을 빼앗아 먹어도 된다.",
+                    "같은 조상의 후손이라도 외국에 살면 무조건 적대시해야 한다.",
+                    "여행길에서는 동료의 짐을 몰래 버려야 편하게 걸을 수 있다."
+                ],
+                answer: 0,
+                exp: "고려보에서의 일화는 사람을 겉모습이나 출신으로 얕보거나 얄팍한 수를 쓰지 않고 진심과 예의로 대해야 함을 보여 줍니다."
+            },
+            {
+                q: "「글이야 배우면 되지」에서 글(문자)을 몰라 부끄러워하고 주눅이 든 장복이와 마두에게 전해 주는 메시지는 무엇인가요?",
+                options: [
+                    "양반이 아니면 글을 배워도 아무 소용이 없으니 포기하라는 뜻",
+                    "글을 모른다는 것은 부끄러운 죄가 아니며, 글은 배우면 되는 것이고 무엇보다 스스로 생각하고 꿈꾸는 마음이 중요하다는 뜻",
+                    "글을 모르는 사람은 여행길에서 즉시 집으로 돌아가야 한다는 뜻",
+                    "글자 대신 그림만 그리며 살라는 뜻"
+                ],
+                answer: 1,
+                exp: "신분이 낮고 글을 모른다는 것이 꿈을 꾸고 세상을 넓히는 데 결코 장애가 되지 않으며, 배움은 언제든 시작할 수 있다는 용기를 줍니다."
+            },
+            {
+                q: "청나라의 수도 연경(베이징)에 도착한 사행단이 확인한 연경 거리의 모습으로 옳은 것은 무엇인가요?",
+                options: [
+                    "길이 넓고 평평하여 수많은 수레가 물건을 싣고 활발히 오가며, 온갖 책과 문물을 파는 상점(유리창 등)이 번성해 있었다.",
+                    "수레가 다니지 못하도록 길 한가운데에 큰 바위들을 막아 놓았다.",
+                    "책을 파는 서점이 단 한 곳도 없어 학자들이 책을 구할 수 없었다.",
+                    "모든 건물이 짚으로 만든 초가집뿐이었다."
+                ],
+                answer: 0,
+                exp: "연경은 잘 닦인 도로 위로 수레가 쌩쌩 달리고, 서점가와 상점이 즐비한 대도시였습니다."
+            },
+            {
+                q: "연암 나리가 청나라의 수레 제도를 눈여겨보며 조선의 현실을 안타까워한 이유는 무엇인가요?",
+                options: [
+                    "조선은 길이 좁고 험하다는 핑계로 수레를 쓰지 않아, 백성들이 무거운 짐을 등이나 말에 지고 나르느라 고생하고 물자 유통이 막혀 있었기 때문에",
+                    "조선에는 수레가 너무 많아서 길거리가 늘 막혔기 때문에",
+                    "청나라 수레가 조선 수레보다 바퀴가 네모나서 잘 굴러가지 않았기 때문에",
+                    "수레를 타면 멀미가 심하게 나기 때문에"
+                ],
+                answer: 0,
+                exp: "연암은 수레를 만들어 쓰면 저절로 길이 넓어지고 상품이 전국으로 유통되어 백성들의 살림이 풍요로워질 것이라 주장했습니다."
+            },
+            {
+                q: "「황제를 찾아가는 길」에서 사행단이 원래 목적지였던 수도 연경에 도착하고도 쉬지 못하고 다시 북쪽으로 먼 길을 떠나야 했던 이유는 무엇인가요?",
+                options: [
+                    "청나라 황제가 무더위를 피해 북쪽의 별궁(피서산장)에 머물고 있어서 그곳에서 생일잔치가 열렸기 때문에",
+                    "연경에 전염병이 돌아 모든 외국 사신들을 쫓아냈기 때문에",
+                    "길을 잘못 들어 연경이 아니라 남쪽 바닷가로 갔기 때문에",
+                    "연암 나리가 혼자 사막을 구경하고 싶다고 고집을 부렸기 때문에"
+                ],
+                answer: 0,
+                exp: "건륭제가 여름 별궁인 피서산장에 머물며 조선 사절단을 그곳으로 오라고 명령했기 때문에 숨 돌릴 틈 없이 다시 길을 떠나야 했습니다."
+            },
+            {
+                q: "연경에서 황제가 있는 별궁으로 가는 길의 여정은 어떠했나요?",
+                options: [
+                    "넓고 편안한 비단길이어서 유람선을 타고 느긋하게 이동했다.",
+                    "고갯길이 험하고 강물이 불어났으며, 기한 내에 도착해야 해서 밤낮없이 강행군을 해야 하는 고된 길이었다.",
+                    "거리가 아주 가까워서 걸어서 한 시간 만에 도착했다.",
+                    "하인들이 모두 도망가서 양반들만 걸어갔다."
+                ],
+                answer: 1,
+                exp: "황제의 생일 기한에 맞추기 위해 험준한 산길과 거센 강물을 밤낮없이 건너야 하는 매우 고된 강행군이었습니다."
+            },
+            {
+                q: "「하룻밤에 아홉 번 강을 건너며」에서 사행단 일행이 하룻밤 사이에 같은 강줄기를 아홉 번이나 건너야 했던 까닭은 무엇인가요?",
+                options: [
+                    "강줄기가 산골짜기를 따라 구불구불하게 굽이쳐 흐르고 있었기 때문에",
+                    "강 건너편에 두고 온 짐을 아홉 번이나 깜빡 잊고 가지러 갔기 때문에",
+                    "연암 나리가 강물 수영 시합을 하자고 제안했기 때문에",
+                    "뱃사공이 길을 몰라 똑같은 자리를 빙빙 돌았기 때문에"
+                ],
+                answer: 0,
+                exp: "계곡 사이로 구불구불 흐르는 강줄기를 따라 길이 나 있어서 하룻밤 동안 아홉 번이나 거센 강물을 건너야 했습니다(원작의 「일야구도하기」)."
+            },
+            {
+                q: "하룻밤에 아홉 번 강을 건너는 위험한 순간에 연암 나리가 강물을 건너는 사람들을 보며 깨달은 마음의 이치는 무엇인가요?",
+                options: [
+                    "밤에는 귀로 듣는 요란한 물소리에 겁을 먹고 낮에는 눈으로 보는 소용돌이에 어지러워하지만, 눈과 귀의 착각에 흔들리지 않고 마음의 중심을 단단히 잡아야 한다.",
+                    "위험한 강을 만났을 때는 무조건 눈과 귀를 막고 달리는 말에서 뛰어내려야 한다.",
+                    "강물은 밤보다 낮에 훨씬 더 깊어지므로 낮에는 절대 강을 건너지 말아야 한다.",
+                    "하인들이 먼저 강에 들어가 물 깊이를 재고 오면 양반은 가마를 타고 건너야 한다."
+                ],
+                answer: 0,
+                exp: "연암은 외물(소리와 모양)에 마음이 현혹되어 두려움을 느끼는 인간의 심리를 성찰하며, 마음의 중심을 바르게 잡는 것이 중요함을 깨달았습니다."
+            },
+            {
+                q: "「나리 대신 말을 타고」에서 목적지에 거의 다다랐을 무렵 마두에게 어떤 안타까운 일이 생겼나요?",
+                options: [
+                    "쉼 없이 걸어온 강행군 탓에 발이 심하게 부르트고 다쳐서 한 걸음도 제대로 내딛지 못하게 되었다.",
+                    "청나라 도적들에게가진 돈을 모두 빼앗기고 길을 잃었다.",
+                    "갑자기 눈이 보이지 않는 병에 걸려 주저앉았다.",
+                    "말에서 떨어져 팔이 부러졌다."
+                ],
+                answer: 0,
+                exp: "밤낮없는 행군으로 마두의 발이 성한 곳 없이 다치고 부어올라 더 이상 걸을 수 없는 지경에 이르렀습니다."
+            },
+            {
+                q: "발을 다쳐 걷지 못하는 마두를 본 연암 나리가 내린 결정으로 옳은 것은 무엇인가요?",
+                options: [
+                    "다친 마두를 길가에 남겨 두고 장복이만 데리고 먼저 떠났다.",
+                    "양반의 체면을 전혀 개의치 않고 다친 마두를 자신의 말에 태운 뒤, 자신은 직접 두 발로 걸어서 길을 갔다.",
+                    "다른 양반 사신에게 마두를 업고 가라고 명령했다.",
+                    "마두가 꾀병을 부린다며 호통을 치고 채찍질을 했다."
+                ],
+                answer: 1,
+                exp: "엄격한 신분 사회였던 조선에서 양반인 연암 나리가 천한 마두를 자기 말에 태우고 스스로 걸어간 일은 연암의 따뜻한 인간애를 보여 주는 명장면입니다."
+            },
+            {
+                q: "연암 나리 대신 말을 타게 된 마두가 말 위에서 느낀 심정으로 가장 알맞은 것은 무엇인가요?",
+                options: [
+                    "나리에게 죄송해하며 어쩔 줄 몰라 하면서도, 신분을 넘어 자신을 사람으로 아껴 주는 나리의 따뜻한 마음에 가슴 뭉클한 감동을 느꼈다.",
+                    "자신이 진짜 양반이 된 것 같아 장복이에게 거만하게 명령을 내렸다.",
+                    "말이 너무 느리게 걷는다며 불평을 늘어놓았다.",
+                    "아무런 생각 없이 말 위에서 내내 잠만 잤다."
+                ],
+                answer: 0,
+                exp: "평생 말고삐를 잡고 아래에서 올려다보기만 하던 마두는 자신에게 말을 내어준 나리의 진심에 큰 감동을 받았습니다."
+            },
+            {
+                q: "사행단의 최종 목적지인 도시에 온천이 많아 한겨울에도 강물이 얼지 않는다고 하여 붙은 특징은 무엇인가요?",
+                options: [
+                    "따뜻한(뜨거운) 강이라는 뜻의 이름을 가지게 되었다.",
+                    "일 년 내내 눈보라가 치는 얼음 도시로 불렸다.",
+                    "물이 전혀 없는 사막 도시로 불렸다.",
+                    "바닷물이 역류하는 소금 도시로 불렸다."
+                ],
+                answer: 0,
+                exp: "온천이 많아 겨울에도 강물이 얼지 않고 따뜻하다고 하여 '열하(熱河)'라는 이름이 붙었습니다."
+            },
+            {
+                q: "「열하에 들어서다」에서 사행단이 목격한 모습으로, 청나라 황제가 여러 민족을 다스리기 위해 크게 대접하던 인물은 누구였나요?",
+                options: [
+                    "티베트 불교(라마교)의 지도자인 법왕(활불, 판첸 라마)",
+                    "영국에서 온 해군 제독",
+                    "일본에서 온 막부의 장군",
+                    "인도에서 온 코끼리 조련사"
+                ],
+                answer: 0,
+                exp: "청나라 건륭제는 티베트와 몽골 등 여러 민족을 포용하기 위해 티베트 불교의 지도자인 법왕(판첸 라마)을 극진히 대접했습니다."
+            },
+            {
+                q: "연암 나리가 사행길에서 코끼리 등 진귀한 동물과 다양한 이민족의 문화를 보며 가진 생각은 무엇인가요?",
+                options: [
+                    "자기가 알고 있는 좁은 기준만으로 세상의 넓고 신기한 이치를 함부로 판단해서는 안 된다.",
+                    "조선에 없는 동물과 문화는 모두 괴상하고 나쁜 것이니 없애야 한다.",
+                    "코끼리를 조선으로 데려와 농사를 짓게 해야 한다.",
+                    "세상 모든 나라는 조선의 풍습만 따라야 한다."
+                ],
+                answer: 0,
+                exp: "연암은 코끼리 등을 보며 우물 안 개구리처럼 자기가 본 것만 옳다고 여기는 편협한 태도를 버리고 천하의 다양함을 인정해야 한다고 생각했습니다."
+            },
+            {
+                q: "「걸어가는 만큼 넓어지는 세상」에서 여행을 마치고 돌아갈 무렵 마두가 장복이에게 털어놓은 자신의 새로운 목표는 무엇이었나요?",
+                options: [
+                    "그냥 어쩔 수 없이 고삐를 잡는 것이 아니라, 말을 진심으로 사랑하고 공부하여 조선과 중국을 통틀어 말에 대해 제일 잘 아는 사람이 되겠다.",
+                    "조선으로 돌아가면 마두 일을 당장 그만두고 양반 신분을 돈으로 사겠다.",
+                    "청나라에 몰래 남아서 큰 식당을 차려 부자가 되겠다.",
+                    "연암 나리처럼 과거 시험을 보아 영의정이 되겠다."
+                ],
+                answer: 0,
+                exp: "마두는 자신의 일을 부끄러워하던 예전 모습에서 벗어나, 말을 가장 사랑하고 말에 대해 가장 잘 아는 최고의 전문가가 되겠다는 당당한 목표를 세웠습니다."
+            },
+            {
+                q: "친구의 당당한 다짐을 처음 들었을 때 하인 장복이가 보인 반응의 변화로 옳은 것은 무엇인가요?",
+                options: [
+                    "처음에는 어차피 평생 고삐나 잡고 살 건데 고작 그게 꿈이냐며 김새 했지만, 친구의 다부진 표정과 결심을 보고 더 이상 비웃지 않고 자신도 꿈에 대해 생각하게 되었다.",
+                    "끝까지 친구를 비웃으며 연암 나리에게 고자질했다.",
+                    "자신도 똑같이 말 전문가가 되겠다며 친구와 다투었다.",
+                    "아무런 관심이 없어 귀를 막고 다른 곳으로 가 버렸다."
+                ],
+                answer: 0,
+                exp: "장복이는 처음에 투덜거렸으나 친구의 진지하고 다부진 눈빛에서 진심을 느끼고 더 이상 비웃지 않았으며, 스스로의 삶도 돌아보게 됩니다."
+            },
+            {
+                q: "책의 마지막 부분에서 연암 나리가 장복이와 마두에게 세상을 넓히는 방법에 대해 해 준 말씀은 무엇인가요?",
+                options: [
+                    "“모든 길을 다 밟을 수는 없으니, 가슴으로라도 밟도록 노력해야지. 그래야 네 세상이 넓어지는 게야.”",
+                    "“세상을 넓히려면 무조건 말을 타고 빨리 달려야 하느니라.”",
+                    "“조선에 돌아가면 오늘 본 것들을 모두 잊고 조용히 살아야 한다.”",
+                    "“책을 천 권 읽기 전에는 절대 집 밖으로 나오지 말거라.”"
+                ],
+                answer: 0,
+                exp: "비록 발로 세상의 모든 길을 다 걸을 수는 없더라도, 열린 마음과 꿈으로 세상을 품고 가슴으로 밟으려 노력할 때 자신의 세상이 넓어진다는 감동적인 가르침입니다."
+            },
+            {
+                q: "연암 나리와 함께한 5개월여 동안의 여행을 통해 장복이와 마두에게 일어난 가장 큰 내면의 변화는 무엇인가요?",
+                options: [
+                    "천한 신분과 글을 모른다는 한계에 갇혀 있던 우물에서 벗어나, 스스로의 가치를 깨닫고 자신만의 꿈을 품게 되었다.",
+                    "청나라에서 많은 보물을 얻어 조선 최고의 부자가 되었다.",
+                    "양반들을 미워하는 마음이 커져 반란을 일으키기로 결심했다.",
+                    "여행이 너무 힘들어 다시는 한양 밖으로 나가지 않기로 맹세했다."
+                ],
+                answer: 0,
+                exp: "두 사람은 연암 나리와 동고동락하며 신분에 얽매이지 않고 스스로의 가치를 매기며 꿈꿀 수 있다는 것을 깨달았습니다."
+            },
+            {
+                q: "이 책의 부록(『열하일기』에 대하여)과 본문을 통해 알 수 있는 연암 나리의 학문적 태도(북학 사상)로 가장 알맞은 것은 무엇인가요?",
+                options: [
+                    "백성들의 삶을 풍요롭게 하고 나라에 이롭다면 청나라의 발전된 기술과 문물이라도 적극적으로 배우고 받아들여야 한다.",
+                    "청나라는 오랑캐 나라이므로 어떤 기술도 배워서는 안 되며 즉시 전쟁을 일으켜야 한다.",
+                    "상업과 수공업을 모두 금지하고 오직 성리학 예법만 연구해야 한다.",
+                    "한문 사용을 폐지하고 모든 책을 불태워야 한다."
+                ],
+                answer: 0,
+                exp: "연암은 명분과 편견을 버리고 백성의 실생활에 도움이 되는 청나라의 선진 문물을 배우자는 실학(북학) 정신을 강조했습니다."
+            },
+            {
+                q: "『장복이, 창대와 함께하는 열하일기』 전체를 관통하는 중심 주제로 가장 적절한 것은 무엇인가요?",
+                options: [
+                    "신분이나 처지에 상관없이 누구나 스스로의 가치를 소중히 여기고 열린 마음으로 꿈을 키울 때 더 넓은 세상으로 나아갈 수 있다.",
+                    "먼 곳으로 여행을 떠나는 것은 위험하니 집 안에만 머무르는 것이 가장 안전하다.",
+                    "타고난 신분은 절대 바꿀 수 없으므로 운명에 순응하며 꿈을 포기해야 한다.",
+                    "외국의 문물은 무조건 우리 것보다 훌륭하므로 우리 전통을 모두 버려야 한다."
+                ],
+                answer: 0,
+                exp: "이 책은 마두와 하인의 성장 이야기를 통해 어린이들에게 스스로의 가치를 믿고 꿈을 향해 나아가라는 따뜻한 울림을 전합니다."
+            }
+        ];
+
+        // 2부: 단답형 주관식 10문제 데이터 (객관식과 중복 없음)
+        const saQuestions = [
+            {
+                q: "이 책의 원작인 고전 《열하일기》를 지은 조선 후기의 대표적인 실학자이자, 책 속에서 장복이와 마두가 '나리'라고 부르며 모신 양반의 이름은 누구인가요? (세 글자 이름)",
+                answers: ["박지원", "연암박지원"],
+                displayAnswer: "박지원 (연암 박지원)",
+                exp: "조선 후기 실학자 연암 박지원이 청나라에 다녀와 쓴 《열하일기》가 이 책의 원작입니다."
+            },
+            {
+                q: "책 제목에도 등장하는 인물로, 하인 장복이와 함께 연암 나리를 모시고 청나라 여행을 다녀오며 '말을 가장 사랑하고 잘 아는 사람'이 되겠다는 꿈을 찾은 마두의 이름은 누구인가요?",
+                answers: ["창대"],
+                displayAnswer: "창대",
+                exp: "마두 '창대'는 실제로 《열하일기》 원전에도 기록되어 있는 실존 인물로, 이 책의 주인공입니다."
+            },
+            {
+                q: "사행단에서 창대가 맡았던 역할로, 말을 몰고 관리하며 돌보는 직업을 일컫는 두 글자 낱말은 무엇인가요?",
+                answers: ["마두", "마부"],
+                displayAnswer: "마두 (또는 마부)",
+                exp: "조선 시대 사행단 등에서 말을 몰고 돌보던 사람을 '마두(馬頭)' 또는 '마부'라고 불렀습니다."
+            },
+            {
+                q: "「벽돌로 쌓은 성」에서 연암 나리가 청나라의 성곽과 집을 보며 감탄한 건축 재료로, 진흙을 일정한 틀에 찍어 불에 구워 만들어 집의 기초와 벽을 튼튼하게 쌓는 데 쓰인 이것은 무엇인가요?",
+                answers: ["벽돌"],
+                displayAnswer: "벽돌",
+                exp: "연암 나리는 일정한 크기로 구워 낸 '벽돌'의 우수성을 보고 조선에서도 벽돌을 만들어 써야 한다고 주장했습니다."
+            },
+            {
+                q: "「벽돌로 쌓은 성」에서 연암 나리가 “집의 기초가 벽돌이듯 사람도 기초를 단단히 만들어 두어야 한다”라고 하자, 창대가 “사람에게 벽돌이란 무엇입니까?”라고 물었습니다. 이에 나리가 “스스로를 잘 알고 하고 싶은 일을 간직하는 것”이라며 대답해 준 한 글자 단어는 무엇인가요?",
+                answers: ["꿈"],
+                displayAnswer: "꿈",
+                exp: "연암 나리는 사람에게 벽돌(기초)이란 바로 '꿈'이라고 답하며 창대와 장복이의 마음을 일깨웠습니다."
+            },
+            {
+                q: "「에그머니나, 괴물!」에서 연암 나리가 말 위에서 천둥치듯 코를 골며 조는 바람에 직접 보지 못하고, 창대가 먼저 보고 깜짝 놀라 나리에게 생김새를 설명해 준 '등에 혹이 달린 동물'은 무엇인가요?",
+                answers: ["낙타"],
+                displayAnswer: "낙타",
+                exp: "창대는 태어나 처음 본 '낙타'를 괴물인 줄 알고 놀랐으며, 잠에서 깬 연암 나리에게 낙타의 모습을 신나게 설명해 주었습니다."
+            },
+            {
+                q: "「기와 조각과 똥 덩어리」에서 청나라 사람들이 길가에 떨어진 가축의 똥오줌을 조금도 버리지 않고 알뜰하게 모아 농사지을 때 땅을 기름지게 하기 위해 사용한 용도는 무엇인가요? (두 글자)",
+                answers: ["거름", "비료"],
+                displayAnswer: "거름 (비료)",
+                exp: "청나라 사람들은 똥오줌도 함부로 버리지 않고 정성껏 모아 농사짓는 '거름'으로 알뜰하게 활용했습니다."
+            },
+            {
+                q: "만리장성의 동쪽 끝에 위치한 천하제일의 관문으로, 「적은 내 안에 있으니」에서 연암 나리가 둘러보며 나라를 지키는 진정한 힘에 대해 성찰했던 이 성문의 이름은 무엇인가요?",
+                answers: ["산해관"],
+                displayAnswer: "산해관",
+                exp: "'산해관'은 요동과 중국 본토(관내)를 가르는 거대한 요새로, 연암은 이곳을 지나며 진정한 적은 성 밖이 아니라 내부에 있음을 이야기했습니다."
+            },
+            {
+                q: "청나라 황제의 여름 별궁(피서산장)이 있던 곳으로, 연경에 도착했던 사행단이 황제의 생일잔치에 참석하기 위해 하룻밤에 아홉 번 강을 건너며 찾아간 최종 목적지 도시의 이름은 무엇인가요?",
+                answers: ["열하"],
+                displayAnswer: "열하",
+                exp: "사행단의 최종 목적지이자 이 책의 제목에 들어간 도시는 온천이 많아 강물이 얼지 않는다는 '열하(熱河)'입니다."
+            },
+            {
+                q: "「걸어가는 만큼 넓어지는 세상」에서 마두 창대가 여행을 마무리하며 “난 조선에서, 아니 중국을 통틀어서도 이 동물에 대해 제일 잘 알고 가장 사랑하는 사람이 될 거다!”라고 다짐한 동물은 무엇인가요?",
+                answers: ["말"],
+                displayAnswer: "말",
+                exp: "마두 창대는 평생 어쩔 수 없이 고삐를 잡는 신세가 아니라, '말'을 진심으로 사랑하고 가장 잘 아는 최고의 전문가가 되겠다는 꿈을 품게 되었습니다."
+            }
+        ];
+
+        let firstUnansweredElement = null;
+
+        // 초기 렌더링
+        function renderQuiz() {
+            const mcContainer = document.getElementById("mcContainer");
+            const saContainer = document.getElementById("saContainer");
+
+            mcContainer.innerHTML = mcQuestions.map((item, idx) => {
+                const qNum = idx + 1;
+                const optionsHtml = item.options.map((opt, oIdx) => `
+                    <label class="option-label" id="mc_${idx}_label_${oIdx}">
+                        <input type="radio" name="mc_${idx}" value="${oIdx}" onchange="handleMcChange(${idx}, ${oIdx})">
+                        <span>${oIdx + 1}) ${opt}</span>
+                    </label>
+                `).join("");
+
+                return `
+                    <div class="question-card" id="qcard_mc_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="options-list">
+                            ${optionsHtml}
+                        </div>
+                        <div class="feedback-box" id="feedback_mc_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            saContainer.innerHTML = saQuestions.map((item, idx) => {
+                const qNum = idx + 41;
+                return `
+                    <div class="question-card short-answer-card" id="qcard_sa_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="short-input-wrap">
+                            <input type="text" class="short-input" id="sa_input_${idx}" placeholder="정답을 입력하세요" oninput="handleSaInput(${idx})" autocomplete="off">
+                        </div>
+                        <div class="feedback-box" id="feedback_sa_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            updateProgress();
+        }
+
+        function handleMcChange(qIdx, selectedIdx) {
+            const card = document.getElementById(`qcard_mc_${qIdx}`);
+            card.classList.remove("unanswered-warning");
+            for (let i = 0; i < 4; i++) {
+                const lbl = document.getElementById(`mc_${qIdx}_label_${i}`);
+                if (i === selectedIdx) {
+                    lbl.classList.add("selected");
+                } else {
+                    lbl.classList.remove("selected");
+                }
+            }
+            updateProgress();
+        }
+
+        function handleSaInput(sIdx) {
+            const card = document.getElementById(`qcard_sa_${sIdx}`);
+            const val = document.getElementById(`sa_input_${sIdx}`).value.trim();
+            if (val.length > 0) {
+                card.classList.remove("unanswered-warning");
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answeredCount = 0;
+
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (checked) answeredCount++;
+            }
+
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val.length > 0) answeredCount++;
+            }
+
+            const total = mcQuestions.length + saQuestions.length;
+            const percent = Math.round((answeredCount / total) * 100);
+
+            document.getElementById("progressText").textContent = `진행률: ${answeredCount} / ${total} (${percent}%)`;
+            document.getElementById("progressFill").style.width = `${percent}%`;
+        }
+
+        // 문자열 정규화 (공백 및 특수기호 제거)
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, "").replace(/[<>《》"'「」『』()]/g, "").toLowerCase();
+        }
+
+        // 채점 함수
+        function gradeQuiz() {
+            let unansweredNumbers = [];
+            firstUnansweredElement = null;
+
+            // 모든 경고 테두리 초기화
+            document.querySelectorAll(".question-card").forEach(el => el.classList.remove("unanswered-warning"));
+
+            // 1. 객관식 미응답 확인
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (!checked) {
+                    unansweredNumbers.push(i + 1);
+                    const card = document.getElementById(`qcard_mc_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 2. 단답형 주관식 미응답 확인
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val === "") {
+                    unansweredNumbers.push(i + 41);
+                    const card = document.getElementById(`qcard_sa_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 안 푼 문제가 하나라도 있으면 채점하지 않고 경고 메시지 표시
+            if (unansweredNumbers.length > 0) {
+                const previewList = unansweredNumbers.slice(0, 10).join(", ") + (unansweredNumbers.length > 10 ? ` 외 ${unansweredNumbers.length - 10}문항` : "번");
+                document.getElementById("modalMessage").innerHTML = `
+                    아직 풀지 않은 문제가 <strong>${unansweredNumbers.length}개</strong> 있습니다.<br>
+                    모든 문제를 다 풀어야 채점할 수 있습니다!<br>
+                    <span style="display:inline-block; margin-top:8px; font-size:0.86rem; color:#b45309; background:#fef3c7; padding:4px 10px; border-radius:6px;">
+                        미완료 문항: ${previewList}
+                    </span>
+                `;
+                document.getElementById("warningModal").style.display = "flex";
+                return;
+            }
+
+            // 모든 문제를 다 푼 경우 채점 진행
+            let mcCorrect = 0;
+            let saCorrect = 0;
+
+            // 객관식 채점
+            mcQuestions.forEach((item, idx) => {
+                const checked = document.querySelector(`input[name="mc_${idx}"]:checked`);
+                const userChoice = parseInt(checked.value, 10);
+                const isCorrect = (userChoice === item.answer);
+                if (isCorrect) mcCorrect++;
+
+                const card = document.getElementById(`qcard_mc_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                for (let oIdx = 0; oIdx < 4; oIdx++) {
+                    const lbl = document.getElementById(`mc_${idx}_label_${oIdx}`);
+                    const radio = lbl.querySelector("input");
+                    radio.disabled = true;
+                    lbl.classList.remove("correct-option", "wrong-option");
+                    if (oIdx === item.answer) {
+                        lbl.classList.add("correct-option");
+                    } else if (oIdx === userChoice && !isCorrect) {
+                        lbl.classList.add("wrong-option");
+                    }
+                }
+
+                const fb = document.getElementById(`feedback_mc_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (정답: ${item.answer + 1}번 ${item.options[item.answer]})`}
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            // 단답형 주관식 채점 (정답 반드시 표시)
+            saQuestions.forEach((item, idx) => {
+                const inputEl = document.getElementById(`sa_input_${idx}`);
+                const userRaw = inputEl.value.trim();
+                const userNorm = normalizeAnswer(userRaw);
+                const acceptedNorms = item.answers.map(a => normalizeAnswer(a));
+                const isCorrect = acceptedNorms.includes(userNorm);
+                if (isCorrect) saCorrect++;
+
+                inputEl.disabled = true;
+
+                const card = document.getElementById(`qcard_sa_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                const fb = document.getElementById(`feedback_sa_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (입력한 답: ${userRaw})`}
+                    </div>
+                    <div style="margin: 6px 0;">
+                        <span class="short-answer-reveal">정답: ${item.displayAnswer}</span>
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            const totalCorrect = mcCorrect + saCorrect;
+            const totalScore = totalCorrect * 2; // 50문항 * 2점 = 100점 만점
+
+            document.getElementById("finalScore").textContent = totalScore;
+            document.getElementById("totalCorrectStat").textContent = `${totalCorrect} / 50문제`;
+            document.getElementById("mcCorrectStat").textContent = `${mcCorrect} / 40문제`;
+            document.getElementById("saCorrectStat").textContent = `${saCorrect} / 10문제`;
+
+            let msg = "";
+            if (totalScore === 100) {
+                msg = "완벽합니다! 『장복이, 창대와 함께하는 열하일기』를 처음부터 끝까지 아주 꼼꼼하게 읽었네요! 🎉";
+            } else if (totalScore >= 80) {
+                msg = "참 잘했어요! 장복이와 창대의 여정과 연암 나리의 가르침을 훌륭하게 이해하고 있습니다! 👍";
+            } else if (totalScore >= 60) {
+                msg = "좋은 결과예요! 틀린 문제의 해설을 읽으며 책의 주요 장면을 다시 한번 떠올려 보세요. 😊";
+            } else {
+                msg = "끝까지 50문제를 모두 풀어낸 끈기가 멋집니다! 아래 정답과 해설을 확인하고 책을 다시 살펴보세요! 💪";
+            }
+            document.getElementById("resultSubtext").textContent = msg;
+
+            const resultCard = document.getElementById("resultCard");
+            resultCard.style.display = "block";
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("resetBtn").style.display = "block";
+
+            resultCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function closeModal() {
+            document.getElementById("warningModal").style.display = "none";
+            if (firstUnansweredElement) {
+                firstUnansweredElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById("resultCard").style.display = "none";
+            document.getElementById("submitBtn").style.display = "block";
+            document.getElementById("resetBtn").style.display = "none";
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        window.addEventListener("DOMContentLoaded", renderQuiz);
+    </script>
+</body>
+</html>
