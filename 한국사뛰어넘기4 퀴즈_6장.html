@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>한국사 뛰어넘기 4 - 6장 흔들리는 신분 제도 퀴즈</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            --accent: #d97706;
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --border: #e5e7eb;
+            --card-bg: #ffffff;
+            --bg-body: #f3f4f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", "맑은 고딕", sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* 상단 고정 진행률 바 */
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .sticky-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        /* 헤더 카드 */
+        .header-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.15);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header-card h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            word-break: keep-all;
+        }
+
+        .header-card p {
+            font-size: 0.95rem;
+            opacity: 0.92;
+            word-break: keep-all;
+        }
+
+        .info-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .info-pill {
+            background: rgba(15, 23, 42, 0.25);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* 섹션 구분 타이틀 */
+        .section-header {
+            background: #ffffff;
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 28px 0 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-header.short-answer {
+            border-left-color: var(--accent);
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .section-header p {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        /* 문제 카드 */
+        .question-card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .question-card.unanswered-warning {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+
+        .question-card.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .question-card.incorrect {
+            border-color: var(--danger);
+            background-color: var(--danger-bg);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .q-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.92rem;
+            flex-shrink: 0;
+        }
+
+        .short-answer-card .q-num {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .q-title {
+            font-size: 1.03rem;
+            font-weight: 700;
+            color: var(--text-main);
+            word-break: keep-all;
+            padding-top: 3px;
+        }
+
+        /* 객관식 보기 스타일 */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.15s ease;
+            font-size: 0.96rem;
+            word-break: keep-all;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-bg);
+        }
+
+        .option-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .option-label.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-bg);
+            font-weight: 600;
+        }
+
+        .option-label.correct-option {
+            border-color: var(--success);
+            background-color: #dcfce7;
+            font-weight: 700;
+            color: #14532d;
+        }
+
+        .option-label.wrong-option {
+            border-color: var(--danger);
+            background-color: #fee2e2;
+            color: #7f1d1d;
+            text-decoration: line-through;
+        }
+
+        /* 단답형 주관식 입력창 */
+        .short-input-wrap {
+            margin-top: 6px;
+        }
+
+        .short-input {
+            width: 100%;
+            padding: 13px 16px;
+            font-size: 1rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #ffffff;
+        }
+
+        .short-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+        }
+
+        /* 채점 피드백 박스 */
+        .feedback-box {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .feedback-status {
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .feedback-status.pass {
+            color: var(--success);
+        }
+
+        .feedback-status.fail {
+            color: var(--danger);
+        }
+
+        .short-answer-reveal {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 700;
+        }
+
+        /* 하단 버튼 및 결과 영역 */
+        .action-area {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* 결과 성적표 카드 */
+        .result-card {
+            display: none;
+            background: #ffffff;
+            border: 3px solid var(--primary);
+            border-radius: 16px;
+            padding: 28px 20px;
+            margin-top: 24px;
+            text-align: center;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            border: 6px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .score-number {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .score-unit {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 8px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* 모달 알림창 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 18px;
+            word-break: keep-all;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .header-card {
+                padding: 22px 18px;
+            }
+            .header-card h1 {
+                font-size: 1.35rem;
+            }
+            .question-card {
+                padding: 16px;
+            }
+            .q-title {
+                font-size: 0.98rem;
+            }
+            .option-label {
+                padding: 11px 12px;
+                font-size: 0.92rem;
+            }
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 고정 진행 상태바 -->
+    <div class="sticky-bar">
+        <div class="sticky-inner">
+            <span class="progress-text" id="progressText">진행률: 0 / 50 (0%)</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header-card">
+            <span class="badge">한국사 뛰어넘기 4 (스푼북) · 제6장</span>
+            <h1>6. 흔들리는 신분 제도</h1>
+            <p>본문과 연표, 세계 역사와 우리(미국의 노예 해방), 그것도 알고 싶다(조선 후기 여성들의 삶) 내용을 바탕으로 구성된 50문항 종합 퀴즈입니다. 모든 문제를 다 풀어야 채점이 진행됩니다.</p>
+            <div class="info-pills">
+                <span class="info-pill">객관식 40문항 (80점)</span>
+                <span class="info-pill">단답형 주관식 10문항 (20점)</span>
+                <span class="info-pill">총 50문항 · 100점 만점 (문항당 2점)</span>
+            </div>
+        </div>
+
+        <!-- 성적 결과 카드 (채점 후 상단에 표시) -->
+        <div class="result-card" id="resultCard">
+            <div class="score-circle">
+                <span class="score-number" id="finalScore">0</span>
+                <span class="score-unit">/ 100점</span>
+            </div>
+            <h2 id="resultHeadline" style="margin-bottom: 6px; font-size: 1.35rem;">채점 완료!</h2>
+            <p id="resultSubtext" style="color: var(--text-sub); font-size: 0.95rem;"></p>
+            <div class="result-stats">
+                <div class="stat-box">
+                    <div class="stat-label">전체 맞은 문제 수</div>
+                    <div class="stat-value" id="totalCorrectStat">0 / 50</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">객관식 정답 수</div>
+                    <div class="stat-value" id="mcCorrectStat">0 / 40</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">단답형 정답 수</div>
+                    <div class="stat-value" id="saCorrectStat">0 / 10</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1부: 객관식 40문항 -->
+        <div class="section-header">
+            <h2>[1부] 객관식 40문항 (1번 ~ 40번)</h2>
+            <p>각 문제에서 가장 알맞은 보기를 하나씩 골라 주세요. (문항당 2점)</p>
+        </div>
+        <div id="mcContainer"></div>
+
+        <!-- 2부: 단답형 주관식 10문항 -->
+        <div class="section-header short-answer">
+            <h2>[2부] 단답형 주관식 10문항 (41번 ~ 50번)</h2>
+            <p>빈칸에 알맞은 정답을 직접 입력해 주세요. 채점 시 정답과 해설이 함께 표시됩니다. (문항당 2점)</p>
+        </div>
+        <div id="saContainer"></div>
+
+        <!-- 하단 제출 버튼 -->
+        <div class="action-area">
+            <button type="button" class="btn-submit" id="submitBtn" onclick="gradeQuiz()">채점하기 (50문항 완료 후 클릭)</button>
+            <button type="button" class="btn-reset" id="resetBtn" onclick="resetQuiz()">다시 풀기</button>
+        </div>
+    </div>
+
+    <!-- 미완료 문항 안내 모달 -->
+    <div class="modal-overlay" id="warningModal">
+        <div class="modal-box">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">문제를 모두 풀어 주세요!</div>
+            <div class="modal-desc" id="modalMessage">아직 풀지 않은 문제가 있습니다. 모든 문제를 다 풀어야 채점할 수 있습니다.</div>
+            <button type="button" class="modal-btn" onclick="closeModal()">미완료 문제로 이동하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 1부: 객관식 40문제 데이터 (단답형 10문제와 중복되지 않음)
+        const mcQuestions = [
+            {
+                q: "[연표] 1712년에 세운 국경 비석과, 1720년 붕당 대립이 극에 달한 가운데 사망한 왕이 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "백두산정계비 - 숙종",
+                    "진흥왕 순수비 - 영조",
+                    "백두산정계비 - 정조",
+                    "탕평비 - 순조"
+                ],
+                answer: 0,
+                exp: "연표에서 1712년에 백두산정계비를 세웠고, 1720년에 숙종이 사망하였음을 확인할 수 있습니다."
+            },
+            {
+                q: "[연표] 1776년에 즉위한 조선의 왕과, 1789년에 관직에 진출한 실학자가 바르게 연결된 것은 무엇인가요?",
+                options: [
+                    "영조 - 이익",
+                    "정조 - 정약용",
+                    "순조 - 박지원",
+                    "숙종 - 유형원"
+                ],
+                answer: 1,
+                exp: "1776년에 정조가 즉위하였고, 1789년에 실학자인 정약용이 관직에 진출하였습니다."
+            },
+            {
+                q: "[연표] 1794년에 정조에게 고구마의 중요성을 알리는 글을 올린 인물은 누구인가요?",
+                options: [
+                    "서용보",
+                    "김육",
+                    "홍상선",
+                    "이중하"
+                ],
+                answer: 0,
+                exp: "1794년 서용보가 고구마의 중요성을 알리는 글을 정조에게 올렸습니다."
+            },
+            {
+                q: "[연표] 6장 도입부 연표에 붉은 글씨로 강조된 해로, 순조가 관청에 딸려 있는 노비를 해방한 연도는 언제인가요?",
+                options: [
+                    "1755년",
+                    "1778년",
+                    "1801년",
+                    "1861년"
+                ],
+                answer: 2,
+                exp: "연표에 붉은 글씨로 '1801년 순조가 관청에 딸려 있는 노비를 해방하다'라고 표시되어 있습니다."
+            },
+            {
+                q: "[연표] 1805년 <처네 쓴 여인>을 그린 화가와, 1861년 <대동여지도>를 만든 인물이 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "신윤복 - 김정호",
+                    "김홍도 - 정약용",
+                    "권용정 - 서용보",
+                    "정선 - 최제우"
+                ],
+                answer: 0,
+                exp: "1805년 신윤복이 <처네 쓴 여인>을 그렸고, 1861년 김정호가 <대동여지도>를 만들었습니다."
+            },
+            {
+                q: "[연표] 1862년에 농민 봉기가 일어난 지역과, 1864년에 처형된 동학 창시자가 바르게 연결된 것은 무엇인가요?",
+                options: [
+                    "진주 - 최제우",
+                    "영천 - 이덕무",
+                    "예산 - 박제가",
+                    "부안 - 전봉준"
+                ],
+                answer: 0,
+                exp: "1862년 진주에서 농민 봉기가 일어났고, 1864년 동학을 창시한 최제우가 처형되었습니다."
+            },
+            {
+                q: "태어날 때부터 네 신분(양반, 중인, 평민, 천민)으로 엄격히 구분되었던 조선 사회가 조선 후기에 들어 어떻게 달라졌나요?",
+                options: [
+                    "점점 양반의 수는 늘어나고, 평민과 노비의 수는 줄어들었다.",
+                    "양반은 모두 사라지고 노비의 수만 열 배로 늘어났다.",
+                    "평민의 수가 전체 인구의 99퍼센트를 차지하게 되었다.",
+                    "신분 이동이 더욱 엄격해져 단 한 명도 신분이 바뀌지 않았다."
+                ],
+                answer: 0,
+                exp: "조선 후기에 들어 신분 제도가 뿌리부터 흔들리면서 양반의 수는 늘어나고 평민과 노비의 수는 줄어들었습니다."
+            },
+            {
+                q: "예전에는 대개 양반만 부유했으나, 조선 후기에 들어 돈을 많이 벌어 떵떵거리며 잘사는 부유한 평민들이 나타나게 된 배경은 무엇인가요?",
+                options: [
+                    "새로운 농사 방법으로 성공한 부자 농민과 장사로 큰돈을 번 부자 상인이 등장했기 때문에",
+                    "나라에서 모든 평민에게 황금을 무료로 나누어 주었기 때문에",
+                    "평민들이 양반의 재산을 법적으로 모두 몰수했기 때문에",
+                    "외국에서 평민들에게만 돈을 빌려주었기 때문에"
+                ],
+                answer: 0,
+                exp: "새로운 농사 방법으로 성공한 부자 농민과 장사로 큰돈을 번 부자 상인이 등장하면서 부유한 평민들이 나타났습니다."
+            },
+            {
+                q: "부유해진 평민들이 평민 신분에서 벗어나 기어코 양반이 되고 싶어 했던 이유로 본문에 나온 것은 무엇인가요?",
+                options: [
+                    "아무리 돈이 많아도 양반에게 굽실거려야 하고, 양반들은 내지도 않는 온갖 세금을 바쳐야 하며, 양반들은 안 가는 군대도 가야 했기 때문에",
+                    "양반이 되어야만 시장에서 물건을 사고파는 장사를 할 수 있었기 때문에",
+                    "양반이 되면 외국으로 자유롭게 이민을 갈 수 있었기 때문에",
+                    "평민은 쌀밥을 먹는 것이 법으로 금지되어 있었기 때문에"
+                ],
+                answer: 0,
+                exp: "부유한 평민들은 평민이라는 이유로 양반에게 굽실거리고 온갖 세금을 내며 군대까지 가야 하는 처지에서 벗어나 경제적 능력에 걸맞은 지위를 얻고자 했습니다."
+            },
+            {
+                q: "조선 후기에 나라(정부)에서 이름 칸이 비어 있는 임명장을 이용해 돈을 받고 벼슬을 팔았던 까닭은 무엇인가요?",
+                options: [
+                    "임진왜란과 병자호란 이후 전쟁 피해를 복구하는 데 많은 돈이 필요했지만, 땅이 황폐해져 세금을 걷기 힘들자 부족한 나라 살림을 보충하기 위해서",
+                    "나라 창고에 돈이 너무 많이 남아서 백성들에게 벼슬을 골고루 나누어 주기 위해서",
+                    "양반들의 숫자를 줄이고 평민들의 숫자를 늘리기 위해서",
+                    "과거 시험 제도를 완전히 폐지했기 때문에"
+                ],
+                answer: 0,
+                exp: "두 차례의 큰 전쟁 뒤 땅이 황폐해져 세금을 걷기 어려워지자, 전쟁 복구와 부족한 나라 살림을 보충하기 위해 돈을 받고 벼슬을 팔았습니다."
+            },
+            {
+                q: "본문 85쪽 사진에 실린 '고종 때의 임명장'에 대한 설명으로 옳은 것은 무엇인가요?",
+                options: [
+                    "원래는 임진왜란 때 무공을 세우거나 곡식을 바친 사람에게 주었지만, 나중에는 부족한 나라 살림을 메우기 위해 마구 남발했다.",
+                    "태조 이성계가 조선을 건국할 때 개국 공신들에게만 나누어 주었던 문서이다.",
+                    "과거 시험에서 장원 급제한 사람에게만 주던 합격증이다.",
+                    "청나라 황제가 조선의 사신들에게 내려준 외교 문서이다."
+                ],
+                answer: 0,
+                exp: "이름 칸이 비어 있는 이 임명장은 원래 임진왜란 때 무공을 세우거나 곡식을 바친 사람에게 주었으나 나중에는 재정 보충을 위해 남발되었습니다."
+            },
+            {
+                q: "부유한 평민들이 나라에 돈을 내고 임명장을 사는 것 말고도, 양반이 되기 위해 동원했던 불법적인 방법들로 옳은 것은 무엇인가요?",
+                options: [
+                    "과거 급제자의 이름을 가짜로 지어 내어 합격증을 사거나 위조하고, 가난한 양반 가문의 혈통 기록 책을 사들여 자기 이름을 슬쩍 끼워 넣었다.",
+                    "밤에 몰래 궁궐에 들어가 왕의 도장을 훔쳐 스스로 정승에 임명했다.",
+                    "외국 군대를 끌어들여 고을 사또 자리를 빼앗았다.",
+                    "서원을 불태우고 자신들이 새로운 스승이라고 주장했다."
+                ],
+                answer: 0,
+                exp: "과거 시험 합격증을 사거나 위조하고, 빚이 많아 생활이 곤란한 양반의 가문 기록을 사들여 자기 이름을 끼워 넣는 등 불법적인 방법도 성행했습니다."
+            },
+            {
+                q: "평민 가운데 양반 신분을 얻은 사람들이 많아지면서, 조선 전기에는 전체 인구의 10퍼센트도 안 되던 양반이 19세기 중반에는 무려 몇 퍼센트에 이르렀나요?",
+                options: [
+                    "20퍼센트",
+                    "40퍼센트",
+                    "70퍼센트",
+                    "95퍼센트"
+                ],
+                answer: 2,
+                exp: "조선 전기에는 전체 인구의 10퍼센트도 안 되던 양반이 19세기 중반에는 무려 70퍼센트에 이를 정도로 크게 늘어났습니다."
+            },
+            {
+                q: "본문 86쪽 사진에 소개된 '왕실의 혈통 관계를 기록한 책'은 경상도 어느 지역에서 작성된 것인가요?",
+                options: [
+                    "경상도 영천",
+                    "경상도 진주",
+                    "경상도 동래",
+                    "경상도 안동"
+                ],
+                answer: 0,
+                exp: "본문 86쪽 사진 설명에 '경상도 영천에서 작성한 왕실의 족보'라고 나와 있습니다."
+            },
+            {
+                q: "너도나도 양반 행세를 하여 '흔해 빠진 게 양반'이라는 말까지 나오게 되면서 양반의 지위와 권위는 어떻게 되었나요?",
+                options: [
+                    "양반이 타고난 신분이 아니라 돈만 있으면 살 수 있는 지위로 여겨지게 되면서 양반의 권위는 크게 떨어졌다.",
+                    "양반의 수가 많아져서 양반 한 사람 한 사람의 권위가 예전보다 훨씬 더 높아졌다.",
+                    "상인이나 농민들이 양반을 더욱 두려워하며 절대 양반 행세를 하지 못했다.",
+                    "모든 양반이 관직에 올라 나라의 정치가 매우 안정되었다."
+                ],
+                answer: 0,
+                exp: "상인이나 농민들도 서로 양반이라 부르고 돈으로 살 수 있는 지위로 여겨지면서 양반의 권위는 크게 떨어졌습니다."
+            },
+            {
+                q: "조선 후기에 부유한 평민보다도 어려운 생활을 하게 된 '몰락한 양반'들이 먹고살기 위해 보인 모습으로 옳은 것은 무엇인가요?",
+                options: [
+                    "글공부에서 손을 떼고 직접 농사를 짓고 베를 짜서 생활하거나, 양반 체면에 농사는 못 짓겠다며 가문의 혈통 기록을 팔기도 했다.",
+                    "모두 청나라나 일본으로 건너가 무역 상인이 되었다.",
+                    "나라에서 주는 보조금만으로 평생 부유하게 살았다.",
+                    "스스로 관청의 노비로 들어가 일했다."
+                ],
+                answer: 0,
+                exp: "몰락한 양반들 중에는 직접 농사를 짓고 베를 짜서 생활하는 사람도 있었고, 농사는 못 짓겠다며 가문의 기록을 파는 사람도 있었습니다."
+            },
+            {
+                q: "양반의 자식이면서도 '서얼'들이 조선의 신분 제도에 대해 오랫동안 큰 불만을 품었던 이유는 무엇인가요?",
+                options: [
+                    "첩이 낳은 자식이라는 이유 때문에 양반 대접을 받지 못했고, 아무리 똑똑해도 벼슬을 할 수 없었기 때문에",
+                    "평민보다 세금을 열 배나 더 많이 내야 했기 때문에",
+                    "태어나자마자 무조건 군대에 가서 평생 복무해야 했기 때문에",
+                    "글을 배우는 것이 법으로 금지되어 있었기 때문에"
+                ],
+                answer: 0,
+                exp: "서얼은 첩이 낳은 자식이라는 이유로 양반 대접을 받지 못하고 아버지와 형도 제대로 부르지 못했으며, 벼슬길도 막혀 있었습니다."
+            },
+            {
+                q: "조선 후기에 서얼들이 신분 상승과 차별 철폐를 위해 기울인 노력으로 옳은 것은 무엇인가요?",
+                options: [
+                    "나라에 쌀이나 돈을 바쳐 벼슬길에 오르기도 했고, 영조와 정조 때에는 차별을 없애 달라고 요구하며 적극적인 상소 운동을 펼쳤다.",
+                    "모두 산속으로 들어가 농사를 지으며 세상과 연락을 끊었다.",
+                    "양반들의 집을 습격하여 강제로 벼슬을 빼앗았다.",
+                    "과거 시험을 아예 없애 달라고 왕에게 요구했다."
+                ],
+                answer: 0,
+                exp: "서얼들은 납속(쌀이나 돈을 바침)을 이용해 벼슬길에 오르거나, 영조와 정조 때 대규모 상소 운동을 펼쳐 차별 철폐를 요구했습니다."
+            },
+            {
+                q: "서얼들의 신분 상승 운동에 깊은 관심을 보인 영조가 내린 명령의 내용으로 옳은 것은 무엇인가요?",
+                options: [
+                    "서얼이라고 차별하지 말고 능력이 뛰어나면 중요한 관직에 등용하며, 아버지를 아버지로, 형을 형으로 부를 수 있게 하고 이를 어기는 자는 법률로 다스리겠다고 했다.",
+                    "서얼들은 상소문을 올리지 못하도록 엄격히 금지하고 모두 귀양을 보냈다.",
+                    "서얼들에게는 오직 군대에서만 일할 수 있도록 제한했다.",
+                    "서얼 제도를 유지하기 위해 첩을 두는 것을 더욱 장려했다."
+                ],
+                answer: 0,
+                exp: "영조는 서얼도 능력이 뛰어나면 중요한 관직에 등용하고 아버지와 형을 부를 수 있게 하였으며, 어기는 자는 법률로 다스리겠다고 명했습니다."
+            },
+            {
+                q: "정조가 “서얼도 나의 신하인데, 그들이 제자리를 얻지 못하고 포부도 펴지 못한다면, 이 또한 과인의 허물이다.”라고 하며 규장각 관리로 등용해 능력을 발휘하게 한 서얼 출신 학자 두 사람은 누구인가요?",
+                options: [
+                    "박제가, 이덕무",
+                    "유형원, 이익",
+                    "김만중, 송시열",
+                    "서용보, 김정호"
+                ],
+                answer: 0,
+                exp: "정조는 박제가, 이덕무 같은 서얼 출신의 뛰어난 학자들을 규장각 관리로 등용하였습니다."
+            },
+            {
+                q: "서얼들의 신분 상승 운동에 자극을 받아 역관, 의관 등 전문 기술직 계층이 펼친 차별 철폐 요구의 결과는 어떠했나요?",
+                options: [
+                    "높은 관직에 오를 수 있게 해 달라고 요구했으나 성공을 거두지 못하고, 전문 기술직으로서 중요한 역할을 하고 있다는 사실을 드러내는 데 그쳤다.",
+                    "요구가 즉시 받아들여져 영의정과 좌의정을 모두 차지하게 되었다.",
+                    "요구를 한 사람들이 모두 노비로 신분이 강등되었다.",
+                    "전문 기술직 일을 모두 그만두고 농민이 되었다."
+                ],
+                answer: 0,
+                exp: "이들은 전문 기술과 행정 능력이 뛰어남에도 양반에 가로막혀 높은 벼슬을 할 수 없자 차별 철폐를 요구했으나, 성공을 거두지 못하고 자신들의 중요한 역할을 드러내는 데 그쳤습니다."
+            },
+            {
+                q: "최하층이었던 노비들이 합법적으로 노비 신분에서 해방될 수 있었던 방법 두 가지는 무엇이었나요?",
+                options: [
+                    "전쟁 중에 적군의 목을 베는 공을 세우거나, 나라에 돈이나 쌀을 바치는 방법",
+                    "양반 주인과 씨름 시합을 해서 이기거나, 한시를 지어 바치는 방법",
+                    "외국어를 배워 통역을 하거나, 그림을 그려 파는 방법",
+                    "다른 마을로 이사를 가거나, 이름을 바꾸는 방법"
+                ],
+                answer: 0,
+                exp: "노비는 전쟁에서 적군의 목을 베는 공을 세우거나 나라에 돈이나 쌀을 바치면 합법적으로 노비 신분에서 벗어날 수 있었습니다."
+            },
+            {
+                q: "합법적인 방법으로 신분 상승이 어려울 경우, 조선 후기 노비들이 가장 쉽고 흔하게 선택했던 불법적인 방법은 무엇이었나요?",
+                options: [
+                    "주인 몰래 먼 곳으로 도망쳐 다른 곳으로 가서 신분을 감추고 평민 행세를 하는 것",
+                    "관청에 찾아가 스스로 양반이라고 우기는 것",
+                    "외국 상선을 타고 다른 나라로 망명하는 것",
+                    "성균관에 몰래 들어가 유생 복장을 입는 것"
+                ],
+                answer: 0,
+                exp: "가장 쉽고 흔한 불법적인 방법은 주인 몰래 먼 곳으로 도망쳐 신분을 감추고 평민 행세를 하는 것이었습니다."
+            },
+            {
+                q: "조선 후기에 나라(정부)에서 노비를 평민으로 서서히 풀어 주는 정책을 펼친 가장 큰 이유는 무엇이었나요?",
+                options: [
+                    "평민이 줄고 세금을 안 내는 양반의 수가 늘어 나라 재정이 부족해지자, 세금을 의무적으로 바쳐야 하는 평민을 늘려 부족한 나라 재정을 채우기 위해서",
+                    "나라에 농사지을 땅이 너무 많이 남아서 노비들에게 땅을 나누어 주기 위해서",
+                    "양반들이 노비를 부리는 것이 귀찮다며 모두 풀어 달라고 요청했기 때문에",
+                    "이웃 나라에서 노비를 풀어 주지 않으면 무역을 하지 않겠다고 했기 때문에"
+                ],
+                answer: 0,
+                exp: "세금을 내는 평민이 줄고 세금을 안 내는 양반이 늘어 나라 재정이 부족해지자, 납세자인 평민을 늘리기 위해 노비를 평민으로 풀어 주는 정책을 폈습니다."
+            },
+            {
+                q: "본문 90쪽 사진에 실린 '1755년 홍상선이 작성한 노비 매매 문서'와 그 뒷면(1778년)에 적힌 내용으로 옳은 것은 무엇인가요?",
+                options: [
+                    "1755년 노비 8명을 사면서 작성한 문서이며, 뒷면에는 1778년에 이 노비들 중 4명과 이후 태어난 2명 등 모두 6명을 돈을 받고 노비 신분에서 풀어 주었음을 증명하는 내용이 적혀 있다.",
+                    "노비 100명을 국가에 무상으로 기증한다는 내용이 적혀 있다.",
+                    "도망간 노비를 잡아 오면 큰 상금을 주겠다는 현상 수배 문서이다.",
+                    "노비들에게 땅과 집을 무료로 물려준다는 유언장이다."
+                ],
+                answer: 0,
+                exp: "1755년 홍상선이 노비 8명을 사면서 작성한 매매 문서 뒷면에는 1778년 그중 6명을 돈을 받고 노비 신분에서 풀어 주었음을 증명하는 기록이 남아 있습니다."
+            },
+            {
+                q: "영조가 노비를 평민으로 신분을 개선시켜 노비 인구를 줄이고 나라 재정을 확보하기 위해 새롭게 만든 법(노비종모법)의 내용은 무엇인가요?",
+                options: [
+                    "지금까지는 부모 중 한쪽이 노비이면 그 자녀도 노비였으나, 이제부터는 아버지가 노비라도 어머니가 평민이면 어머니 신분을 따라 자녀가 평민이 될 수 있게 하였다.",
+                    "부모 중 한쪽이라도 평민이면 어머니나 아버지에 상관없이 무조건 노비가 되도록 하였다.",
+                    "노비가 아들을 낳으면 노비로 삼고, 딸을 낳으면 양반으로 삼도록 하였다.",
+                    "노비들이 스무 살이 되면 자동으로 모두 양반이 되도록 하였다."
+                ],
+                answer: 0,
+                exp: "영조는 아버지가 노비라도 어머니가 평민이면 어머니의 신분을 따라 자녀가 평민이 될 수 있게 하여 많은 노비가 평민이 되었습니다."
+            },
+            {
+                q: "정조가 준비해 온 정책이 결실을 맺어 1801년 순조가 궁궐을 비롯한 관청 소속 노비를 모두 평민으로 삼도록 명했을 때, 해방된 관청 노비는 약 몇 명이었나요?",
+                options: [
+                    "약 600명",
+                    "약 6,000명",
+                    "무려 6만여 명",
+                    "무려 60만여 명"
+                ],
+                answer: 2,
+                exp: "1801년 순조의 명에 따라 무려 6만여 명에 이르는 관청 노비가 해방되었습니다."
+            },
+            {
+                q: "1801년 관청 노비가 해방된 이후, 개인이 사적으로 부리던 노비(사노비)까지 모두 해방되어 우리나라에서 노비 제도가 역사 속으로 완전히 사라진 해는 언제인가요?",
+                options: [
+                    "1818년",
+                    "1864년",
+                    "1894년",
+                    "1945년"
+                ],
+                answer: 2,
+                exp: "1894년(갑오개혁)에는 개인이 사적으로 부리던 노비도 모두 해방되어 노비 제도는 역사 속으로 사라지게 되었습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 19세기 미국에서 노예제를 둘러싸고 북부와 남부가 갈등을 겪었던 이유를 바르게 비교한 것은 무엇인가요?",
+                options: [
+                    "공업이 발전한 북부에서는 더 이상 값싼 흑인 노예가 필요하지 않아 18세기부터 노예제를 없애기 시작했으나, 농업 중심의 남부에서는 흑인 노예의 노동력이 필요해 여전히 법으로 인정하고 있었다.",
+                    "북부는 농업 중심이어서 노예제를 찬성했고, 남부는 공업 중심이어서 노예제를 반대했다.",
+                    "북부와 남부 모두 노예제를 폐지하자고 했으나 영국이 반대하여 갈등이 일어났다.",
+                    "남부에서는 이미 18세기에 노예제를 폐지했으나 북부에서 노예제를 유지하려 했다."
+                ],
+                answer: 0,
+                exp: "공업이 발달한 북부는 노예 노동력이 필요 없어 폐지하기 시작했으나, 대농장 농업 중심의 남부는 흑인 노예 노동력이 필요해 노예제를 고수했습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 처음에 남부에 유리하게 돌아가던 미국의 내전이 북부의 승리로 역전된 결정적인 계기(1863년)와, 미국 의회에서 노예제를 완전히 금지하는 법이 통과된 연도(1865년)에 대한 설명으로 옳은 것은 무엇인가요?",
+                options: [
+                    "1863년 링컨 대통령이 노예 해방을 선언하자 남부의 노예들이 북부군에 가담하면서 전세가 역전되었고, 1865년 노예제를 완전히 금지하는 법이 의회를 통과했다.",
+                    "1863년 남부 대통령이 스스로 항복을 선언했고, 1865년 노예제가 다시 부활했다.",
+                    "1863년 프랑스 군대가 북부군을 도와주었고, 1900년에 노예제가 금지되었다.",
+                    "1863년 북부군이 남부의 노예들을 모두 아프리카로 돌려보내면서 전쟁이 끝났다."
+                ],
+                answer: 0,
+                exp: "1863년 링컨 대통령의 노예 해방 선언으로 남부 노예들이 북부군에 가담해 전세가 역전되었고, 북부의 승리 후 1865년 노예제 금지법이 의회를 통과했습니다."
+            },
+            {
+                q: "[그것도 알고 싶다] 조선 시대에 유교의 '남녀유별(남녀가 엄연히 다르다는 뜻)'이 남녀 차별로 변질되면서 여성들에게 강요된 삶의 방식은 무엇이었나요?",
+                options: [
+                    "어려서는 아버지를 따르고, 결혼해서는 남편을 따르며, 늙어서는 아들을 따라야 했다.",
+                    "어려서는 어머니를 따르고, 결혼해서는 아내의 뜻대로 살며, 늙어서는 딸과 함께 살아야 했다.",
+                    "결혼하지 않고 평생 관청에서 관리로 일해야 했다.",
+                    "남편보다 먼저 과거 시험을 보아 집안을 이끌어야 했다."
+                ],
+                answer: 0,
+                exp: "조선 시대 여성들은 어려서는 아버지를, 결혼해서는 남편을, 늙어서는 아들을 따라야 한다는 규범 속에 차별을 받았습니다."
+            },
+            {
+                q: "[그것도 알고 싶다] 조선 후기와 달리 '조선 전기'까지만 해도 여성이 크게 차별받지 않았음을 보여 주는 가족 풍습으로 옳지 않은 것은 무엇인가요?",
+                options: [
+                    "혼인 후에 남편이 처가에서 생활하는 게 흔한 일이었다.",
+                    "부모가 죽으면 아들딸에게 재산을 똑같이 나누어 주었다.",
+                    "재산을 같이 나누어 받는 만큼 제사도 형제가 돌아가면서 지내기도 했다.",
+                    "딸은 태어나자마자 집안 기록에서 이름을 지우고 재산도 한 푼 주지 않았다."
+                ],
+                answer: 3,
+                exp: "조선 전기에는 남편이 처가에서 생활하는 일이 흔했고, 아들딸에게 재산을 똑같이 나누어 주었으며 제사도 형제가 돌아가며 지냈습니다."
+            },
+            {
+                q: "[그것도 알고 싶다] 조선 전기와 달리 조선 후기에 들어 여성의 지위가 낮아지고 남녀 차별이 두드러지게 나타난 까닭은 무엇인가요?",
+                options: [
+                    "양반 지배층 사이에서만 지켜지던 유교의 윤리가 일반 백성들의 생활에까지 깊숙이 뿌리를 내리게 되면서 모든 문화가 남성 중심으로 바뀌었기 때문에",
+                    "여성의 인구가 남성의 인구보다 열 배나 많아졌기 때문에",
+                    "외국에서 여성을 차별하는 법률을 강제로 수입했기 때문에",
+                    "여성들이 스스로 재산 상속을 받지 않겠다고 거부했기 때문에"
+                ],
+                answer: 0,
+                exp: "양반 지배층 사이에서만 지켜지던 유교 윤리가 조선 후기 일반 백성들의 생활에까지 깊이 뿌리내리면서 모든 문화가 남성 중심으로 바뀌었기 때문입니다."
+            },
+            {
+                q: "[그것도 알고 싶다] 조선 후기에 접어들면서 바뀐 혼인 풍습과 딸에 대한 차별로 옳은 것은 무엇인가요?",
+                options: [
+                    "결혼하면 여성이 남편 집에서 생활하는 '시집살이' 풍습이 생겨났고, 여성을 출가외인으로 여겨 딸은 아들과 달리 가문 기록에 이름조차 못 올리게 되었다.",
+                    "결혼하면 무조건 남성이 아내의 집으로 들어가 평생 살게 되었다.",
+                    "딸의 이름만 가문 기록의 맨 앞장에 크게 적게 되었다.",
+                    "결혼을 하지 않고 혼자 사는 것이 유행하게 되었다."
+                ],
+                answer: 0,
+                exp: "조선 후기에는 여성이 남편 집에서 생활하는 혼인 풍습('시집가다', '시집살이')으로 바뀌었고, 출가외인으로 여겨져 딸은 가문 기록에 이름조차 올리지 못했습니다."
+            },
+            {
+                q: "[그것도 알고 싶다] 조선 후기에 제사와 재산 상속 풍습이 어떻게 바뀌었나요?",
+                options: [
+                    "제사는 반드시 맏아들이 지내야 했고 재산 상속에서도 맏아들이 우대를 받았으며, 딸과 맏아들 외의 다른 아들은 점차 재산 상속과 제사에 대한 권리를 잃어 갔다.",
+                    "막내딸이 제사를 지내고 모든 재산을 물려받게 되었다.",
+                    "재산은 모두 나라에 바치고 제사는 지내지 않게 되었다.",
+                    "아들과 딸에게 예전보다 더 똑같이 재산을 나누어 주게 되었다."
+                ],
+                answer: 0,
+                exp: "조선 후기에는 제사를 반드시 맏아들이 지내고 재산 상속에서도 맏아들이 우대를 받으면서 딸과 차남 이하 아들들은 권리를 잃어 갔습니다."
+            },
+            {
+                q: "[그것도 알고 싶다] 여성들은 아무리 능력이 뛰어나도 사회 활동을 할 수 없었고 집안일과 자녀 교육에만 전념해야 했던 당시의 남녀 차별 모습을 잘 드러낸 속담으로 본문에 소개된 것은 무엇인가요?",
+                options: [
+                    "암탉이 울면 집안이 망한다.",
+                    "백지장도 맞들면 낫다.",
+                    "가는 말이 고와야 오는 말이 곱다.",
+                    "천 리 길도 한 걸음부터."
+                ],
+                answer: 0,
+                exp: "본문에서는 남녀 차별이 두드러진 당시 사회 모습을 잘 드러낸 속담으로 '암탉이 울면 집안이 망한다.'를 들고 있습니다."
+            },
+            {
+                q: "[그것도 알고 싶다] 조선 후기에 남편이 죽으면 여성이 자식의 앞날을 위해서라도 재혼을 꿈도 꾸지 못하고 평생 혼자 살아야 했던 이유는 무엇인가요?",
+                options: [
+                    "여성의 재혼을 금지했을 뿐만 아니라, 재혼한 여성이 낳은 자식의 벼슬길을 막는 규정도 있었기 때문에",
+                    "재혼을 하면 모든 재산을 관청에 빼앗겼기 때문에",
+                    "남편이 죽으면 여성은 무조건 다른 나라로 떠나야 했기 때문에",
+                    "재혼한 여성의 남편에게도 곤장 백 대를 때렸기 때문에"
+                ],
+                answer: 0,
+                exp: "여성의 재혼을 금지했을 뿐 아니라 재혼한 여성이 낳은 자식의 벼슬길을 막는 규정 때문에 자식의 앞날을 위해서라도 재혼할 수 없었습니다."
+            },
+            {
+                q: "[그것도 알고 싶다] 본문 93쪽에 실린 19세기 말~20세기 초에 제작된 여덟 폭 병풍 그림 <평생도>에 묘사된 장면은 무엇인가요?",
+                options: [
+                    "가문을 이을 아들의 돌잔치 장면",
+                    "농민들이 논에서 모내기를 하는 장면",
+                    " 중인들이 모여서 시를 짓고 노래하는 장면",
+                    "관청 노비들이 문서를 불태우며 기뻐하는 장면"
+                ],
+                answer: 0,
+                exp: "본문 93쪽의 <평생도> 그림은 가문을 이을 아들의 돌잔치 장면을 묘사한 것입니다."
+            },
+            {
+                q: "[그것도 알고 싶다] 남편이 죽은 뒤에도 온갖 사회적 제약과 차별을 받았던 여성과 달리, 당시 남편(남성)에게 허용되었던 일로 옳은 것은 무엇인가요?",
+                options: [
+                    "부인이 버젓이 있는데도 여러 여자를 첩으로 두는 것이 허용됐고, 아내가 죽은 뒤 1년이 지나면 얼마든지 재혼할 수 있었다.",
+                    "남편도 아내가 죽으면 평생 재혼할 수 없었고 아내가 죽자마자 따라 죽어야 했다.",
+                    "남편은 집안일만 해야 하고 절대 밖에서 사회 활동을 할 수 없었다.",
+                    "아들을 낳지 못하면 남편이 집에서 쫓겨나게 되어 있었다."
+                ],
+                answer: 0,
+                exp: "남편은 부인이 있어도 첩을 둘 수 있었고 아내가 죽은 뒤 1년이 지나면 얼마든지 재혼할 수 있어 여성에게만 매우 불리한 현실이었습니다."
+            },
+            {
+                q: "6장 전체 내용을 통해 알 수 있는 조선 후기 사회의 변화 모습으로 가장 알맞은 것은 무엇인가요?",
+                options: [
+                    "부유한 평민, 서얼, 중인, 노비들의 신분 상승 노력으로 신분 제도는 뿌리부터 흔들렸으나, 유교 윤리가 일반 백성에게까지 퍼지면서 여성에 대한 차별은 오히려 심해졌다.",
+                    "신분 제도는 더욱 굳건해져 양반만 잘살게 되었고, 여성의 지위는 조선 전기보다 훨씬 높아졌다.",
+                    "양반, 중인, 평민, 노비의 구분은 그대로 유지되었고, 여성들이 과거 시험을 보아 관리가 되었다.",
+                    "노비 제도와 남녀 차별이 모두 숙종 때 하루아침에 완전히 사라졌다."
+                ],
+                answer: 0,
+                exp: "조선 후기에는 경제력 성장과 신분 상승 운동으로 신분 제도가 크게 흔들린 반면, 남성 중심의 유교 윤리가 확산되면서 여성의 지위는 오히려 낮아졌습니다."
+            }
+        ];
+
+        // 2부: 단답형 주관식 10문제 데이터 (객관식과 중복 없음)
+        const saQuestions = [
+            {
+                q: "이름 쓰는 칸이 비어 있는 임명장으로, 조선 후기 부족한 나라 살림을 보충하기 위해 나라에 돈을 낸 사람의 이름을 빈칸에 써 주고 벼슬을 팔았던 이 문서를 무엇이라고 하나요?",
+                answers: ["공명첩"],
+                displayAnswer: "공명첩",
+                exp: "이름 쓰는 칸이 비어 있는 임명장을 '공명첩'이라고 하며, 조선 후기 부유한 평민들이 이를 사서 양반 신분을 얻었습니다."
+            },
+            {
+                q: "한 가문의 혈통 관계를 기록한 책으로, 조선 후기에 부유한 평민들이 가난한 양반으로부터 돈을 주고 사들여 자기 이름을 슬쩍 끼워 넣거나 위조하여 양반 행세를 하는 데 이용했던 책은 무엇인가요?",
+                answers: ["족보"],
+                displayAnswer: "족보",
+                exp: "한 가문의 혈통 관계를 기록한 책을 '족보'라고 합니다."
+            },
+            {
+                q: "홍길동이란 의적을 주인공으로 하여 “아버지를 아버지라 부르지 못하고, 형을 형이라 부르지 못하니 어찌 사람이라고 하겠습니까!”라며 서얼 차별의 불합리함을 깨부수고 부패한 정치를 개혁하려는 내용을 담은 우리나라 최초의 한글 소설 제목은 무엇인가요?",
+                answers: ["홍길동전"],
+                displayAnswer: "홍길동전",
+                exp: "최초의 한글 소설인 《홍길동전》은 서얼 차별의 아픔과 부패한 정치 개혁의 염원을 담고 있습니다."
+            },
+            {
+                q: "조선 시대에 양반과 평민의 중간에 해당하는 신분으로, 하급 관리나 통역을 담당하는 역관, 병을 고치는 의관 등 주로 전문 기술직 일을 맡아서 했던 계층을 무엇이라고 부르나요?",
+                answers: ["중인"],
+                displayAnswer: "중인",
+                exp: "양반과 평민의 중간 신분으로 역관, 의관, 하급 관리 등 전문 기술직을 맡았던 계층은 '중인'입니다."
+            },
+            {
+                q: "동갑인 22명의 중인들이 여가 시간에 모여서 시를 짓고 그림을 그리고 노래를 부르며 밤새 즐기는 모임 장면을 그린 19세기의 그림 제목은 무엇인가요? (본문 87쪽 그림 설명 참고)",
+                answers: ["수갑계첩도"],
+                displayAnswer: "수갑계첩도",
+                exp: "본문 87쪽에 소개된 19세기 그림으로 동갑인 22명의 중인들이 모임을 갖는 장면을 그린 작품은 <수갑계첩도>입니다."
+            },
+            {
+                q: "1861년 미국에서 노예제 폐지를 찬성하는 링컨이 대통령에 당선되자, 이에 반발하여 노예제 폐지를 반대하는 남부의 여러 주가 일으킨 전쟁의 이름은 무엇인가요?",
+                answers: ["남북전쟁"],
+                displayAnswer: "남북 전쟁",
+                exp: "노예제 폐지를 둘러싸고 1861년 미국의 북부와 남부 사이에 일어난 전쟁을 '남북 전쟁'이라고 합니다."
+            },
+            {
+                q: "영조의 둘째 딸로 남편이 죽자 물 한 모금 안 마시고 죽음을 택해 조선의 왕녀로는 유일하게 열녀가 되었으며, 충청남도 예산군에 열녀문이 남아 있는 인물은 누구인가요? (본문 92쪽 사진 설명 참고)",
+                answers: ["화순옹주"],
+                displayAnswer: "화순옹주",
+                exp: "영조의 둘째 딸인 '화순옹주'는 남편이 죽자 따라 죽어 조선의 왕녀로는 유일한 열녀가 되었습니다."
+            },
+            {
+                q: "조선 후기에 아들이 집안의 대를 이어야 한다는 의식이 널리 퍼지면서, 아들이 없는 집안에서 대를 잇기 위해 당연하게 들이게 된 것은 무엇인가요? (두 글자)",
+                answers: ["양자"],
+                displayAnswer: "양자",
+                exp: "아들이 집안의 대를 이어야 한다는 의식이 퍼지면서 아들이 없는 집안에서는 '양자'를 들이는 것을 당연하게 여겼습니다."
+            },
+            {
+                q: "조선 시대에 남편을 잃은 부인이 남편을 따라 죽으면 가문의 영광으로 여겨 나라에서 정절을 굳게 지킨 여성으로 표창하며 칭송했는데, 이러한 여성을 무엇이라고 불렀나요?",
+                answers: ["열녀"],
+                displayAnswer: "열녀",
+                exp: "남편을 따라 죽거나 정절을 굳게 지킨 여성을 나라에서 '열녀'로 표창하며 칭송했습니다."
+            },
+            {
+                q: "조선 시대에 '아들을 낳지 못하는 것' 등을 포함하여 남편이 아내를 내쫓을 수 있었던 일곱 가지 허물을 무엇이라고 불렀나요? (본문 93쪽 <평생도> 설명 참고, 네 글자)",
+                answers: ["칠거지악"],
+                displayAnswer: "칠거지악",
+                exp: "조선 시대에 아내를 내쫓을 수 있는 일곱 가지 허물을 '칠거지악'이라고 했으며, 그중에는 아들을 낳지 못하는 것도 들어 있었습니다."
+            }
+        ];
+
+        let firstUnansweredElement = null;
+
+        // 초기 렌더링
+        function renderQuiz() {
+            const mcContainer = document.getElementById("mcContainer");
+            const saContainer = document.getElementById("saContainer");
+
+            mcContainer.innerHTML = mcQuestions.map((item, idx) => {
+                const qNum = idx + 1;
+                const optionsHtml = item.options.map((opt, oIdx) => `
+                    <label class="option-label" id="mc_${idx}_label_${oIdx}">
+                        <input type="radio" name="mc_${idx}" value="${oIdx}" onchange="handleMcChange(${idx}, ${oIdx})">
+                        <span>${oIdx + 1}) ${opt}</span>
+                    </label>
+                `).join("");
+
+                return `
+                    <div class="question-card" id="qcard_mc_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="options-list">
+                            ${optionsHtml}
+                        </div>
+                        <div class="feedback-box" id="feedback_mc_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            saContainer.innerHTML = saQuestions.map((item, idx) => {
+                const qNum = idx + 41;
+                return `
+                    <div class="question-card short-answer-card" id="qcard_sa_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="short-input-wrap">
+                            <input type="text" class="short-input" id="sa_input_${idx}" placeholder="정답을 입력하세요" oninput="handleSaInput(${idx})" autocomplete="off">
+                        </div>
+                        <div class="feedback-box" id="feedback_sa_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            updateProgress();
+        }
+
+        function handleMcChange(qIdx, selectedIdx) {
+            const card = document.getElementById(`qcard_mc_${qIdx}`);
+            card.classList.remove("unanswered-warning");
+            for (let i = 0; i < 4; i++) {
+                const lbl = document.getElementById(`mc_${qIdx}_label_${i}`);
+                if (i === selectedIdx) {
+                    lbl.classList.add("selected");
+                } else {
+                    lbl.classList.remove("selected");
+                }
+            }
+            updateProgress();
+        }
+
+        function handleSaInput(sIdx) {
+            const card = document.getElementById(`qcard_sa_${sIdx}`);
+            const val = document.getElementById(`sa_input_${sIdx}`).value.trim();
+            if (val.length > 0) {
+                card.classList.remove("unanswered-warning");
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answeredCount = 0;
+
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (checked) answeredCount++;
+            }
+
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val.length > 0) answeredCount++;
+            }
+
+            const total = mcQuestions.length + saQuestions.length;
+            const percent = Math.round((answeredCount / total) * 100);
+
+            document.getElementById("progressText").textContent = `진행률: ${answeredCount} / ${total} (${percent}%)`;
+            document.getElementById("progressFill").style.width = `${percent}%`;
+        }
+
+        // 문자열 정규화 (공백 및 특수기호 제거)
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, "").replace(/[<>《》"'「」『』()]/g, "").toLowerCase();
+        }
+
+        // 채점 함수
+        function gradeQuiz() {
+            let unansweredNumbers = [];
+            firstUnansweredElement = null;
+
+            // 모든 경고 테두리 초기화
+            document.querySelectorAll(".question-card").forEach(el => el.classList.remove("unanswered-warning"));
+
+            // 1. 객관식 미응답 확인
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (!checked) {
+                    unansweredNumbers.push(i + 1);
+                    const card = document.getElementById(`qcard_mc_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 2. 단답형 주관식 미응답 확인
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val === "") {
+                    unansweredNumbers.push(i + 41);
+                    const card = document.getElementById(`qcard_sa_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 안 푼 문제가 하나라도 있으면 채점하지 않고 경고 메시지 표시
+            if (unansweredNumbers.length > 0) {
+                const previewList = unansweredNumbers.slice(0, 10).join(", ") + (unansweredNumbers.length > 10 ? ` 외 ${unansweredNumbers.length - 10}문항` : "번");
+                document.getElementById("modalMessage").innerHTML = `
+                    아직 풀지 않은 문제가 <strong>${unansweredNumbers.length}개</strong> 있습니다.<br>
+                    모든 문제를 다 풀어야 채점할 수 있습니다!<br>
+                    <span style="display:inline-block; margin-top:8px; font-size:0.86rem; color:#b45309; background:#fef3c7; padding:4px 10px; border-radius:6px;">
+                        미완료 문항: ${previewList}
+                    </span>
+                `;
+                document.getElementById("warningModal").style.display = "flex";
+                return;
+            }
+
+            // 모든 문제를 다 푼 경우 채점 진행
+            let mcCorrect = 0;
+            let saCorrect = 0;
+
+            // 객관식 채점
+            mcQuestions.forEach((item, idx) => {
+                const checked = document.querySelector(`input[name="mc_${idx}"]:checked`);
+                const userChoice = parseInt(checked.value, 10);
+                const isCorrect = (userChoice === item.answer);
+                if (isCorrect) mcCorrect++;
+
+                const card = document.getElementById(`qcard_mc_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                for (let oIdx = 0; oIdx < 4; oIdx++) {
+                    const lbl = document.getElementById(`mc_${idx}_label_${oIdx}`);
+                    const radio = lbl.querySelector("input");
+                    radio.disabled = true;
+                    lbl.classList.remove("correct-option", "wrong-option");
+                    if (oIdx === item.answer) {
+                        lbl.classList.add("correct-option");
+                    } else if (oIdx === userChoice && !isCorrect) {
+                        lbl.classList.add("wrong-option");
+                    }
+                }
+
+                const fb = document.getElementById(`feedback_mc_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (정답: ${item.answer + 1}번 ${item.options[item.answer]})`}
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            // 단답형 주관식 채점 (정답 반드시 표시)
+            saQuestions.forEach((item, idx) => {
+                const inputEl = document.getElementById(`sa_input_${idx}`);
+                const userRaw = inputEl.value.trim();
+                const userNorm = normalizeAnswer(userRaw);
+                const acceptedNorms = item.answers.map(a => normalizeAnswer(a));
+                const isCorrect = acceptedNorms.includes(userNorm);
+                if (isCorrect) saCorrect++;
+
+                inputEl.disabled = true;
+
+                const card = document.getElementById(`qcard_sa_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                const fb = document.getElementById(`feedback_sa_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (입력한 답: ${userRaw})`}
+                    </div>
+                    <div style="margin: 6px 0;">
+                        <span class="short-answer-reveal">정답: ${item.displayAnswer}</span>
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            const totalCorrect = mcCorrect + saCorrect;
+            const totalScore = totalCorrect * 2; // 50문항 * 2점 = 100점 만점
+
+            document.getElementById("finalScore").textContent = totalScore;
+            document.getElementById("totalCorrectStat").textContent = `${totalCorrect} / 50문제`;
+            document.getElementById("mcCorrectStat").textContent = `${mcCorrect} / 40문제`;
+            document.getElementById("saCorrectStat").textContent = `${saCorrect} / 10문제`;
+
+            let msg = "";
+            if (totalScore === 100) {
+                msg = "완벽합니다! 6장 '흔들리는 신분 제도' 내용을 완벽히 마스터하셨네요! 🎉";
+            } else if (totalScore >= 80) {
+                msg = "훌륭해요! 조선 후기 신분 제도의 변화와 여성들의 삶을 아주 잘 이해하고 있습니다. 틀린 문제만 가볍게 복습해 보세요! 👍";
+            } else if (totalScore >= 60) {
+                msg = "잘했어요! 아래 표시된 정답과 해설을 읽으며 헷갈렸던 개념을 다시 정리해 보세요. 😊";
+            } else {
+                msg = "끝까지 문제를 모두 풀어낸 점이 멋집니다! 해설을 꼼꼼히 확인하고 한 번 더 도전해 보세요! 💪";
+            }
+            document.getElementById("resultSubtext").textContent = msg;
+
+            const resultCard = document.getElementById("resultCard");
+            resultCard.style.display = "block";
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("resetBtn").style.display = "block";
+
+            resultCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function closeModal() {
+            document.getElementById("warningModal").style.display = "none";
+            if (firstUnansweredElement) {
+                firstUnansweredElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById("resultCard").style.display = "none";
+            document.getElementById("submitBtn").style.display = "block";
+            document.getElementById("resetBtn").style.display = "none";
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        window.addEventListener("DOMContentLoaded", renderQuiz);
+    </script>
+</body>
+</html>
