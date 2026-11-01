@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>한국사 뛰어넘기 4 - 9장 세도 정치로 곪아 가는 조선 퀴즈</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            --accent: #d97706;
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --border: #e5e7eb;
+            --card-bg: #ffffff;
+            --bg-body: #f3f4f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", "맑은 고딕", sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* 상단 고정 진행률 바 */
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .sticky-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        /* 헤더 카드 */
+        .header-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.15);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header-card h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            word-break: keep-all;
+        }
+
+        .header-card p {
+            font-size: 0.95rem;
+            opacity: 0.92;
+            word-break: keep-all;
+        }
+
+        .info-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .info-pill {
+            background: rgba(15, 23, 42, 0.25);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* 섹션 구분 타이틀 */
+        .section-header {
+            background: #ffffff;
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 28px 0 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-header.short-answer {
+            border-left-color: var(--accent);
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .section-header p {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        /* 문제 카드 */
+        .question-card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .question-card.unanswered-warning {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+
+        .question-card.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .question-card.incorrect {
+            border-color: var(--danger);
+            background-color: var(--danger-bg);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .q-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.92rem;
+            flex-shrink: 0;
+        }
+
+        .short-answer-card .q-num {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .q-title {
+            font-size: 1.03rem;
+            font-weight: 700;
+            color: var(--text-main);
+            word-break: keep-all;
+            padding-top: 3px;
+        }
+
+        /* 객관식 보기 스타일 */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.15s ease;
+            font-size: 0.96rem;
+            word-break: keep-all;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-bg);
+        }
+
+        .option-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .option-label.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-bg);
+            font-weight: 600;
+        }
+
+        .option-label.correct-option {
+            border-color: var(--success);
+            background-color: #dcfce7;
+            font-weight: 700;
+            color: #14532d;
+        }
+
+        .option-label.wrong-option {
+            border-color: var(--danger);
+            background-color: #fee2e2;
+            color: #7f1d1d;
+            text-decoration: line-through;
+        }
+
+        /* 단답형 주관식 입력창 */
+        .short-input-wrap {
+            margin-top: 6px;
+        }
+
+        .short-input {
+            width: 100%;
+            padding: 13px 16px;
+            font-size: 1rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #ffffff;
+        }
+
+        .short-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+        }
+
+        /* 채점 피드백 박스 */
+        .feedback-box {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .feedback-status {
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .feedback-status.pass {
+            color: var(--success);
+        }
+
+        .feedback-status.fail {
+            color: var(--danger);
+        }
+
+        .short-answer-reveal {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 700;
+        }
+
+        /* 하단 버튼 및 결과 영역 */
+        .action-area {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: #e2e8f0;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* 결과 성적표 카드 */
+        .result-card {
+            display: none;
+            background: #ffffff;
+            border: 3px solid var(--primary);
+            border-radius: 16px;
+            padding: 28px 20px;
+            margin-top: 24px;
+            text-align: center;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            border: 6px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .score-number {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .score-unit {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 8px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* 모달 알림창 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 18px;
+            word-break: keep-all;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .header-card {
+                padding: 22px 18px;
+            }
+            .header-card h1 {
+                font-size: 1.35rem;
+            }
+            .question-card {
+                padding: 16px;
+            }
+            .q-title {
+                font-size: 0.98rem;
+            }
+            .option-label {
+                padding: 11px 12px;
+                font-size: 0.92rem;
+            }
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 고정 진행 상태바 -->
+    <div class="sticky-bar">
+        <div class="sticky-inner">
+            <span class="progress-text" id="progressText">진행률: 0 / 50 (0%)</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header-card">
+            <span class="badge">한국사 뛰어넘기 4 (스푼북) · 제9장</span>
+            <h1>9. 세도 정치로 곪아 가는 조선</h1>
+            <p>본문과 연표, 세계 역사와 우리(먹고살기 힘든 조선과 아일랜드), 인물 인터뷰(암행어사 출또야!) 내용을 바탕으로 구성된 50문항 종합 퀴즈입니다. 모든 문제를 다 풀어야 채점이 진행됩니다.</p>
+            <div class="info-pills">
+                <span class="info-pill">객관식 40문항 (80점)</span>
+                <span class="info-pill">단답형 주관식 10문항 (20점)</span>
+                <span class="info-pill">총 50문항 · 100점 만점 (문항당 2점)</span>
+            </div>
+        </div>
+
+        <!-- 성적 결과 카드 (채점 후 상단에 표시) -->
+        <div class="result-card" id="resultCard">
+            <div class="score-circle">
+                <span class="score-number" id="finalScore">0</span>
+                <span class="score-unit">/ 100점</span>
+            </div>
+            <h2 id="resultHeadline" style="margin-bottom: 6px; font-size: 1.35rem;">채점 완료!</h2>
+            <p id="resultSubtext" style="color: var(--text-sub); font-size: 0.95rem;"></p>
+            <div class="result-stats">
+                <div class="stat-box">
+                    <div class="stat-label">전체 맞은 문제 수</div>
+                    <div class="stat-value" id="totalCorrectStat">0 / 50</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">객관식 정답 수</div>
+                    <div class="stat-value" id="mcCorrectStat">0 / 40</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">단답형 정답 수</div>
+                    <div class="stat-value" id="saCorrectStat">0 / 10</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1부: 객관식 40문항 -->
+        <div class="section-header">
+            <h2>[1부] 객관식 40문항 (1번 ~ 40번)</h2>
+            <p>각 문제에서 가장 알맞은 보기를 하나씩 골라 주세요. (문항당 2점)</p>
+        </div>
+        <div id="mcContainer"></div>
+
+        <!-- 2부: 단답형 주관식 10문항 -->
+        <div class="section-header short-answer">
+            <h2>[2부] 단답형 주관식 10문항 (41번 ~ 50번)</h2>
+            <p>빈칸에 알맞은 정답을 직접 입력해 주세요. 채점 시 정답과 해설이 함께 표시됩니다. (문항당 2점)</p>
+        </div>
+        <div id="saContainer"></div>
+
+        <!-- 하단 제출 버튼 -->
+        <div class="action-area">
+            <button type="button" class="btn-submit" id="submitBtn" onclick="gradeQuiz()">채점하기 (50문항 완료 후 클릭)</button>
+            <button type="button" class="btn-reset" id="resetBtn" onclick="resetQuiz()">다시 풀기</button>
+        </div>
+    </div>
+
+    <!-- 미완료 문항 안내 모달 -->
+    <div class="modal-overlay" id="warningModal">
+        <div class="modal-box">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">문제를 모두 풀어 주세요!</div>
+            <div class="modal-desc" id="modalMessage">아직 풀지 않은 문제가 있습니다. 모든 문제를 다 풀어야 채점할 수 있습니다.</div>
+            <button type="button" class="modal-btn" onclick="closeModal()">미완료 문제로 이동하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 1부: 객관식 40문제 데이터 (단답형 10문제와 중복되지 않음)
+        const mcQuestions = [
+            {
+                q: "[연표] 1712년에 세운 국경 비석과, 1720년 붕당 대립이 극에 달한 가운데 사망한 왕이 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "백두산정계비 - 숙종",
+                    "진흥왕 순수비 - 영조",
+                    "백두산정계비 - 정조",
+                    "탕평비 - 순조"
+                ],
+                answer: 0,
+                exp: "연표에서 1712년에 백두산정계비를 세웠고, 1720년에 숙종이 사망하였음을 확인할 수 있습니다."
+            },
+            {
+                q: "[연표] 1776년에 즉위한 조선의 왕과, 1789년에 관직에 진출한 실학자가 바르게 연결된 것은 무엇인가요?",
+                options: [
+                    "영조 - 이익",
+                    "정조 - 정약용",
+                    "순조 - 박지원",
+                    "헌종 - 김조순"
+                ],
+                answer: 1,
+                exp: "1776년에 정조가 즉위하였고, 1789년에 실학자인 정약용이 관직에 진출하였습니다."
+            },
+            {
+                q: "[연표] 1794년에 서용보가 정조에게 올린 글의 내용과, 1801년 순조가 해방한 대상이 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "고구마의 중요성을 알리는 글 - 관청에 딸려 있는 노비",
+                    "감자의 중요성을 알리는 글 - 양반집의 사노비",
+                    "화폐를 만들자는 글 - 전쟁 포로",
+                    "과거제를 폐지하자는 글 - 역관과 의관"
+                ],
+                answer: 0,
+                exp: "1794년 서용보는 고구마의 중요성을 알리는 글을 정조에게 올렸고, 1801년 순조는 관청에 딸려 있는 노비를 해방하였습니다."
+            },
+            {
+                q: "[연표] 1805년 <처네 쓴 여인>을 그린 화가와, 1861년 <대동여지도>를 만든 인물이 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "신윤복 - 김정호",
+                    "김홍도 - 정약용",
+                    "정선 - 서용보",
+                    "권용정 - 최제우"
+                ],
+                answer: 0,
+                exp: "1805년 신윤복이 <처네 쓴 여인>을 그렸고, 1861년 김정호가 <대동여지도>를 만들었습니다."
+            },
+            {
+                q: "[연표] 9장 도입부 연표에 붉은 글씨로 강조된 사건으로, 1862년에 농민 봉기가 일어난 지역과 1864년에 처형된 동학 창시자가 바르게 연결된 것은 무엇인가요?",
+                options: [
+                    "진주 - 최제우",
+                    "평양 - 전봉준",
+                    "안동 - 김조순",
+                    "부안 - 최시형"
+                ],
+                answer: 0,
+                exp: "연표에 붉은 글씨로 '1862년 진주에서 농민 봉기가 일어나다'라고 표시되어 있으며, 1864년에는 동학을 창시한 최제우가 처형되었습니다."
+            },
+            {
+                q: "9장 도입부에 따르면, 백성들을 위한 개혁 정치를 펼쳤던 정조가 갑작스럽게 세상을 떠난 해는 언제인가요?",
+                options: [
+                    "1776년",
+                    "1794년",
+                    "1800년",
+                    "1811년"
+                ],
+                answer: 2,
+                exp: "1800년, 백성들을 위한 정치를 펼쳤던 정조가 갑작스럽게 세상을 떠나면서 19세기의 조선은 정조 때와는 완전히 다른 모습을 맞이하게 되었습니다."
+            },
+            {
+                q: "정조가 죽고 왕위에 오른 순조가 몇 살의 어린 나이였기 때문에 증조할머니가 대신 정치를 하게 되었나요?",
+                options: [
+                    "5살",
+                    "11살",
+                    "17살",
+                    "25살"
+                ],
+                answer: 1,
+                exp: "순조가 11살의 어린 나이로 왕위에 올랐기 때문에 증조할머니가 대신 정치를 하게 되었습니다."
+            },
+            {
+                q: "순조가 나랏일을 직접 돌보게 된 뒤에 권력을 잡고 왕을 쥐락펴락했던 순조의 장인은 어느 집안의 누구였나요?",
+                options: [
+                    "안동 김씨 집안의 김조순",
+                    "풍양 조씨 집안의 조만영",
+                    "경주 김씨 집안의 김육",
+                    "해평 윤씨 집안의 윤원형"
+                ],
+                answer: 0,
+                exp: "순조가 나랏일을 직접 돌보게 됐지만, 순조의 장인인 안동 김씨 집안의 김조순이 권력을 잡고 왕을 쥐락펴락했습니다."
+            },
+            {
+                q: "순조의 뒤를 이은 헌종 때에 권력을 잡아 나랏일을 마음대로 주물렀던 헌종의 외가 집안은 어디인가요?",
+                options: [
+                    "풍양 조씨",
+                    "안동 권씨",
+                    "전주 이씨",
+                    "청주 한씨"
+                ],
+                answer: 0,
+                exp: "순조의 뒤를 이은 헌종 때에는 헌종의 외가인 풍양 조씨가 권력을 잡아 나랏일을 마음대로 주물렀습니다."
+            },
+            {
+                q: "안동 김씨와 풍양 조씨처럼 왕과 친척 관계에 있는 몇몇 힘 있는 가문이 권력을 독차지한 정치는 왕이 몇 번 바뀌고 얼마만큼의 세월이 지나도록 이어졌나요?",
+                options: [
+                    "왕이 한 번 바뀌고 10여 년의 세월이 지나도록",
+                    "왕이 두 번 바뀌고 30여 년의 세월이 지나도록",
+                    "왕이 세 번 바뀌고 60여 년의 세월이 지나도록",
+                    "왕이 다섯 번 바뀌고 150여 년의 세월이 지나도록"
+                ],
+                answer: 2,
+                exp: "왕과 친척 관계에 있는 가문들이 권력을 독차지한 정치는 왕이 세 번(순조·헌종·철종) 바뀌고 60여 년의 세월이 지나도록 계속 이어졌습니다."
+            },
+            {
+                q: "본문 125쪽 사진 설명에 따르면, 어린 나이에 왕이 된 순조는 외척 가문의 권력 강화에 맞서 누구의 정책을 모범으로 삼아 국정을 주도하려 했나요?",
+                options: [
+                    "아버지인 정조의 여러 정책",
+                    "태종 이방원의 무력 정책",
+                    "광해군의 중립 외교 정책",
+                    "청나라 황제의 통치 정책"
+                ],
+                answer: 0,
+                exp: "순조는 외척 가문의 권력 강화에 맞서 아버지인 정조의 여러 정책을 모범으로 삼아 국정을 주도하려 노력했습니다."
+            },
+            {
+                q: "왕실의 친척 가문들이 마치 자신들이 왕인 양 행세하며 나라의 질서를 어지럽히던 시기, 왕과 일반 관리들이 처했던 상황으로 옳은 것은 무엇인가요?",
+                options: [
+                    "왕은 권세에 눌려 아무것도 못 하는 허수아비 신세로 눈치를 보며 숨죽여 지냈고, 관리들도 당장 목이 잘릴까 봐 두려워 옳은 소리를 할 수 없었다.",
+                    "왕이 강력한 군사력을 바탕으로 외척 가문들을 모두 궁궐에서 내쫓았다.",
+                    "관리들이 날마다 자유롭게 외척 가문의 잘못을 비판하는 상소를 올려 바로잡았다.",
+                    "왕과 외척 가문이 서로 양보하고 협력하여 태평성대를 이루었다."
+                ],
+                answer: 0,
+                exp: "사위나 외손자가 왕인데도 외척 가문이 왕인 양 행세하여 왕은 허수아비 신세가 되었고, 관리들도 그들의 눈 밖에 날까 봐 옳은 소리를 할 수 없었습니다."
+            },
+            {
+                q: "권력을 독차지한 가문들이 오로지 자기 가문의 이익만을 위해 힘을 휘두르며 벌인 부정부패의 모습으로 옳은 것은 무엇인가요?",
+                options: [
+                    "중요한 벼슬자리에 줄줄이 자기 가문의 사람들을 앉히고 돈을 받고 관직을 팔아, 그들의 집은 뇌물을 바치며 벼슬을 부탁하는 사람들로 늘 북적였다.",
+                    "능력과 학식이 뛰어난 서얼과 노비들에게 무료로 높은 벼슬을 나누어 주었다.",
+                    "자기 가문의 재산을 모두 털어 가난한 농민들에게 땅을 사 주었다.",
+                    "뇌물을 가져오는 사람들을 즉시 감옥에 가두고 엄벌에 처했다."
+                ],
+                answer: 0,
+                exp: "권력을 잡은 가문들은 중요한 벼슬자리에 자기 가문 사람들을 앉히고 돈을 받고 관직을 팔았으며, 줄을 대지 않고는 관직에 나가는 것이 꿈도 못 꿀 일이 되었습니다."
+            },
+            {
+                q: "권력 가문에게 뇌물을 바치고 관직을 산 관리들이 백성들을 돌보지 않고 수단과 방법을 가리지 않으며 많은 세금을 거둬들인 까닭은 무엇인가요?",
+                options: [
+                    "관직을 사는 데 들인 돈만큼 본전을 뽑고, 백성들을 쥐어짜서라도 돈을 모아 더 높은 벼슬도 사려고 했기 때문에",
+                    "거둬들인 세금으로 고을마다 큰 병원과 학교를 세워 주기 위해서",
+                    "외적의 침입에 대비해 성곽을 고치고 거북선을 만들기 위해서",
+                    "청나라에서 고구마와 감자 씨앗을 사 오기 위해서"
+                ],
+                answer: 0,
+                exp: "돈을 바치고 관직을 산 관리들은 자신이 바친 돈만큼 본전을 뽑고, 돈을 더 모아 더 높은 벼슬을 사기 위해 백성들을 가혹하게 쥐어짰습니다."
+            },
+            {
+                q: "부정부패한 관리들이 백성들에게 세금을 이중삼중으로 거두면서, 원래는 어른만 내야 하는 군포 등의 세금을 누구에게까지 물렸나요?",
+                options: [
+                    "갓난아이에게도 물렸다.",
+                    "지나가는 외국 사신에게도 물렸다.",
+                    "집에서 기르는 소와 말에게도 물렸다.",
+                    "왕실의 왕자들에게도 물렸다."
+                ],
+                answer: 0,
+                exp: "못된 관리들은 세금을 부풀려 받기 위해 어른만 내는 세금을 갓난아이에게도 물리는 횡포를 부렸습니다."
+            },
+            {
+                q: "못된 관리들이 이미 죽은 사람이나 세금을 못 내고 도망간 이웃의 세금까지 거두기 위해 벌인 일은 무엇이었나요?",
+                options: [
+                    "죽은 사람도 살아 있는 것처럼 거짓 장부를 꾸며 세금을 거두었고, 이웃이 도망가면 친척이나 이웃 사람들에게 도망간 사람 몫까지 내라고 강요했다.",
+                    "죽은 사람의 무덤을 파헤쳐 부장품을 가져가고, 도망간 사람의 집을 불태웠다.",
+                    "죽은 사람과 도망간 사람의 세금은 고을 수령이 자기 월급으로 대신 내주었다.",
+                    "도망간 이웃을 찾아오면 평생 세금을 면제해 주었다."
+                ],
+                answer: 0,
+                exp: "죽은 사람도 살아 있는 것처럼 거짓 장부를 꾸며 세금을 거두고, 도망간 사람의 세금은 친척이나 이웃에게 대신 내라고 강요했습니다."
+            },
+            {
+                q: "19세기 무렵 부정부패한 관리들의 수탈과 더불어 해마다 수만 명씩 죽어 나가며 백성들의 살림살이가 갈수록 어려워진 자연적·환경적 원인은 무엇이었나요?",
+                options: [
+                    "잦은 가뭄과 홍수에다가 전염병마저 유행했기 때문에",
+                    "화산이 폭발하여 온 나라가 화산재로 뒤덮였기 때문에",
+                    "십 년 동안 눈이 한 번도 녹지 않는 빙하기가 찾아왔기 때문에",
+                    "메뚜기 떼가 바다를 건너와 모든 나무를 갉아먹었기 때문에"
+                ],
+                answer: 0,
+                exp: "이 무렵 잦은 가뭄과 홍수에다가 전염병마저 유행해 해마다 수만 명씩 죽어 나갔으나, 못된 관리들은 세금 걷는 일을 멈추지 않았습니다."
+            },
+            {
+                q: "못된 관리들이 봄에 백성들에게 곡식을 빌려주고 가을에 돌려받는 제도(환곡)를 악용하여 저지른 날강도 같은 횡포로 본문에 나오지 않는 것은 무엇인가요?",
+                options: [
+                    "곡식을 강제로 꾸어 주고 비싼 이자를 얹어 갚으라고 했다.",
+                    "심지어 빌려 주지도 않은 곡식을 갚으라고 윽박지르기까지 했다.",
+                    "지푸라기와 모래가 섞인 곡식을 저울을 속여 적게 빌려 주고, 돌려받을 때는 알곡으로만 제대로 다 받아 갔다.",
+                    "백성들이 곡식을 갚지 못하면 관리들이 직접 농사를 지어 창고를 채워 넣었다."
+                ],
+                answer: 3,
+                exp: "관리들은 강제 대여, 허위 장부로 안 빌려준 곡식 독촉, 지푸라기·모래 섞기, 저울 속이기 등 온갖 부정한 방법으로 제 주머니를 채웠습니다."
+            },
+            {
+                q: "19세기 초 참다못한 백성들의 분노가 가장 먼저 폭발하여 대규모 반란이 일어난 곳은 한양에서 북쪽으로 멀리 떨어진 어느 지역이었나요?",
+                options: [
+                    "평안도",
+                    "강원도",
+                    "전라도",
+                    "제주도"
+                ],
+                answer: 0,
+                exp: "백성들의 분노가 폭발하기 시작한 곳은 한양에서 북쪽으로 멀리 떨어진 평안도였습니다."
+            },
+            {
+                q: "그 지역(평안도) 사람들이 조정에 대해 오랫동안 큰 불만과 억울함을 품어 왔던 이유는 무엇이었나요?",
+                options: [
+                    "관리들의 횡포와 거듭되는 심한 가뭄으로 굶어 죽는 사람이 많았을 뿐 아니라, 반역 기질이 있다고 여겨져 높은 벼슬을 한 사람이 없을 정도로 오랫동안 지역 차별을 받아 왔기 때문에",
+                    "평안도 사람들에게만 과거 시험에 응시할 자격을 주지 않는 법률이 있었기 때문에",
+                    "평안도에서는 상업과 무역을 하는 것이 법으로 금지되어 있었기 때문에",
+                    "수도를 평안도로 옮기겠다는 약속을 조정이 지키지 않았기 때문에"
+                ],
+                answer: 0,
+                exp: "평안도는 수탈과 가뭄이 심했을 뿐만 아니라, 반역 기질이 있다고 여겨져 높은 벼슬에 오르지 못하는 등 오랜 지역 차별을 받아 왔습니다."
+            },
+            {
+                q: "1811년 평안도에서 반란을 이끈 지도자의 신분 배경과, 그가 세상을 바꾸기로 결심한 직접적인 계기는 무엇이었나요?",
+                options: [
+                    "몰락한 양반의 자손으로 몇 차례 과거 시험을 치렀지만 평안도 출신이어서 매번 떨어지자 이에 불만을 품고 결심했다.",
+                    "관청에 소속된 노비였는데 주인에게 매를 맞고 도망치다가 결심했다.",
+                    "의주에서 활동하던 큰 부자 상인이었는데 청나라와의 무역이 막히자 결심했다.",
+                    "한양에서 파견된 고을 수령이었는데 왕의 명령에 불만을 품고 결심했다."
+                ],
+                answer: 0,
+                exp: "그는 몰락한 양반의 자손으로 몇 차례 과거 시험을 치렀으나 평안도 출신이라는 이유로 매번 떨어지자 세상을 바꾸기로 결심했습니다."
+            },
+            {
+                q: "평안도에서 반란을 준비할 때 뜻을 같이하며 모여든 동지들의 신분 구성과 준비 과정으로 옳은 것은 무엇인가요?",
+                options: [
+                    "몰락한 양반, 가난한 농민과 상인, 노비 등 여러 신분의 사람들이 따랐으며, 무기를 마련하고 말 타기와 총 쏘기를 익히며 치밀하게 준비했다.",
+                    "오직 부유한 양반들만 모였으며, 무기는 전혀 준비하지 않고 상소문만 작성했다.",
+                    "외국 군인들을 돈을 주고 고용하여 비밀리에 훈련시켰다.",
+                    "어린아이들과 노인들만 모여서 활쏘기를 연습했다."
+                ],
+                answer: 0,
+                exp: "몰락한 양반, 가난한 농민과 상인, 노비 등 여러 신분의 사람들이 가담하여 무기를 마련하고 말 타기와 총 쏘기를 익히며 치밀한 준비를 했습니다."
+            },
+            {
+                q: "평안도에서 반란의 깃발을 높이 든 시기(연도와 월)와, 반란군이 백성들에게 외친 목표로 바르게 짝지어진 것은 무엇인가요?",
+                options: [
+                    "1811년 12월 / 한양으로 진격하여 썩어 빠진 정치를 몰아내고 차별 없는 평등한 사회를 함께 만들자고 외쳤다.",
+                    "1801년 1월 / 평안도를 청나라의 영토로 편입시키자고 외쳤다.",
+                    "1862년 5월 / 신분 제도를 더욱 엄격하게 강화하자고 외쳤다.",
+                    "1894년 10월 / 서양과 무역 조약을 맺자고 외쳤다."
+                ],
+                answer: 0,
+                exp: "1811년 12월 반란을 일으키며 평안도에 대한 천시를 비판하고, 한양으로 진격해 썩어 빠진 정치를 몰아내고 차별 없는 평등한 사회를 만들자고 외쳤습니다."
+            },
+            {
+                q: "평안도 반란군이 거병한 지 열흘 만에 평안도의 여러 지역을 손에 넣고, 백성들이 속속 가담해 수천 명으로 불어날 수 있었던 까닭은 무엇인가요?",
+                options: [
+                    "부패한 관리들의 창고를 열어 굶주린 백성들에게 곡식을 나눠 주어 큰 호응을 얻었기 때문에",
+                    "백성들에게 가담하지 않으면 집을 불태우겠다고 협박했기 때문에",
+                    "관군들이 싸우지도 않고 모두 반란군에 항복했기 때문에",
+                    "가담하는 사람들에게 양반 족보를 한 권씩 나누어 주었기 때문에"
+                ],
+                answer: 0,
+                exp: "반란군은 못된 관리들의 창고를 열어 굶주린 백성들에게 곡식을 나눠 주었고, 이에 백성들이 크게 호응하며 속속 가담해 군대가 수천 명으로 불어났습니다."
+            },
+            {
+                q: "관군이 전열을 가다듬고 반격해 오자 밀려난 반란군은 성 안으로 들어가 성문을 굳게 닫고 몇 개월 동안이나 끈질기게 저항했나요?",
+                options: [
+                    "1개월 동안",
+                    "4개월 동안",
+                    "12개월 동안",
+                    "36개월 동안"
+                ],
+                answer: 1,
+                exp: "성으로 들어간 반란군은 성문을 굳게 닫고 4개월 동안이나 끈질기게 저항했습니다."
+            },
+            {
+                q: "4개월 동안 성이 함락되지 않자, 1812년 4월 관군이 성벽을 무너뜨리기 위해 사용한 최후의 방법은 무엇이었나요?",
+                options: [
+                    "성 밑으로 땅굴을 파고 화약을 묻은 다음 불을 붙여 성을 폭파했다.",
+                    "성 주변의 강물을 막아 성 안을 물에 잠기게 했다.",
+                    "하늘에 거대한 연을 띄워 성 안으로 불화살을 쏘았다.",
+                    "성문이 저절로 열릴 때까지 3년 동안 포위만 하고 기다렸다."
+                ],
+                answer: 0,
+                exp: "관군은 성 밑으로 땅굴을 파고 화약을 묻은 다음 불을 붙여 성을 폭파하는 방법으로 1812년 4월 성벽을 무너뜨렸습니다."
+            },
+            {
+                q: "1812년 4월 요란한 폭음과 함께 성벽이 무너진 뒤 성 안으로 밀어닥친 관군이 벌인 일은 무엇이었나요?",
+                options: [
+                    "여자와 어린아이를 제외한 약 2천 명을 모두 죽였고, 반란의 지도자도 죽음을 맞았다.",
+                    "성 안에 있던 모든 사람을 용서하고 고향으로 돌려보내 주었다.",
+                    "반란군에게 벼슬을 주고 국경을 지키는 군대로 삼았다.",
+                    "반란군과 평화 조약을 맺고 평안도의 세금을 면제해 주었다."
+                ],
+                answer: 0,
+                exp: "성 안으로 밀어닥친 관군은 여자와 어린아이를 제외한 약 2천 명을 모두 죽였고, 반란 지도자도 죽음을 맞으며 새 세상을 향한 꿈이 꺾이고 말았습니다."
+            },
+            {
+                q: "임술년인 1862년(평안도 반란 이후 약 50년 만)에 경상남도 진주에서 농민 봉기가 폭발하게 된 직접적인 원인은 무엇이었나요?",
+                options: [
+                    "백성들에게 빌려 주려고 준비해 둔 곡식을 관리들이 다 가져다 먹고, 뻔뻔스럽게도 백성들에게 몽땅 물어내게 했기 때문에",
+                    "진주 성곽을 새로 쌓는다며 농민들의 집을 모두 허물었기 때문에",
+                    "외국 상인들이 진주 시장을 독점하여 장사를 할 수 없었기 때문에",
+                    "진주 지역의 서원을 모두 철거하라는 명령이 내려졌기 때문에"
+                ],
+                answer: 0,
+                exp: "진주에 있던 악독한 경상우병사와 관리들이 백성들에게 빌려 주려고 준비해 둔 곡식을 다 가져다 먹고 백성들에게 몽땅 물어내게 하자 불만이 폭발했습니다."
+            },
+            {
+                q: "1862년 진주 농민 봉기 때 성난 농민들의 차림새와 그들이 고을 관청에 쳐들어가 벌인 행동으로 옳은 것은 무엇인가요?",
+                options: [
+                    "머리에 흰 수건을 동여매고 손에는 몽둥이를 움켜쥐었으며, 관청에 쳐들어가 세금 장부를 불태우고 못된 관리들을 옥에 가뒀다.",
+                    "갑옷과 투구를 입고 총과 대포를 쏘며 한양의 궁궐까지 진격했다.",
+                    "검은 옷을 입고 밤에 몰래 관청 창고의 쌀만 가져다 나누어 가졌다.",
+                    "관청 앞에 모여 조용히 사흘 동안 단식 농성만 벌였다."
+                ],
+                answer: 0,
+                exp: "성난 농민들은 머리에 흰 수건을 동여매고 손에 몽둥이를 들고 관청에 쳐들어가 세금 장부를 불태우고 탐관오리들을 옥에 가뒀습니다."
+            },
+            {
+                q: "진주 농민 봉기 소식이 경상도, 전라도, 충청도를 넘어 전국으로 퍼져 나가자 나라(조정)에서 취한 조치와 그 결과로 옳은 것은 무엇인가요?",
+                options: [
+                    "못된 관리들을 파면하고 조사를 벌였으나 모두 시늉에 그쳤을 뿐 근본적인 처방은 없었고, 봉기가 가라앉자 도리어 참여 농민들을 잡아들여 엄하게 처벌했다.",
+                    "전국 모든 농민들의 세금을 영구히 면제해 주고 봉기 지도자들을 수령으로 임명했다.",
+                    "왕실 친척 가문들이 스스로 권력을 내려놓고 시골로 물러났다.",
+                    "봉기에 참여한 농민들에게 나라의 토지를 골고루 나누어 주었다."
+                ],
+                answer: 0,
+                exp: "조정은 못된 관리들을 파면하고 조사하는 시늉만 했을 뿐 근본적인 개혁을 하지 않았고, 봉기가 가라앉자 오히려 참여 농민들을 잡아들여 엄벌했습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 19세기 아일랜드에서 많은 사람들이 집단으로 굶주린 '대기근'이 발생한 원인과 당시 아일랜드 사람들의 주식은 무엇이었나요?",
+                options: [
+                    "감자 마름병으로 알려진 감자 전염병 때문에 발생했으며, 당시 주식은 감자였다.",
+                    "벼 도열병으로 알려진 쌀 전염병 때문에 발생했으며, 당시 주식은 쌀이었다.",
+                    "고구마 썩음병 때문에 발생했으며, 당시 주식은 고구마였다.",
+                    "화산 폭발로 인한 밀 흉작 때문에 발생했으며, 당시 주식은 밀이었다."
+                ],
+                answer: 0,
+                exp: "당시 감자는 아일랜드 사람들의 주식이었는데, 감자 마름병으로 알려진 감자 전염병이 돌면서 대기근이 발생했습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 1845년에 시작된 아일랜드의 감자 전염병은 몇 년 동안이나 되풀이되었으며, 기근을 해결하기 위해 해외로부터 수입했지만 턱없이 부족했던 식량은 무엇인가요?",
+                options: [
+                    "7년 동안 / 옥수수",
+                    "2년 동안 / 보리",
+                    "15년 동안 / 고구마",
+                    "30년 동안 / 콩"
+                ],
+                answer: 0,
+                exp: "1845년에 시작된 감자 전염병이 7년 동안 되풀이되었고, 아일랜드는 해외로부터 옥수수를 수입했지만 식량 부족을 해결하기에는 턱없이 부족했습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 아일랜드가 심각한 대기근을 겪고 있을 때, 당시 아일랜드를 지배하고 있던 영국은 어떻게 행동했나요?",
+                options: [
+                    "아일랜드에 식량을 지원하기는커녕 아일랜드에서 생산되는 밀과 옥수수 등의 식량을 수확하는 대로 모두 영국으로 가져가 버렸다.",
+                    "영국 왕실의 창고를 열어 아일랜드 사람들에게 무료로 빵과 고기를 나누어 주었다.",
+                    "아일랜드 사람들의 세금을 모두 면제해 주고 즉각 독립을 허용했다.",
+                    "전 세계 나라들에 도움을 요청하여 구호 식량을 아일랜드에 보내 주었다."
+                ],
+                answer: 0,
+                exp: "아일랜드를 지배하던 영국은 식량을 지원하기는커녕 아일랜드에서 생산되는 밀과 옥수수 등의 식량을 수확하는 대로 모두 영국으로 가져가 버렸습니다."
+            },
+            {
+                q: "[세계 역사와 우리] 이 끔찍한 대기근으로 인해 당시 800만 명 정도였던 아일랜드 인구가 겪은 피해 규모로 옳은 것은 무엇인가요?",
+                options: [
+                    "약 100만 명이 굶어 죽었고, 100만 명이 넘는 사람들이 기근을 피해 정든 고향을 등지고 외국으로 이민을 떠나야 했다.",
+                    "약 1만 명이 굶어 죽었고, 이민을 떠난 사람은 한 명도 없었다.",
+                    "800만 명 전원이 다른 나라로 이민을 떠나 무인도가 되었다.",
+                    "오히려 인구가 두 배로 늘어나 1,600만 명이 되었다."
+                ],
+                answer: 0,
+                exp: "당시 800만 명 정도였던 아일랜드 인구 가운데 약 100만 명이 굶어 죽었고, 100만 명이 넘는 사람들이 외국으로 이민을 떠나야 했습니다."
+            },
+            {
+                q: "[인물 인터뷰] 조선 시대에 임금의 명을 받아 몰래 지방 곳곳을 다니며 부정부패한 관리들을 벌주고 백성의 어려움을 보살피던 특별 관리는 어떤 인물 중에서 어떻게 뽑혔나요?",
+                options: [
+                    "젊고 패기가 있으며 때 묻지 않고 왕이 믿을 수 있는 인물 중에서 왕이 직접 뽑았으며, 임명과 임무를 철저히 비밀에 부쳤다.",
+                    "나이가 많고 재산이 많은 고위 대신들 중에서 신하들의 투표로 뽑아 온 나라에 널리 알렸다.",
+                    "외국어를 잘하는 역관들 중에서 시험을 치러 뽑았다.",
+                    "지방의 고을 사또들이 추천한 사람 중에서 뽑았다."
+                ],
+                answer: 0,
+                exp: "왕은 젊고 패기가 있으며 때 묻지 않고 믿을 수 있는 인물을 직접 뽑았으며, 임명과 임무를 철저히 비밀에 부쳤습니다."
+            },
+            {
+                q: "[인물 인터뷰] 이 특별 관리로 뽑히면 왕으로부터 받는 비밀 봉투의 겉면에 무엇이라 쓰여 있으며, 언제 열어 보아야 하나요?",
+                options: [
+                    "'동대문 밖에 나가 열어 볼 것' 또는 '남대문 밖에 나가 열어 볼 것'이라고 쓰여 있으며, 한양을 벗어난 후 열어 봐야 어디로 가서 무슨 일을 하는지 알 수 있다.",
+                    "'궁궐 안에서 즉시 열어 볼 것'이라고 쓰여 있으며, 왕 앞에서 바로 읽고 외워야 한다.",
+                    "'목적지 관청 앞에서 열어 볼 것'이라고 쓰여 있으며, 사또와 함께 열어 봐야 한다.",
+                    "'임무를 마친 뒤 열어 볼 것'이라고 쓰여 있으며, 한양에 돌아온 뒤에 열어 본다."
+                ],
+                answer: 0,
+                exp: "봉투 겉면에 '동대문 밖에 나가 열어 볼 것' 또는 '남대문 밖에 나가 열어 볼 것'이라 쓰여 있어, 한양을 벗어난 후 열어 봐야 자신의 행선지와 임무를 알 수 있었습니다."
+            },
+            {
+                q: "[인물 인터뷰] 이 특별 관리가 임명될 때 왕에게 받는 둥근 패의 앞면에는 무엇이 새겨져 있으며, 어떤 실용적인 기능이 있었나요?",
+                options: [
+                    "앞면에 말 그림이 새겨져 있는데, 그 말 그림의 숫자만큼 역에서 말을 빌려 탈 수 있었고 신분증 역할도 했다.",
+                    "앞면에 호랑이 그림이 새겨져 있는데, 산적을 만났을 때 무기로 사용했다.",
+                    "앞면에 동전 그림이 새겨져 있는데, 시장에서 물건을 공짜로 살 수 있었다.",
+                    "앞면에 배 그림이 새겨져 있는데, 외국으로 가는 배를 빌려 탈 수 있었다."
+                ],
+                answer: 0,
+                exp: "패의 앞면에는 말 그림이 새겨져 있어서 그 숫자만큼 역에서 말을 빌려 탈 수 있었을 뿐 아니라 신분증 역할도 했습니다."
+            },
+            {
+                q: "[인물 인터뷰] 목적지에 도착한 이 특별 관리가 관리의 부정부패를 적발하는 과정으로 옳은 것은 무엇인가요?",
+                options: [
+                    "정체를 숨긴 채 몰래 백성들의 생활을 살피고 조사하다가, 관리의 부정부패가 발견되면 관청 문을 열고 들어가 크게 출도를 외치며 신분을 밝혀 벌을 주었다.",
+                    "도착하자마자 관청에 들어가 신분을 밝히고 사또가 차려 주는 잔치상을 받은 뒤 조사했다.",
+                    "백성들을 관청 앞으로 모두 모이게 한 뒤 투표를 통해 사또의 죄를 결정했다.",
+                    "직접 벌을 주지 않고 몰래 편지만 써서 사또의 집 문 앞에 두고 왔다."
+                ],
+                answer: 0,
+                exp: "정체를 숨긴 채 몰래 백성들의 생활과 관리의 비리를 조사한 뒤, 부정부패가 확인되면 관청 문을 열고 들어가 크게 출도를 외치며 신분을 밝혔습니다."
+            },
+            {
+                q: "[인물 인터뷰] 이 특별 관리가 목적지까지 이동하며 임무를 수행하는 동안 겪어야 했던 고초로 본문에 언급되지 않은 것은 무엇인가요?",
+                options: [
+                    "말을 타거나 걸어서 목적지까지 가는 데만 한두 달에서 많게는 여러 달이 걸렸다.",
+                    "가는 길에 산짐승이나 산적들에게 봉변을 당하거나 목숨을 잃기도 했다.",
+                    "길에서 얼어 죽거나 굶어 죽는 경우도 있었다.",
+                    "가는 고을마다 사또들이 미리 알고 마중 나와 가마에 태워 모셨다."
+                ],
+                answer: 3,
+                exp: "신분을 철저히 숨기고 몇 달씩 이동해야 했기 때문에 산짐승이나 산적에게 목숨을 잃거나 얼어 죽고 굶어 죽는 등 임무를 다하기가 매우 힘들었습니다."
+            },
+            {
+                q: "[인물 인터뷰] 부패한 관리를 잡으러 갔을 때 겪었던 위험과 이 제도의 한계로 본문 135쪽에 설명된 내용은 무엇인가요?",
+                options: [
+                    "출도를 외쳐도 문을 걸어 잠그는 관리가 있었고 비리를 밝힐 즈음 쥐도 새도 모르게 암살당하는 경우도 있었으며, 이들의 힘만으로는 지방 곳곳의 부정부패를 다 막아낼 수 없었다.",
+                    "한 번 출도를 외치면 전국의 모든 부정부패한 관리들이 그 자리에서 즉시 사라졌다.",
+                    "지방 관리들이 오히려 이 특별 관리를 감옥에 가둘 수 있는 법적 권한을 가지고 있었다.",
+                    "백성들이 부패한 사또 편을 들어 조사를 방해하는 경우가 대부분이었다."
+                ],
+                answer: 0,
+                exp: "출도를 외쳐도 문을 걸어 잠그거나 비리를 밝힐 즈음 암살당하는 경우도 있었으며, 소수의 특별 관리 힘만으로는 전국에 퍼진 부정부패를 다 막아낼 수 없었습니다."
+            }
+        ];
+
+        // 2부: 단답형 주관식 10문제 데이터 (객관식과 중복 없음)
+        const saQuestions = [
+            {
+                q: "안동 김씨와 풍양 조씨 집안처럼 왕과 친척 관계에 있는 몇몇 힘 있는 가문(세도 가문)이 순조·헌종·철종 3대 60여 년 동안 권력을 독차지하고 마음대로 휘두른 정치를 무엇이라고 하나요?",
+                answers: ["세도정치"],
+                displayAnswer: "세도 정치",
+                exp: "왕과 친척 관계에 있는 몇몇 힘 있는 집안을 '세도 가문'이라 하고, 이들이 권력을 독차지한 정치를 '세도 정치'라고 합니다."
+            },
+            {
+                q: "정조가 죽고 11살의 어린 나이로 왕위에 오른 순조를 대신해 정치를 하면서, 정조가 길러 낸 인재들을 몰아내고 애써 만든 개혁 기구를 모두 없앤 순조의 증조할머니는 누구인가요?",
+                answers: ["정순왕후"],
+                displayAnswer: "정순 왕후",
+                exp: "순조의 증조할머니인 '정순 왕후'는 수렴청정을 하며 정조가 길러 낸 인재들을 몰아내고 개혁 기구를 없애 개혁 정치를 물거품으로 만들었습니다."
+            },
+            {
+                q: "서울시 강남구에 있는 왕릉으로, 순조와 왕비가 함께 묻혀 있는 합장릉의 이름은 무엇인가요? (본문 125쪽 사진 설명 참고, 두 글자)",
+                answers: ["인릉"],
+                displayAnswer: "인릉",
+                exp: "서울시 강남구에 위치한 순조와 왕비의 합장릉 이름은 '인릉'입니다."
+            },
+            {
+                q: "백성들을 돌보는 데는 신경 쓰지 않고 백성들의 재물을 탐내거나 부정을 일삼는 못된 관리를 가리키는 네 글자 말은 무엇인가요?",
+                answers: ["탐관오리"],
+                displayAnswer: "탐관오리",
+                exp: "백성들의 재물을 탐내거나 부정을 일삼는 관리를 '탐관오리'라고 합니다."
+            },
+            {
+                q: "평안도 출신의 몰락한 양반 자손으로, 평안도에 대한 오랜 차별과 부패한 관리들의 횡포에 맞서 1811년 12월 평안도에서 가난한 농민·상인·노비 등과 함께 반란을 일으킨 인물은 누구인가요?",
+                answers: ["홍경래"],
+                displayAnswer: "홍경래",
+                exp: "'홍경래'는 평안도에 대한 차별과 세도 정치의 부패에 맞서 1811년 12월 평안도에서 대규모 반란(홍경래의 난)을 일으켰습니다."
+            },
+            {
+                q: "평안도에서 반란을 일으킨 군대가 관군의 반격에 밀려 들어가 성문을 굳게 닫고 4개월 동안이나 끈질기게 저항하다가, 1812년 4월 관군이 땅굴을 파고 묻은 화약이 폭발해 무너진 성의 이름은 무엇인가요?",
+                answers: ["정주성"],
+                displayAnswer: "정주성",
+                exp: "홍경래 군대는 '정주성'에 들어가 4개월 동안 끈질기게 저항했으나, 관군이 땅굴을 파고 화약을 묻어 성벽을 폭파하면서 함락되었습니다."
+            },
+            {
+                q: "평안도에서 일어난 반란을 진압하기 위해 파견된 순무영군이 성에서 농민군과 치열한 공방전을 벌이는 모습을 그린 그림의 제목은 무엇인가요? (본문 130쪽 그림 설명 참고)",
+                answers: ["순무영진도"],
+                displayAnswer: "순무영진도",
+                exp: "본문 130쪽에 실린 <순무영진도>는 순무영군이 정주성에서 홍경래의 농민군과 치열한 공방전을 벌이는 모습을 그린 그림입니다."
+            },
+            {
+                q: "임술년인 1862년 경상남도 진주에서 농민 봉기가 일어나게 만든 악독한 관리로, 관리들이 훔쳐 먹은 곡식을 백성들에게 몽땅 물어내게 한 진주의 경상우병사 이름은 누구인가요?",
+                answers: ["백낙신"],
+                displayAnswer: "백낙신",
+                exp: "1862년 진주 농민 봉기는 진주에 있던 경상우병사 '백낙신'의 악독한 횡포와 수탈 때문에 일어났습니다."
+            },
+            {
+                q: "조선 시대에 임금의 명을 받아 정체를 숨긴 채 몰래 지방 곳곳을 다니며 부정부패한 관리들을 벌주고 백성의 어려움을 보살피는 일을 했던 특별 관리를 무엇이라고 부르나요? (네 글자)",
+                answers: ["암행어사"],
+                displayAnswer: "암행어사",
+                exp: "임금의 명을 받아 비밀리에 지방을 돌며 탐관오리를 벌주고 백성을 살폈던 관리는 '암행어사'입니다."
+            },
+            {
+                q: "왕에게 임명받을 때 함께 받는 둥근 패로, 앞면에 새겨진 말 그림의 숫자만큼 역에서 말을 빌려 탈 수 있는 표시일 뿐 아니라 신분증 역할도 했던 이 물건의 이름은 무엇인가요?",
+                answers: ["마패"],
+                displayAnswer: "마패",
+                exp: "앞면에 말 그림이 새겨져 있어 역에서 말을 빌릴 수 있는 표시이자 암행어사의 신분증 역할을 했던 물건은 '마패'입니다."
+            }
+        ];
+
+        let firstUnansweredElement = null;
+
+        // 초기 렌더링
+        function renderQuiz() {
+            const mcContainer = document.getElementById("mcContainer");
+            const saContainer = document.getElementById("saContainer");
+
+            mcContainer.innerHTML = mcQuestions.map((item, idx) => {
+                const qNum = idx + 1;
+                const optionsHtml = item.options.map((opt, oIdx) => `
+                    <label class="option-label" id="mc_${idx}_label_${oIdx}">
+                        <input type="radio" name="mc_${idx}" value="${oIdx}" onchange="handleMcChange(${idx}, ${oIdx})">
+                        <span>${oIdx + 1}) ${opt}</span>
+                    </label>
+                `).join("");
+
+                return `
+                    <div class="question-card" id="qcard_mc_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="options-list">
+                            ${optionsHtml}
+                        </div>
+                        <div class="feedback-box" id="feedback_mc_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            saContainer.innerHTML = saQuestions.map((item, idx) => {
+                const qNum = idx + 41;
+                return `
+                    <div class="question-card short-answer-card" id="qcard_sa_${idx}">
+                        <div class="q-header">
+                            <span class="q-num">${qNum}</span>
+                            <div class="q-title">${item.q}</div>
+                        </div>
+                        <div class="short-input-wrap">
+                            <input type="text" class="short-input" id="sa_input_${idx}" placeholder="정답을 입력하세요" oninput="handleSaInput(${idx})" autocomplete="off">
+                        </div>
+                        <div class="feedback-box" id="feedback_sa_${idx}"></div>
+                    </div>
+                `;
+            }).join("");
+
+            updateProgress();
+        }
+
+        function handleMcChange(qIdx, selectedIdx) {
+            const card = document.getElementById(`qcard_mc_${qIdx}`);
+            card.classList.remove("unanswered-warning");
+            for (let i = 0; i < 4; i++) {
+                const lbl = document.getElementById(`mc_${qIdx}_label_${i}`);
+                if (i === selectedIdx) {
+                    lbl.classList.add("selected");
+                } else {
+                    lbl.classList.remove("selected");
+                }
+            }
+            updateProgress();
+        }
+
+        function handleSaInput(sIdx) {
+            const card = document.getElementById(`qcard_sa_${sIdx}`);
+            const val = document.getElementById(`sa_input_${sIdx}`).value.trim();
+            if (val.length > 0) {
+                card.classList.remove("unanswered-warning");
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answeredCount = 0;
+
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (checked) answeredCount++;
+            }
+
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val.length > 0) answeredCount++;
+            }
+
+            const total = mcQuestions.length + saQuestions.length;
+            const percent = Math.round((answeredCount / total) * 100);
+
+            document.getElementById("progressText").textContent = `진행률: ${answeredCount} / ${total} (${percent}%)`;
+            document.getElementById("progressFill").style.width = `${percent}%`;
+        }
+
+        // 문자열 정규화 (공백 및 특수기호 제거)
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, "").replace(/[<>《》"'「」『』()]/g, "").toLowerCase();
+        }
+
+        // 채점 함수
+        function gradeQuiz() {
+            let unansweredNumbers = [];
+            firstUnansweredElement = null;
+
+            // 모든 경고 테두리 초기화
+            document.querySelectorAll(".question-card").forEach(el => el.classList.remove("unanswered-warning"));
+
+            // 1. 객관식 미응답 확인
+            for (let i = 0; i < mcQuestions.length; i++) {
+                const checked = document.querySelector(`input[name="mc_${i}"]:checked`);
+                if (!checked) {
+                    unansweredNumbers.push(i + 1);
+                    const card = document.getElementById(`qcard_mc_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 2. 단답형 주관식 미응답 확인
+            for (let i = 0; i < saQuestions.length; i++) {
+                const val = document.getElementById(`sa_input_${i}`).value.trim();
+                if (val === "") {
+                    unansweredNumbers.push(i + 41);
+                    const card = document.getElementById(`qcard_sa_${i}`);
+                    card.classList.add("unanswered-warning");
+                    if (!firstUnansweredElement) firstUnansweredElement = card;
+                }
+            }
+
+            // 안 푼 문제가 하나라도 있으면 채점하지 않고 경고 메시지 표시
+            if (unansweredNumbers.length > 0) {
+                const previewList = unansweredNumbers.slice(0, 10).join(", ") + (unansweredNumbers.length > 10 ? ` 외 ${unansweredNumbers.length - 10}문항` : "번");
+                document.getElementById("modalMessage").innerHTML = `
+                    아직 풀지 않은 문제가 <strong>${unansweredNumbers.length}개</strong> 있습니다.<br>
+                    모든 문제를 다 풀어야 채점할 수 있습니다!<br>
+                    <span style="display:inline-block; margin-top:8px; font-size:0.86rem; color:#b45309; background:#fef3c7; padding:4px 10px; border-radius:6px;">
+                        미완료 문항: ${previewList}
+                    </span>
+                `;
+                document.getElementById("warningModal").style.display = "flex";
+                return;
+            }
+
+            // 모든 문제를 다 푼 경우 채점 진행
+            let mcCorrect = 0;
+            let saCorrect = 0;
+
+            // 객관식 채점
+            mcQuestions.forEach((item, idx) => {
+                const checked = document.querySelector(`input[name="mc_${idx}"]:checked`);
+                const userChoice = parseInt(checked.value, 10);
+                const isCorrect = (userChoice === item.answer);
+                if (isCorrect) mcCorrect++;
+
+                const card = document.getElementById(`qcard_mc_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                for (let oIdx = 0; oIdx < 4; oIdx++) {
+                    const lbl = document.getElementById(`mc_${idx}_label_${oIdx}`);
+                    const radio = lbl.querySelector("input");
+                    radio.disabled = true;
+                    lbl.classList.remove("correct-option", "wrong-option");
+                    if (oIdx === item.answer) {
+                        lbl.classList.add("correct-option");
+                    } else if (oIdx === userChoice && !isCorrect) {
+                        lbl.classList.add("wrong-option");
+                    }
+                }
+
+                const fb = document.getElementById(`feedback_mc_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (정답: ${item.answer + 1}번 ${item.options[item.answer]})`}
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            // 단답형 주관식 채점 (정답 반드시 표시)
+            saQuestions.forEach((item, idx) => {
+                const inputEl = document.getElementById(`sa_input_${idx}`);
+                const userRaw = inputEl.value.trim();
+                const userNorm = normalizeAnswer(userRaw);
+                const acceptedNorms = item.answers.map(a => normalizeAnswer(a));
+                const isCorrect = acceptedNorms.includes(userNorm);
+                if (isCorrect) saCorrect++;
+
+                inputEl.disabled = true;
+
+                const card = document.getElementById(`qcard_sa_${idx}`);
+                card.classList.remove("correct", "incorrect");
+                card.classList.add(isCorrect ? "correct" : "incorrect");
+
+                const fb = document.getElementById(`feedback_sa_${idx}`);
+                fb.style.display = "block";
+                fb.innerHTML = `
+                    <div class="feedback-status ${isCorrect ? 'pass' : 'fail'}">
+                        ${isCorrect ? '⭕ 정답입니다! (+2점)' : `❌ 오답입니다. (입력한 답: ${userRaw})`}
+                    </div>
+                    <div style="margin: 6px 0;">
+                        <span class="short-answer-reveal">정답: ${item.displayAnswer}</span>
+                    </div>
+                    <div>💡 ${item.exp}</div>
+                `;
+            });
+
+            const totalCorrect = mcCorrect + saCorrect;
+            const totalScore = totalCorrect * 2; // 50문항 * 2점 = 100점 만점
+
+            document.getElementById("finalScore").textContent = totalScore;
+            document.getElementById("totalCorrectStat").textContent = `${totalCorrect} / 50문제`;
+            document.getElementById("mcCorrectStat").textContent = `${mcCorrect} / 40문제`;
+            document.getElementById("saCorrectStat").textContent = `${saCorrect} / 10문제`;
+
+            let msg = "";
+            if (totalScore === 100) {
+                msg = "완벽합니다! 9장 '세도 정치로 곪아 가는 조선' 내용을 완벽히 마스터하셨네요! 🎉";
+            } else if (totalScore >= 80) {
+                msg = "훌륭해요! 19세기 세도 정치의 문제점과 농민 봉기의 역사를 아주 잘 이해하고 있습니다. 틀린 문제만 가볍게 복습해 보세요! 👍";
+            } else if (totalScore >= 60) {
+                msg = "잘했어요! 아래 표시된 정답과 해설을 읽으며 헷갈렸던 개념을 다시 정리해 보세요. 😊";
+            } else {
+                msg = "끝까지 문제를 모두 풀어낸 점이 멋집니다! 해설을 꼼꼼히 확인하고 한 번 더 도전해 보세요! 💪";
+            }
+            document.getElementById("resultSubtext").textContent = msg;
+
+            const resultCard = document.getElementById("resultCard");
+            resultCard.style.display = "block";
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("resetBtn").style.display = "block";
+
+            resultCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function closeModal() {
+            document.getElementById("warningModal").style.display = "none";
+            if (firstUnansweredElement) {
+                firstUnansweredElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById("resultCard").style.display = "none";
+            document.getElementById("submitBtn").style.display = "block";
+            document.getElementById("resetBtn").style.display = "none";
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        window.addEventListener("DOMContentLoaded", renderQuiz);
+    </script>
+</body>
+</html>
